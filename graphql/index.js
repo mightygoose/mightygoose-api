@@ -1,20 +1,24 @@
-const { ApolloServer, gql } = require('apollo-server-koa');
-
+const {  ApolloServer, gql } = require('apollo-server-koa');
+const { mergeSchemas } = require('graphql-tools');
+const { version } = require('../package');
 
 // Construct a schema, using GraphQL schema language
-const typeDefs = gql`
+const appTypeDefs = gql`
   type Query {
-    hello: String
+    version: String
   }
 `;
 
 // Provide resolver functions for your schema fields
-const resolvers = {
+const appResolvers = {
   Query: {
-    hello: () => 'Hello world!',
+    version: () => version,
   },
 };
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({
+  typeDefs: [appTypeDefs],
+  resolvers: [appResolvers],
+});
 
 module.exports = server;
