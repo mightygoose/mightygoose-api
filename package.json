@@ -1,0 +1,18 @@
+{
+  "name": "mg-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "run:dev": "nodemon index.js",
+    "run:debug": "ndb yarn run:dev"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.8.1",
+    "musicbrainz": "^0.2.6",
+    "ndb": "^1.1.4",
+    "nodemon": "^1.19.2"
+  }
+}
