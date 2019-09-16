@@ -3,27 +3,36 @@ coming soon
 #example queries
 
 ```
-search(query: { query: "Beatles Help" }){
+search(search: { query: "Beatles Help" }){
   discogs {
     releases {
-      artist
+      pageInfo { ... }
+      nodes {
+        artist
+      }
     }
   }
 }
 ```
 
 ```
-discogs(search: { query: "Beatles" }) {
-  releases {
-    artist
+search {
+  discogs(search: { query: "Beatles" }) {
+    releases {
+      nodes {
+        artist
+      }
+    }
   }
 }
 ```
 
 ```
-discogs {
-  release(id: 44444) {
-    artist
+lookup {
+  discogs {
+    release(id: 44444) {
+      artist
+    }
   }
 }
 ```
@@ -32,11 +41,9 @@ discogs {
 spotify {
   album(id: 55555) {
     artist
-    connection {
-      discogs {
-        releases {
-          artist
-        }
+    discogs {
+      releases {
+        artist
       }
     }
   }
