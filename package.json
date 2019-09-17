@@ -4,14 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "run:dev": "nodemon index.js",
+    "run:dev": "nodemon -r esm index.js",
     "run:debug": "ndb yarn run:dev"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "apollo-datasource-rest": "^0.6.4",
     "apollo-server-koa": "^2.9.3",
     "dotenv": "^8.1.0",
+    "esm": "^3.2.25",
     "graphql": "^14.5.4",
     "koa": "^2.8.1",
     "musicbrainz": "^0.2.6",

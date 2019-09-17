@@ -310,6 +310,17 @@ apollo-cache-control@^0.8.4:
     apollo-server-env "^2.4.3"
     graphql-extensions "^0.10.3"
 
+apollo-datasource-rest@^0.6.4:
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/apollo-datasource-rest/-/apollo-datasource-rest-0.6.4.tgz#7d42d8b41e9e8d001ff4925df799c326f44eeb78"
+  integrity sha512-jPPnJd+ZtGTjIDd2LpBrny/CJgg6DyW6jPc5dESdIxA829pNYDjKHugA59G0ZlgnFGbwzjM2h2Vemo+HifnUYA==
+  dependencies:
+    apollo-datasource "^0.6.3"
+    apollo-server-caching "^0.5.0"
+    apollo-server-env "^2.4.3"
+    apollo-server-errors "^2.3.3"
+    http-cache-semantics "^4.0.0"
+
 apollo-datasource@^0.6.3:
   version "0.6.3"
   resolved "https://registry.yarnpkg.com/apollo-datasource/-/apollo-datasource-0.6.3.tgz#b31e089e52adb92fabb536ab8501c502573ffe13"
@@ -1066,6 +1077,11 @@ escape-string-regexp@^1.0.5:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
 
+esm@^3.2.25:
+  version "3.2.25"
+  resolved "https://registry.yarnpkg.com/esm/-/esm-3.2.25.tgz#342c18c29d56157688ba5ce31f8431fbb795cc10"
+  integrity sha512-U1suiZ2oDVWv4zPO56S0NcR5QriEahGtdN2OR6FiOG4WJvcjBVFB0qI4+eKoWFH483PKGuLuu6V8Z4T5g63UVA==
+
 eventemitter3@^3.1.0:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-3.1.2.tgz#2d3d48f9c346698fce83a85d7d664e98535df6e7"
@@ -1406,6 +1422,11 @@ http-assert@^1.3.0:
   dependencies:
     deep-equal "~1.0.1"
     http-errors "~1.7.2"
+
+http-cache-semantics@^4.0.0:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/http-cache-semantics/-/http-cache-semantics-4.0.3.tgz#495704773277eeef6e43f9ab2c2c7d259dda25c5"
+  integrity sha512-TcIMG3qeVLgDr1TEd2XvHaTnMPwYQUQMIBLy+5pLSDKYFc7UIqj39w8EGzZkaxoLv/l2K8HaI0t5AVA+YYgUew==
 
 http-errors@1.7.3, http-errors@^1.3.1, http-errors@^1.6.3, http-errors@^1.7.2, http-errors@~1.7.2:
   version "1.7.3"

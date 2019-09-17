@@ -1,6 +1,7 @@
 const {  ApolloServer, gql } = require('apollo-server-koa');
 const { mergeSchemas } = require('graphql-tools');
 const { version } = require('../package');
+const { typeDefs: discogsTypeDefs, resolvers: discogsResolvers, DiscogsAPI } = require('./discogs');
 
 
 const appTypeDefs = gql`
@@ -17,16 +18,6 @@ const appResolvers = {
 
 
 const searchTypeDefs = gql`
-  type DiscogsRelease {
-    artist: String
-    album: String
-  }
-
-  type DiscogsResult {
-    releases: [DiscogsRelease]
-  }
-
-
   input SearchQuery {
     query: String
     artist: String
@@ -34,35 +25,34 @@ const searchTypeDefs = gql`
   }
 
   type SearchResult {
-    discogs: DiscogsResult
+    discogs(search: SearchQuery): DiscogsSearchResult
   }
 
   extend type Query {
-    search(query: SearchQuery): SearchResult
-    discogs: DiscogsResult
+    search(search: SearchQuery): SearchResult
   }
 `;
 
-const searchResolves = {
+const searchResolvers = {
   Query: {
-    search: (_, { query }) => {
+    search: (_, { search }, { dataSources }) => {
       return {
-        discogs: {
-          releases: []
-        }
+        discogs: ({ search: nestedSearch }) => {
+	  return dataSources.discogsApi.search(nestedSearch || search);
+	}
       }
     },
-    discogs: () => {
-      return {
-        releases: []
-      }
-    }
   },
 };
 
 const server = new ApolloServer({
-  typeDefs: [appTypeDefs, searchTypeDefs],
-  resolvers: [appResolvers, searchResolves],
+  typeDefs: [appTypeDefs, searchTypeDefs, discogsTypeDefs],
+  resolvers: [appResolvers, searchResolvers, discogsResolvers],
+  dataSources: () => {
+    return {
+      discogsApi: new DiscogsAPI(),
+    };
+  },
 });
 
 module.exports = server;
