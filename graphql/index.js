@@ -38,7 +38,7 @@ const searchResolvers = {
     search: (_, { search }, { dataSources }) => {
       return {
         discogs: ({ search: nestedSearch }) => {
-	  return dataSources.discogsApi.search(nestedSearch || search);
+	  return dataSources.discogsApi.search({ ...search, ...nestedSearch});
 	}
       }
     },

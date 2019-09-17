@@ -1,11 +1,13 @@
-const { gql } = require('apollo-server-koa');
-import { RESTDataSource } from 'apollo-datasource-rest';
+import {gql} from 'apollo-server-koa';
+import {RESTDataSource} from 'apollo-datasource-rest';
 
+const DISCOGS_TOKEN = process.env.DISCOGS_TOKEN;
 
 export const typeDefs = gql`
   type DiscogsRelease {
     artist: String
     album: String
+    title: String
   }
 
   type DiscogsSearchResult {
@@ -13,20 +15,27 @@ export const typeDefs = gql`
   }
 `;
 
-export const resolvers = {
-};
+export const resolvers = {};
 
 export class DiscogsAPI extends RESTDataSource {
   constructor() {
     super();
-    this.baseURL = 'https://foo.bar';
+    this.baseURL = 'https://api.discogs.com/database';
   }
 
-  search(params){
+  willSendRequest(request) {
+    request.params.set('token', DISCOGS_TOKEN);
+  }
+
+  search(params) {
     return {
-      releases: () => {
-	return [{ artist: 'Foo', album: 'Blah' }]
-      }
-    }
+      releases: async () => {
+        const response = await this.get('search', {
+          type: 'release',
+          q: encodeURI(params.query),
+        });
+        return response.results;
+      },
+    };
   }
 }
