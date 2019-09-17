@@ -1,7 +1,7 @@
-const {  ApolloServer, gql } = require('apollo-server-koa');
-const { mergeSchemas } = require('graphql-tools');
-const { version } = require('../package');
-const { typeDefs: discogsTypeDefs, resolvers: discogsResolvers, DiscogsAPI } = require('./discogs');
+import {ApolloServer, gql, makeExecutableSchema} from 'apollo-server-koa';
+import { mergeSchemas } from 'graphql-tools';
+import { version } from '../package';
+import { typeDefs as discogsTypeDefs, resolvers as discogsResolvers, DiscogsAPI } from './discogs';
 
 
 const appTypeDefs = gql`
@@ -45,9 +45,13 @@ const searchResolvers = {
   },
 };
 
-const server = new ApolloServer({
+const schema = makeExecutableSchema({
   typeDefs: [appTypeDefs, searchTypeDefs, discogsTypeDefs],
   resolvers: [appResolvers, searchResolvers, discogsResolvers],
+});
+
+const server = new ApolloServer({
+  schema,
   dataSources: () => {
     return {
       discogsApi: new DiscogsAPI(),
