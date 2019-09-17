@@ -1,5 +1,6 @@
 import {gql} from 'apollo-server-koa';
 import {RESTDataSource} from 'apollo-datasource-rest';
+import { mergeSchemas, makeExecutableSchema } from 'graphql-tools';
 
 const DISCOGS_TOKEN = process.env.DISCOGS_TOKEN;
 
@@ -16,6 +17,8 @@ export const typeDefs = gql`
 `;
 
 export const resolvers = {};
+
+export const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 export class DiscogsAPI extends RESTDataSource {
   constructor() {

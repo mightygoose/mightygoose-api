@@ -1,53 +1,11 @@
-import {ApolloServer, gql, makeExecutableSchema} from 'apollo-server-koa';
-import { mergeSchemas } from 'graphql-tools';
-import { version } from '../package';
-import { typeDefs as discogsTypeDefs, resolvers as discogsResolvers, DiscogsAPI } from './discogs';
+import {ApolloServer, gql} from 'apollo-server-koa';
+import {mergeSchemas, makeExecutableSchema} from 'graphql-tools';
+import {DiscogsAPI} from './discogs';
+import {schema as versionSchema} from './version';
+import {schema as searchSchema} from './search';
 
-
-const appTypeDefs = gql`
-  type Query {
-    version: String
-  }
-`;
-
-const appResolvers = {
-  Query: {
-    version: () => version,
-  },
-};
-
-
-const searchTypeDefs = gql`
-  input SearchQuery {
-    query: String
-    artist: String
-    album: String
-  }
-
-  type SearchResult {
-    discogs(search: SearchQuery): DiscogsSearchResult
-  }
-
-  extend type Query {
-    search(search: SearchQuery): SearchResult
-  }
-`;
-
-const searchResolvers = {
-  Query: {
-    search: (_, { search }, { dataSources }) => {
-      return {
-        discogs: ({ search: nestedSearch }) => {
-	  return dataSources.discogsApi.search({ ...search, ...nestedSearch});
-	}
-      }
-    },
-  },
-};
-
-const schema = makeExecutableSchema({
-  typeDefs: [appTypeDefs, searchTypeDefs, discogsTypeDefs],
-  resolvers: [appResolvers, searchResolvers, discogsResolvers],
+const schema = mergeSchemas({
+  schemas: [versionSchema, searchSchema],
 });
 
 const server = new ApolloServer({
