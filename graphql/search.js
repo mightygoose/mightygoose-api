@@ -11,6 +11,9 @@ import {
   schema as discogsSchema,
   DiscogsSearchResult,
 } from './discogs';
+import {
+  SpotifySearchResult,
+} from './spotify';
 
 const searchParams = {
   query: { type: GraphQLString },
@@ -23,6 +26,13 @@ const SearchResult = new GraphQLObjectType({
   fields: {
     discogs: {
       type: DiscogsSearchResult,
+      args: searchParams,
+      resolve(search, nestedSearch) {
+        return {...search, ...nestedSearch};
+      },
+    },
+    spotify: {
+      type: SpotifySearchResult,
       args: searchParams,
       resolve(search, nestedSearch) {
         return {...search, ...nestedSearch};
