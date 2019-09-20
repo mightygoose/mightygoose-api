@@ -1,44 +1,47 @@
-import { mergeSchemas, makeExecutableSchema } from 'graphql-tools';
+import {mergeSchemas, makeExecutableSchema} from 'graphql-tools';
 import {gql} from 'apollo-server-koa';
 import {
-  typeDefs as discogsTypeDefs,
+  graphql,
+  GraphQLSchema,
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLList,
+} from 'graphql';
+import {
   schema as discogsSchema,
+  DiscogsSearchResult,
 } from './discogs';
 
+const searchParams = {
+  query: { type: GraphQLString },
+  artist: { type: GraphQLString },
+  album: { type: GraphQLString },
+}
 
-const searchTypeDefs = gql`
-  input SearchQuery {
-    query: String
-    artist: String
-    album: String
-  }
-
-  type SearchResult {
-    discogs(search: SearchQuery): DiscogsSearchResult
-  }
-
-  type Query {
-    search(search: SearchQuery): SearchResult
-  }
-`;
-
-const searchResolvers = {
-  Query: {
-    search: (_, {search}, {dataSources}) => {
-      return {
-        discogs: ({search: nestedSearch}) => {
-          return dataSources.discogsApi.search({...search, ...nestedSearch});
-        },
-      };
+const SearchResult = new GraphQLObjectType({
+  name: 'SearchResult',
+  fields: {
+    discogs: {
+      type: DiscogsSearchResult,
+      args: searchParams,
+      resolve(search, nestedSearch) {
+        return {...search, ...nestedSearch};
+      },
     },
   },
-};
-
-const searchSchema = makeExecutableSchema({
-  typeDefs: [discogsTypeDefs, searchTypeDefs],
-  resolvers: searchResolvers,
 });
 
-export const schema = mergeSchemas({
-  schemas: [searchSchema, discogsSchema],
+export const schema = new GraphQLSchema({
+  query: new GraphQLObjectType({
+    name: 'search',
+    fields: {
+      search: {
+        type: SearchResult,
+        args: searchParams,
+        resolve(_, args) {
+          return args;
+        },
+      },
+    },
+  }),
 });
