@@ -9,27 +9,62 @@ import {
   GraphQLString,
   GraphQLList,
   GraphQLInt,
+  GraphQLBoolean,
 } from 'graphql';
 
 const DISCOGS_TOKEN = process.env.DISCOGS_TOKEN;
 
-export const typeDefs = gql`
-  type DiscogsSearchResult {
-    releases: String
-  }
-`;
-
-export const resolvers = {};
-
 const DiscogsRelease = new GraphQLObjectType({
   name: 'DiscogsRelease',
   fields: {
-    artist: {
-      type: GraphQLString,
+    barcode: {type: GraphQLList(GraphQLString)},
+    catno: {type: GraphQLString},
+    community: {
+      type: new GraphQLObjectType({
+        name: 'DiscogsCommunityInfo',
+        fields: {
+          have: {type: GraphQLInt},
+          want: {type: GraphQLInt},
+        },
+      }),
     },
-    title: {
-      type: GraphQLString,
+    country: {type: GraphQLString},
+    cover_image: {type: GraphQLString},
+    format: {type: GraphQLList(GraphQLString)},
+    format_quantity: {type: GraphQLInt},
+    formats: {
+      type: GraphQLList(
+        new GraphQLObjectType({
+          name: 'DiscogsFormats',
+          fields: {
+            descriptions: {type: GraphQLList(GraphQLString)},
+            name: {type: GraphQLString},
+            qty: {type: GraphQLString},
+          },
+        }),
+      ),
     },
+    genre: {type: GraphQLList(GraphQLString)},
+    id: {type: GraphQLInt},
+    label: {type: GraphQLList(GraphQLString)},
+    master_id: {type: GraphQLInt},
+    master_url: {type: GraphQLString},
+    resource_url: {type: GraphQLString},
+    style: {type: GraphQLList(GraphQLString)},
+    thumb: {type: GraphQLString},
+    title: {type: GraphQLString},
+    type: {type: GraphQLString},
+    uri: {type: GraphQLString},
+    user_data: {
+      type: new GraphQLObjectType({
+        name: 'DiscogsUserData',
+        fields: {
+          in_collection: {type: GraphQLBoolean},
+          in_wantlist: {type: GraphQLBoolean},
+        },
+      }),
+    },
+    year: {type: GraphQLString},
   },
 });
 
