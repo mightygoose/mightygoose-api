@@ -29,11 +29,51 @@ const SpotifyPagination = new GraphQLObjectType({
   },
 });
 
+const SpotifyImage = new GraphQLObjectType({
+  name: 'SpotifyImage',
+  fields: {
+    height: {type: GraphQLInt},
+    url: {type: GraphQLString},
+    width: {type: GraphQLInt},
+  },
+});
+
+const SpotifyExternalUrls = new GraphQLObjectType({
+  name: 'SpotifyExternalUrls',
+  fields: {
+    spotify: {type: GraphQLString},
+  },
+});
+
+const SpotifyArtistSimplified = new GraphQLObjectType({
+  name: 'SpotifyArtistSimplified',
+  fields: {
+    external_urls: {type: SpotifyExternalUrls},
+    href: {type: GraphQLString},
+    id: {type: GraphQLString},
+    name: {type: GraphQLString},
+    type: {type: GraphQLInt},
+    uri: {type: GraphQLInt},
+  },
+});
+
 const SpotifyAlbum = new GraphQLObjectType({
   name: 'SpotifyAlbum',
   fields: {
+    album_type: {type: GraphQLString},
+    artists: {type: GraphQLList(SpotifyArtistSimplified)},
+    available_markets: {type: GraphQLList(GraphQLString)},
+    external_urls: {type: SpotifyExternalUrls},
+    href: {type: GraphQLString},
+    id: {type: GraphQLString},
+    images: {type: GraphQLList(SpotifyImage)},
     name: {type: GraphQLString},
-  }
+    release_date: {type: GraphQLString},
+    release_date_precision: {type: GraphQLString},
+    total_tracks: {type: GraphQLInt},
+    type: {type: GraphQLString},
+    uri: {type: GraphQLString},
+  },
 });
 
 const SpotifyAlbumsSearchResult = new GraphQLObjectType({
@@ -54,9 +94,12 @@ export const SpotifySearchResult = new GraphQLObjectType({
     albums: {
       type: SpotifyAlbumsSearchResult,
       async resolve(args, _, {dataSources}) {
-        const { albums } = await dataSources.spotifyApi.searchAlbums(args);
-        const { items: results, ...pagination } = albums;
-        return { results, pagination };
+        const {albums} = await dataSources.spotifyApi.searchAlbums(args);
+        const {items: results, ...pagination} = albums;
+        console.log('-----------------------');
+        console.log(JSON.stringify(results[0], null, 2));
+        console.log('-----------------------');
+        return {results, pagination};
       },
     },
   },
@@ -108,7 +151,7 @@ export class SpotifyAPI extends RESTDataSource {
   searchAlbums(params = {}) {
     return this.search({
       type: 'album',
-      q: (params.query || '').replace(/[ ]/ig, '+'),
+      q: (params.query || '').replace(/[ ]/gi, '+'),
     });
   }
 }
