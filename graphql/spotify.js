@@ -96,9 +96,6 @@ export const SpotifySearchResult = new GraphQLObjectType({
       async resolve(args, _, {dataSources}) {
         const {albums} = await dataSources.spotifyApi.searchAlbums(args);
         const {items: results, ...pagination} = albums;
-        console.log('-----------------------');
-        console.log(JSON.stringify(results[0], null, 2));
-        console.log('-----------------------');
         return {results, pagination};
       },
     },
@@ -142,6 +139,18 @@ export class SpotifyAPI extends RESTDataSource {
 
   async willSendRequest(request) {
     request.headers.set('Authorization', `Bearer ${await getToken()}`);
+  }
+
+  // workaround to prevent '+' sign escape
+  resolveURL(request) {
+    const url = super.resolveURL(request);
+    url.searchParams.append = () => {};
+    const params = [];
+    for (const [name, value] of request.params) {
+      params.push([name, value].join('='));
+    }
+    url.search = `?${params.join('&')}`;
+    return url;
   }
 
   search(params) {
