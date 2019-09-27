@@ -1,8 +1,12 @@
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
 
 
 dotenv.config();
 
-module.exports = {
-  PORT: process.env.PORT || 8000,
-}
+
+export const {
+  PORT = 8000,
+  SPOTIFY_ID,
+  SPOTIFY_SECRET,
+  DISCOGS_TOKEN,
+} = process.env;

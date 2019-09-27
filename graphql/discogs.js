@@ -12,7 +12,8 @@ import {
   GraphQLBoolean,
 } from 'graphql';
 
-const DISCOGS_TOKEN = process.env.DISCOGS_TOKEN;
+import { DISCOGS_TOKEN } from '../config';
+
 
 const DiscogsRelease = new GraphQLObjectType({
   name: 'DiscogsRelease',

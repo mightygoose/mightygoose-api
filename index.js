@@ -1,6 +1,6 @@
-const Koa = require('koa');
-const { PORT } = require('./config');
-const ApolloServer = require('./graphql');
+import Koa from 'koa';
+import ApolloServer from './graphql';
+import { PORT } from './config';
 
 
 const app = new Koa();

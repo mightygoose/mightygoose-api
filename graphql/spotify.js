@@ -1,4 +1,3 @@
-import https from 'https';
 import {gql} from 'apollo-server-koa';
 import {RESTDataSource} from 'apollo-datasource-rest';
 import {mergeSchemas, makeExecutableSchema} from 'graphql-tools';
@@ -14,8 +13,8 @@ import {
   GraphQLBoolean,
 } from 'graphql';
 
-const SPOTIFY_ID = process.env['SPOTIFY_ID'];
-const SPOTIFY_SECRET = process.env['SPOTIFY_SECRET'];
+import { SPOTIFY_ID, SPOTIFY_SECRET } from '../config';
+
 
 const SpotifyPagination = new GraphQLObjectType({
   name: 'SpotifyPagination',
