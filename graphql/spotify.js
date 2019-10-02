@@ -56,7 +56,7 @@ const SpotifyArtistSimplified = new GraphQLObjectType({
   },
 });
 
-const SpotifyAlbum = new GraphQLObjectType({
+export const SpotifyAlbum = new GraphQLObjectType({
   name: 'SpotifyAlbum',
   fields: {
     album_type: {type: GraphQLString},
