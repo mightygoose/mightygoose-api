@@ -11,22 +11,17 @@ import {
   GraphQLBoolean,
 } from 'graphql';
 
-
 export const connections = {
-  // discogs: {type: DiscogsSearchResult},
+  discogs: {type: DiscogsSearchResult},
   spotify: {
     type: SpotifySearchResult,
     resolve(args, parent) {
-      //TODO: experiment here!
-      if(!args.query){
-        args.query = args.title;
-      }
       return args;
     },
   },
 };
 
-export const getConnectionsFor = ({name}) => {
+export const getFieldsFor = ({name}) => {
   return Object.entries(connections).reduce((acc, [key, value]) => {
     if (key === name) {
       return acc;
@@ -35,7 +30,18 @@ export const getConnectionsFor = ({name}) => {
   }, {});
 };
 
-export const Connection = new GraphQLObjectType({
-  name: 'Connection',
-  fields: connections,
-});
+export const getConnectionFor = ({name}) => {
+  return {
+    type: new GraphQLObjectType({
+      name: 'Connection',
+      fields: getFieldsFor({name}),
+    }),
+    resolve(args, parent) {
+      //TODO: experiment here!
+      if (!args.query) {
+        args.query = args.title;
+      }
+      return args;
+    },
+  };
+};

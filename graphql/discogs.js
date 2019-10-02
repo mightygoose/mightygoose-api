@@ -12,13 +12,8 @@ import {
   GraphQLBoolean,
 } from 'graphql';
 
-import {Connection, getConnectionsFor} from './connections';
+import {getConnectionFor} from './connections';
 import {DISCOGS_TOKEN} from '../config';
-
-const DiscogsConnection = new GraphQLObjectType({
-  name: 'DiscogsConnection',
-  fields: getConnectionsFor('discogs'),
-});
 
 
 export const DiscogsRelease = new GraphQLObjectType({
@@ -72,12 +67,7 @@ export const DiscogsRelease = new GraphQLObjectType({
       }),
     },
     year: {type: GraphQLString},
-    connection: {
-      type: DiscogsConnection,
-      resolve(args, parent) {
-        return args;
-      },
-    },
+    connection: getConnectionFor({ name: 'discogs' }),
   },
 });
 
