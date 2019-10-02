@@ -13,6 +13,7 @@ import {
   GraphQLBoolean,
 } from 'graphql';
 
+import {getConnectionFor} from './connections';
 import { SPOTIFY_ID, SPOTIFY_SECRET } from '../config';
 
 
@@ -72,6 +73,7 @@ export const SpotifyAlbum = new GraphQLObjectType({
     total_tracks: {type: GraphQLInt},
     type: {type: GraphQLString},
     uri: {type: GraphQLString},
+    // connection: getConnectionFor({ name: 'spotify' }),
   },
 });
 

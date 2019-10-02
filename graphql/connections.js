@@ -1,6 +1,3 @@
-import {DiscogsRelease, DiscogsSearchResult} from './discogs';
-import {SpotifyAlbum, SpotifySearchResult} from './spotify';
-
 import {
   graphql,
   GraphQLSchema,
@@ -11,17 +8,17 @@ import {
   GraphQLBoolean,
 } from 'graphql';
 
-export const connections = {
-  discogs: {type: DiscogsSearchResult},
-  spotify: {
-    type: SpotifySearchResult,
-    resolve(args, parent) {
-      return args;
-    },
-  },
-};
-
 export const getFieldsFor = ({name}) => {
+  const connections = {
+    discogs: {type: require('./discogs').DiscogsSearchResult},
+    spotify: {
+      type: require('./spotify').SpotifySearchResult,
+      resolve(args, parent) {
+        return args;
+      },
+    },
+  };
+
   return Object.entries(connections).reduce((acc, [key, value]) => {
     if (key === name) {
       return acc;
@@ -33,7 +30,7 @@ export const getFieldsFor = ({name}) => {
 export const getConnectionFor = ({name}) => {
   return {
     type: new GraphQLObjectType({
-      name: 'Connection',
+      name: `${name}_Connection`,
       fields: getFieldsFor({name}),
     }),
     resolve(args, parent) {
