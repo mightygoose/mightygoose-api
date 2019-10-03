@@ -1,5 +1,4 @@
 import {gql} from 'apollo-server-koa';
-import {RESTDataSource} from 'apollo-datasource-rest';
 import {mergeSchemas, makeExecutableSchema} from 'graphql-tools';
 
 import {
@@ -12,9 +11,15 @@ import {
   GraphQLBoolean,
 } from 'graphql';
 
-import {getConnectionFor} from './connections';
-import {DISCOGS_TOKEN} from '../config';
 
+export { dataSources } from './dataSources';
+
+export const DiscogsConnection = new GraphQLObjectType({
+  name: 'DiscogsConnection',
+  fields: {},
+});
+
+export const Connection = DiscogsConnection;
 
 export const DiscogsRelease = new GraphQLObjectType({
   name: 'DiscogsRelease',
@@ -67,7 +72,12 @@ export const DiscogsRelease = new GraphQLObjectType({
       }),
     },
     year: {type: GraphQLString},
-    connection: getConnectionFor({ name: 'discogs' }),
+    connection: {
+      type: DiscogsConnection,
+      resolve(args) {
+        return args;
+      },
+    },
   },
 });
 
@@ -105,28 +115,23 @@ export const DiscogsSearchResult = new GraphQLObjectType({
   },
 });
 
-export const schema = new GraphQLSchema({
-  query: DiscogsSearchResult,
+const DiscogsQuery = new GraphQLObjectType({
+  name: 'Query',
+  fields: {
+    discogs: {
+      type: DiscogsSearchResult,
+      async resolve(args, _, {dataSources}) {
+        return dataSources.discogsApi.searchRelease(args);
+      },
+    },
+  },
 });
 
-export class DiscogsAPI extends RESTDataSource {
-  constructor() {
-    super();
-    this.baseURL = 'https://api.discogs.com/database';
-  }
+export const schema = new GraphQLSchema({
+  query: DiscogsQuery,
+});
 
-  willSendRequest(request) {
-    request.params.set('token', DISCOGS_TOKEN);
-  }
-
-  search(params) {
-    return this.get('search', params);
-  }
-
-  searchRelease(params) {
-    return this.search({
-      type: 'release',
-      q: encodeURI(params.query),
-    });
-  }
-}
+export const name = 'discogs';
+export const SearchResult = DiscogsSearchResult;
+export const SearchResultName = 'DiscogsSearchResult';
+export const ConnectionName = 'DiscogsConnection';

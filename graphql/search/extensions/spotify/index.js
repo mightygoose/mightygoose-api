@@ -1,7 +1,5 @@
 import {gql} from 'apollo-server-koa';
-import {RESTDataSource} from 'apollo-datasource-rest';
 import {mergeSchemas, makeExecutableSchema} from 'graphql-tools';
-import SpotifyWebApi from 'spotify-web-api-node';
 
 import {
   graphql,
@@ -13,8 +11,7 @@ import {
   GraphQLBoolean,
 } from 'graphql';
 
-import {getConnectionFor} from './connections';
-import { SPOTIFY_ID, SPOTIFY_SECRET } from '../config';
+export { dataSources } from './dataSources';
 
 
 const SpotifyPagination = new GraphQLObjectType({
@@ -57,6 +54,13 @@ const SpotifyArtistSimplified = new GraphQLObjectType({
   },
 });
 
+export const SpotifyConnection = new GraphQLObjectType({
+  name: 'SpotifyConnection',
+  fields: {},
+});
+
+export const Connection = SpotifyConnection;
+
 export const SpotifyAlbum = new GraphQLObjectType({
   name: 'SpotifyAlbum',
   fields: {
@@ -73,7 +77,12 @@ export const SpotifyAlbum = new GraphQLObjectType({
     total_tracks: {type: GraphQLInt},
     type: {type: GraphQLString},
     uri: {type: GraphQLString},
-    // connection: getConnectionFor({ name: 'spotify' }),
+    connection: {
+      type: SpotifyConnection,
+      resolve(args) {
+        return args;
+      },
+    },
   },
 });
 
@@ -103,65 +112,24 @@ export const SpotifySearchResult = new GraphQLObjectType({
   },
 });
 
+const SpotifyQuery = new GraphQLObjectType({
+  name: 'Query',
+  fields: {
+    spotify: {
+      type: SpotifySearchResult,
+      async resolve(args, _, {dataSources}) {
+        const {albums} = await dataSources.spotifyApi.searchAlbums(args);
+        const {items: results, ...pagination} = albums;
+        return {results, pagination};
+      },
+    },
+  },
+})
+
 export const schema = new GraphQLSchema({
-  query: SpotifySearchResult,
+  query: SpotifyQuery,
 });
 
-const spotifyApi = new SpotifyWebApi({
-  clientId: SPOTIFY_ID,
-  clientSecret: SPOTIFY_SECRET,
-});
-
-const getToken = (() => {
-  let token = null;
-  return async () => {
-    if (token) {
-      return token;
-    }
-    console.log('refreshing spotify token');
-    try {
-      const {body} = await spotifyApi.clientCredentialsGrant();
-      token = body['access_token'];
-      setTimeout(() => (token = null), +body['expires_in'] * 1000);
-      return token;
-    } catch (e) {
-      throw new Error(
-        `Something went wrong when retrieving an access token ${e}`,
-      );
-    }
-  };
-})();
-
-export class SpotifyAPI extends RESTDataSource {
-  constructor() {
-    super();
-    this.baseURL = 'https://api.spotify.com/v1/';
-  }
-
-  async willSendRequest(request) {
-    request.headers.set('Authorization', `Bearer ${await getToken()}`);
-  }
-
-  // workaround to prevent '+' sign escape
-  resolveURL(request) {
-    const url = super.resolveURL(request);
-    url.searchParams.append = () => {};
-    const params = [];
-    for (const [name, value] of request.params) {
-      params.push([name, value].join('='));
-    }
-    url.search = `?${params.join('&')}`;
-    return url;
-  }
-
-  search(params) {
-    return this.get('search', params);
-  }
-
-  searchAlbums(params = {}) {
-    return this.search({
-      type: 'album',
-      q: (params.query || '').replace(/[ ]/gi, '+'),
-    });
-  }
-}
+export const name = 'spotify';
+export const SearchResultName = 'SpotifySearchResult';
+export const ConnectionName = 'SpotifyConnection';

@@ -1,22 +1,25 @@
 import {ApolloServer, gql} from 'apollo-server-koa';
 import {mergeSchemas, makeExecutableSchema} from 'graphql-tools';
-import {DiscogsAPI} from './discogs';
-import {SpotifyAPI} from './spotify';
 import {schema as versionSchema} from './version';
-import {schema as searchSchema} from './search';
+import {init as initSearch} from './search';
 
-const schema = mergeSchemas({
-  schemas: [versionSchema, searchSchema],
-});
+export const init = async ({app}) => {
+  const [searchSchema, searchDataSources] = await initSearch();
 
-const server = new ApolloServer({
-  schema,
-  dataSources: () => {
-    return {
-      discogsApi: new DiscogsAPI(),
-      spotifyApi: new SpotifyAPI(),
-    };
-  },
-});
+  const schema = mergeSchemas({
+    schemas: [versionSchema, searchSchema],
+  });
 
-export default server;
+  const server = new ApolloServer({
+    schema,
+    dataSources: () => {
+      return {
+        ...searchDataSources,
+      };
+    },
+  });
+
+  server.applyMiddleware({app});
+
+  return server;
+};
