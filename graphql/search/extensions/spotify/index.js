@@ -9,11 +9,12 @@ import {
   GraphQLList,
   GraphQLInt,
   GraphQLBoolean,
+  GraphQLID,
 } from 'graphql';
 
+import { SearchItemInterface } from '../../interfaces';
 
-export { dataSources } from './dataSources';
-
+export {dataSources} from './dataSources';
 
 const SpotifyConnection = new GraphQLObjectType({
   name: 'SpotifyConnection',
@@ -62,13 +63,14 @@ const SpotifyArtistSimplified = new GraphQLObjectType({
 
 const SpotifyAlbum = new GraphQLObjectType({
   name: 'SpotifyAlbum',
+  interfaces: [SearchItemInterface],
   fields: {
     album_type: {type: GraphQLString},
     artists: {type: GraphQLList(SpotifyArtistSimplified)},
     available_markets: {type: GraphQLList(GraphQLString)},
     external_urls: {type: SpotifyExternalUrls},
     href: {type: GraphQLString},
-    id: {type: GraphQLString},
+    id: {type: GraphQLID},
     images: {type: GraphQLList(SpotifyImage)},
     name: {type: GraphQLString},
     release_date: {type: GraphQLString},
@@ -103,7 +105,10 @@ const SpotifySearchResult = new GraphQLObjectType({
     albums: {
       type: SpotifyAlbumsSearchResult,
       async resolve(args, _, {dataSources}) {
-        const {albums} = await dataSources.spotifyApi.searchAlbums(args);
+        const {albums} = await dataSources.spotifyApi.searchAlbums({
+          ...args,
+          query: args.query || args.title || args.name
+        });
         const {items: results, ...pagination} = albums;
         return {results, pagination};
       },
@@ -123,7 +128,7 @@ const SpotifyQuery = new GraphQLObjectType({
       },
     },
   },
-})
+});
 
 export const schema = new GraphQLSchema({
   query: SpotifyQuery,

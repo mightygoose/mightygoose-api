@@ -40,8 +40,10 @@ export const init = async () => {
   const resolvers = {};
   let schemaExtension = '';
 
-  for(let index in modulesData){
+  for (let index in modulesData) {
     const {name, SearchResultName, ConnectionName, schema} = modulesData[index];
+
+    // TODO: extract name and SearchResultName from schema root type
 
     fields[name] = {
       type: schema.getType(SearchResultName),
@@ -49,24 +51,25 @@ export const init = async () => {
       resolve(search, nestedSearch) {
         return {...search, ...nestedSearch};
       },
-    }
+    };
 
     let connectionExtensionSchema = ``;
     const connectionResolvers = {};
-    for(let i in modulesData){
-      if(i === index){
+    for (let i in modulesData) {
+      if (i === index) {
         continue;
       }
 
-      const { name: moduleName, SearchResultName: moduleSearchResultName } = modulesData[i];
+      const {
+        name: moduleName,
+        SearchResultName: moduleSearchResultName,
+      } = modulesData[i];
 
       connectionExtensionSchema += `
         ${moduleName}: ${moduleSearchResultName}
       `;
 
-      connectionResolvers[moduleName] = obj => {
-        return {...obj, query: obj.title || obj.name};
-      }
+      connectionResolvers[moduleName] = obj => obj;
     }
 
     schemaExtension += `

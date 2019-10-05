@@ -9,11 +9,12 @@ import {
   GraphQLList,
   GraphQLInt,
   GraphQLBoolean,
+  GraphQLID,
 } from 'graphql';
 
+import { SearchItemInterface } from '../../interfaces';
 
-export { dataSources } from './dataSources';
-
+export {dataSources} from './dataSources';
 
 const DiscogsConnection = new GraphQLObjectType({
   name: 'DiscogsConnection',
@@ -22,6 +23,7 @@ const DiscogsConnection = new GraphQLObjectType({
 
 const DiscogsRelease = new GraphQLObjectType({
   name: 'DiscogsRelease',
+  interfaces: [SearchItemInterface],
   fields: {
     barcode: {type: GraphQLList(GraphQLString)},
     catno: {type: GraphQLString},
@@ -51,7 +53,7 @@ const DiscogsRelease = new GraphQLObjectType({
       ),
     },
     genre: {type: GraphQLList(GraphQLString)},
-    id: {type: GraphQLInt},
+    id: {type: GraphQLID},
     label: {type: GraphQLList(GraphQLString)},
     master_id: {type: GraphQLInt},
     master_url: {type: GraphQLString},
@@ -108,7 +110,10 @@ const DiscogsSearchResult = new GraphQLObjectType({
     releases: {
       type: DiscogsReleasesSearchResult,
       async resolve(args, _, {dataSources}) {
-        return dataSources.discogsApi.searchRelease(args);
+        return dataSources.discogsApi.searchRelease({
+          ...args,
+          query: args.query || args.title || args.name,
+        });
       },
     },
   },
