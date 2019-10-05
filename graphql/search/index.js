@@ -24,17 +24,12 @@ const searchParams = {
   album: {type: GraphQLString},
 };
 
-const EXTENSIONS_DIR = path.resolve(__dirname, './extensions');
-
-const getExtensions = async () => {
-  const extensions = await readdir(EXTENSIONS_DIR);
-  return Promise.all(
-    extensions.map(name => import(path.resolve(EXTENSIONS_DIR, name))),
-  );
+const loadExtensions = async extensions => {
+  return Promise.all(extensions.map(name => import(path.resolve(name))));
 };
 
-export const init = async () => {
-  const modulesData = await getExtensions();
+export const init = async ({extensions}) => {
+  const modulesData = await loadExtensions(extensions);
 
   const fields = {};
   const resolvers = {};
