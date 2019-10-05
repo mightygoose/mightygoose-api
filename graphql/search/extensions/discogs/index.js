@@ -14,14 +14,13 @@ import {
 
 export { dataSources } from './dataSources';
 
-export const DiscogsConnection = new GraphQLObjectType({
+
+const DiscogsConnection = new GraphQLObjectType({
   name: 'DiscogsConnection',
   fields: {},
 });
 
-export const Connection = DiscogsConnection;
-
-export const DiscogsRelease = new GraphQLObjectType({
+const DiscogsRelease = new GraphQLObjectType({
   name: 'DiscogsRelease',
   fields: {
     barcode: {type: GraphQLList(GraphQLString)},
@@ -103,7 +102,7 @@ const DiscogsReleasesSearchResult = new GraphQLObjectType({
   },
 });
 
-export const DiscogsSearchResult = new GraphQLObjectType({
+const DiscogsSearchResult = new GraphQLObjectType({
   name: 'DiscogsSearchResult',
   fields: {
     releases: {
@@ -132,6 +131,5 @@ export const schema = new GraphQLSchema({
 });
 
 export const name = 'discogs';
-export const SearchResult = DiscogsSearchResult;
 export const SearchResultName = 'DiscogsSearchResult';
 export const ConnectionName = 'DiscogsConnection';

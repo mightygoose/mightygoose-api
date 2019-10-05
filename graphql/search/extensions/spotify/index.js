@@ -11,8 +11,14 @@ import {
   GraphQLBoolean,
 } from 'graphql';
 
+
 export { dataSources } from './dataSources';
 
+
+const SpotifyConnection = new GraphQLObjectType({
+  name: 'SpotifyConnection',
+  fields: {},
+});
 
 const SpotifyPagination = new GraphQLObjectType({
   name: 'SpotifyPagination',
@@ -54,14 +60,7 @@ const SpotifyArtistSimplified = new GraphQLObjectType({
   },
 });
 
-export const SpotifyConnection = new GraphQLObjectType({
-  name: 'SpotifyConnection',
-  fields: {},
-});
-
-export const Connection = SpotifyConnection;
-
-export const SpotifyAlbum = new GraphQLObjectType({
+const SpotifyAlbum = new GraphQLObjectType({
   name: 'SpotifyAlbum',
   fields: {
     album_type: {type: GraphQLString},
@@ -98,7 +97,7 @@ const SpotifyAlbumsSearchResult = new GraphQLObjectType({
   },
 });
 
-export const SpotifySearchResult = new GraphQLObjectType({
+const SpotifySearchResult = new GraphQLObjectType({
   name: 'SpotifySearchResult',
   fields: {
     albums: {
