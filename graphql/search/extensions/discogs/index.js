@@ -112,10 +112,7 @@ const DiscogsSearchResult = new GraphQLObjectType({
     releases: {
       type: DiscogsReleasesSearchResult,
       async resolve(args, _, {dataSources}) {
-        return dataSources.discogsApi.searchRelease({
-          ...args,
-          query: args.query || args.title || args.name,
-        });
+        return dataSources.discogsApi.searchRelease(args);
       },
     },
   },

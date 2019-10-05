@@ -12,14 +12,14 @@ import {
   GraphQLID,
 } from 'graphql';
 
-import { SearchItemInterface } from '../../interfaces';
+import {SearchItemInterface} from '../../interfaces';
 
 export {dataSources} from './dataSources';
 
 const SpotifyConnection = new GraphQLObjectType({
   name: 'SpotifyConnection',
   fields: {
-    connectionsCount: { type: GraphQLInt },
+    connectionsCount: {type: GraphQLInt},
   },
 });
 
@@ -80,6 +80,7 @@ const SpotifyAlbum = new GraphQLObjectType({
     total_tracks: {type: GraphQLInt},
     type: {type: GraphQLString},
     uri: {type: GraphQLString},
+    title: { type: GraphQLString, },
     connection: {
       type: SpotifyConnection,
       resolve(args) {
@@ -109,9 +110,17 @@ const SpotifySearchResult = new GraphQLObjectType({
       async resolve(args, _, {dataSources}) {
         const {albums} = await dataSources.spotifyApi.searchAlbums({
           ...args,
-          query: args.query || args.title || args.name
         });
-        const {items: results, ...pagination} = albums;
+        const {items, ...pagination} = albums;
+
+        const results = items.map(item => {
+          const artists = item.artists.map(({name}) => name);
+          return {
+            ...item,
+            title: `${artists.join(', ')} - ${item.name}`,
+          };
+        });
+
         return {results, pagination};
       },
     },

@@ -64,7 +64,13 @@ export const init = async ({extensions}) => {
         ${moduleName}: ${moduleSearchResultName}
       `;
 
-      connectionResolvers[moduleName] = obj => obj;
+      connectionResolvers[moduleName] = ({query, title, ...rest}) => {
+        return {
+          ...rest,
+          title,
+          query: query || title,
+        };
+      };
     }
 
     connectionExtensionSchema &&
