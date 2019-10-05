@@ -67,12 +67,14 @@ export const init = async ({extensions}) => {
       connectionResolvers[moduleName] = obj => obj;
     }
 
-    schemaExtension += `
+    connectionExtensionSchema &&
+      (schemaExtension += `
       extend type ${ConnectionName} {
         ${connectionExtensionSchema}
       }
-    `;
-    resolvers[ConnectionName] = connectionResolvers;
+    `);
+    Object.keys(connectionResolvers) &&
+      (resolvers[ConnectionName] = connectionResolvers);
   }
 
   const SearchResult = new GraphQLObjectType({
@@ -95,7 +97,9 @@ export const init = async ({extensions}) => {
     }),
   });
 
-  const extendedSchema = extendSchema(schema, gql(schemaExtension));
+  const extendedSchema = schemaExtension
+    ? extendSchema(schema, gql(schemaExtension))
+    : schema;
 
   addResolveFunctionsToSchema({schema: extendedSchema, resolvers});
 

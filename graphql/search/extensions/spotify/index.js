@@ -18,7 +18,9 @@ export {dataSources} from './dataSources';
 
 const SpotifyConnection = new GraphQLObjectType({
   name: 'SpotifyConnection',
-  fields: {},
+  fields: {
+    connectionsCount: { type: GraphQLInt },
+  },
 });
 
 const SpotifyPagination = new GraphQLObjectType({

@@ -18,7 +18,9 @@ export {dataSources} from './dataSources';
 
 const DiscogsConnection = new GraphQLObjectType({
   name: 'DiscogsConnection',
-  fields: {},
+  fields: {
+    connectionsCount: { type: GraphQLInt },
+  },
 });
 
 const DiscogsRelease = new GraphQLObjectType({
