@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "run:dev": "env $(cat .env| xargs) nodemon -r esm index.js",
-    "run:debug": "ndb yarn run:dev"
+    "start": "node -r esm index.js",
+    "start:prod": "npm run start",
+    "start:dev": "env $(cat .env| xargs) nodemon --exec npm run start",
+    "start:debug": "ndb npm run start:dev"
   },
   "author": "",
   "license": "ISC",
