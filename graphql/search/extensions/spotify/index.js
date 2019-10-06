@@ -58,8 +58,8 @@ const SpotifyArtistSimplified = new GraphQLObjectType({
     href: {type: GraphQLString},
     id: {type: GraphQLString},
     name: {type: GraphQLString},
-    type: {type: GraphQLInt},
-    uri: {type: GraphQLInt},
+    type: {type: GraphQLString},
+    uri: {type: GraphQLString},
   },
 });
 
@@ -67,20 +67,21 @@ const SpotifyAlbum = new GraphQLObjectType({
   name: 'SpotifyAlbum',
   interfaces: [SearchItemInterface],
   fields: {
+    id: {type: GraphQLID},
+    title: { type: GraphQLString, },
+    type: {type: GraphQLString},
+    year: {type: GraphQLInt},
     album_type: {type: GraphQLString},
     artists: {type: GraphQLList(SpotifyArtistSimplified)},
     available_markets: {type: GraphQLList(GraphQLString)},
     external_urls: {type: SpotifyExternalUrls},
     href: {type: GraphQLString},
-    id: {type: GraphQLID},
     images: {type: GraphQLList(SpotifyImage)},
     name: {type: GraphQLString},
     release_date: {type: GraphQLString},
     release_date_precision: {type: GraphQLString},
     total_tracks: {type: GraphQLInt},
-    type: {type: GraphQLString},
     uri: {type: GraphQLString},
-    title: { type: GraphQLString, },
     connection: {
       type: SpotifyConnection,
       resolve(args) {
@@ -113,11 +114,13 @@ const SpotifySearchResult = new GraphQLObjectType({
         });
         const {items, ...pagination} = albums;
 
-        const results = items.map(item => {
+        const results = items.map(({ name, release_date, ...item }) => {
           const artists = item.artists.map(({name}) => name);
           return {
             ...item,
-            title: `${artists.join(', ')} - ${item.name}`,
+            name,
+            year: new Date(release_date).getFullYear(),
+            title: `${artists.join(', ')} - ${name}`,
           };
         });
 
