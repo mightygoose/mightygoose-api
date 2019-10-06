@@ -1032,11 +1032,6 @@ dot-prop@^4.1.0:
   dependencies:
     is-obj "^1.0.0"
 
-dotenv@^8.1.0:
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.1.0.tgz#d811e178652bfb8a1e593c6dd704ec7e90d85ea2"
-  integrity sha512-GUE3gqcDCaMltj2++g6bRQ5rBJWtkWTmqmD0fo1RnnMuUqHNCt2oTPeDnS9n6fKYvlhn7AeBkb38lymBtWBQdA==
-
 duplexer3@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/duplexer3/-/duplexer3-0.1.4.tgz#ee01dd1cac0ed3cbc7fdbea37dc0a8f1ce002ce2"
@@ -2091,10 +2086,10 @@ nanomatch@^1.2.9:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
-ndb@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/ndb/-/ndb-1.1.4.tgz#2d347f6e51e47048174fd65deab7118be000286c"
-  integrity sha512-Xq4miI/Nd7Z/Duq/uMpw1OK/QeXxmsti5AAn2yH4SOuNGw+4HGfLP5qKtYRVQagu1k86nZjIMaiPLfUPPh7IXg==
+ndb@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/ndb/-/ndb-1.1.5.tgz#d09a6c75393e4c4a75fea3a10458b251f2354b85"
+  integrity sha512-YiK+1wRe9SnZIyZ3kLDmogV2/Z0+8uPgHNbk3ExXzJg6IEFSenfskkn82v5ajPUJKkeEpsaK+ae1eT1be8Hllw==
   dependencies:
     carlo "^0.9.46"
     chokidar "^3.0.2"
@@ -2151,10 +2146,10 @@ node-pty@^0.9.0-beta18:
   dependencies:
     nan "^2.13.2"
 
-nodemon@^1.19.2:
-  version "1.19.2"
-  resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-1.19.2.tgz#b0975147dc99b3761ceb595b3f9277084931dcc0"
-  integrity sha512-hRLYaw5Ihyw9zK7NF+9EUzVyS6Cvgc14yh8CAYr38tPxJa6UrOxwAQ351GwrgoanHCF0FalQFn6w5eoX/LGdJw==
+nodemon@^1.19.3:
+  version "1.19.3"
+  resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-1.19.3.tgz#db71b3e62aef2a8e1283a9fa00164237356102c0"
+  integrity sha512-TBNKRmJykEbxpTniZBusqRrUTHIEqa2fpecbTQDQj1Gxjth7kKAPP296ztR0o5gPUWsiYbuEbt73/+XMYab1+w==
   dependencies:
     chokidar "^2.1.5"
     debug "^3.1.0"
