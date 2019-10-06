@@ -23,6 +23,7 @@ export const init = async ({app}) => {
         ...searchDataSources,
       };
     },
+    playground: true,
   });
 
   server.applyMiddleware({app});
