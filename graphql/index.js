@@ -7,6 +7,7 @@ import {init as initSearch} from './search';
 const SEARCH_EXTENSIONS = [
   './graphql/search/extensions/discogs',
   './graphql/search/extensions/spotify',
+  './graphql/search/extensions/deezer',
 ];
 
 export const init = async ({app}) => {
