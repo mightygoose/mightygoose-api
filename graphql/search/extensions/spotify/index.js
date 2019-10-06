@@ -99,6 +99,18 @@ const SpotifyAlbumsSearchResult = new GraphQLObjectType({
     },
     results: {
       type: GraphQLList(SpotifyAlbum),
+      resolve({ results }){
+        return results.map(({ name, release_date, ...item }) => {
+          const artists = item.artists.map(({name}) => name);
+          return {
+            ...item,
+            name,
+            release_date,
+            year: new Date(release_date).getFullYear(),
+            title: `${artists.join(', ')} - ${name}`,
+          };
+        });
+      }
     },
   },
 });
@@ -114,17 +126,7 @@ const SpotifySearchResult = new GraphQLObjectType({
         });
         const {items, ...pagination} = albums;
 
-        const results = items.map(({ name, release_date, ...item }) => {
-          const artists = item.artists.map(({name}) => name);
-          return {
-            ...item,
-            name,
-            year: new Date(release_date).getFullYear(),
-            title: `${artists.join(', ')} - ${name}`,
-          };
-        });
-
-        return {results, pagination};
+        return {results: items, pagination};
       },
     },
   },
@@ -135,11 +137,6 @@ const SpotifyQuery = new GraphQLObjectType({
   fields: {
     spotify: {
       type: SpotifySearchResult,
-      async resolve(args, _, {dataSources}) {
-        const {albums} = await dataSources.spotifyApi.searchAlbums(args);
-        const {items: results, ...pagination} = albums;
-        return {results, pagination};
-      },
     },
   },
 });
