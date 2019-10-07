@@ -52,6 +52,7 @@ const DeezerAlbum = new GraphQLObjectType({
     id: {type: GraphQLID},
     type: {type: GraphQLString},
     title: { type: GraphQLString, },
+    name: { type: GraphQLString, },
     link: {type: GraphQLString},
     cover: {type: GraphQLString},
     cover_small: {type: GraphQLString},
@@ -83,6 +84,15 @@ const DeezerAlbumsSearchResult = new GraphQLObjectType({
     },
     results: {
       type: GraphQLList(DeezerAlbum),
+      resolve({ results }){
+        return results.map(item => {
+          return {
+            ...item,
+            name: item.title,
+            title: `${item.artist.name} - ${item.title}`,
+          };
+        });
+      }
     },
   },
 });
@@ -96,15 +106,7 @@ const DeezerSearchResult = new GraphQLObjectType({
         const response = await dataSources.deezerApi.searchAlbums({
           ...args,
         });
-        const {data, ...pagination} = response;
-
-        const results = data.map(item => {
-          return {
-            ...item,
-            name: item.title,
-            title: `${item.artist.name} - ${item.title}`,
-          };
-        });
+        const {data: results, ...pagination} = response;
 
         return {results, pagination};
       },
