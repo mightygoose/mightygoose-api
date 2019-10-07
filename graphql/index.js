@@ -8,6 +8,7 @@ const SEARCH_EXTENSIONS = [
   './graphql/search/extensions/discogs',
   './graphql/search/extensions/spotify',
   './graphql/search/extensions/deezer',
+  './graphql/search/extensions/itunes',
 ];
 
 export const init = async ({app}) => {
