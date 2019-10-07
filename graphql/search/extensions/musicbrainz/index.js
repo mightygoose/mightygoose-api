@@ -39,6 +39,7 @@ const MusicbrainzArtistSimplified = new GraphQLObjectType({
     id: {type: GraphQLID},
     name: {type: GraphQLString},
     sortName: {type: GraphQLString},
+    disambiguation: {type: GraphQLString},
   },
 });
 
@@ -55,6 +56,7 @@ const MusicbrainzArtistCredit = new GraphQLObjectType({
       },
     },
     name: {type: GraphQLString},
+    joinphrase: {type: GraphQLString},
   },
 });
 
@@ -117,6 +119,9 @@ const MusicbrainzLabelSimplified = new GraphQLObjectType({
   fields: {
     id: {type: GraphQLID},
     name: {type: GraphQLString},
+    sortName: {type: GraphQLString},
+    labelCode: {type: GraphQLString},
+    disambiguation: {type: GraphQLString},
   },
 });
 
@@ -124,7 +129,16 @@ const MusicbrainzLabelInfo = new GraphQLObjectType({
   name: 'MusicbrainzLabelInfo',
   fields: {
     catalogNumber: {type: GraphQLString},
-    label: {type: MusicbrainzLabelSimplified},
+    label: {
+      type: MusicbrainzLabelSimplified,
+      resolve({ label }){
+        return {
+          ...label,
+          sortName: label['sort-name'],
+          labelCode: label['label-code'],
+        }
+      }
+    },
   },
 });
 
@@ -135,6 +149,7 @@ const MusicbrainzRelease = new GraphQLObjectType({
     id: {type: GraphQLID},
     title: {type: GraphQLString},
     type: {type: GraphQLString},
+    quality: {type: GraphQLString},
     count: {type: GraphQLInt},
     country: {type: GraphQLString},
     date: {type: GraphQLString},
@@ -143,6 +158,9 @@ const MusicbrainzRelease = new GraphQLObjectType({
     trackCount: {type: GraphQLInt},
     year: {type: GraphQLInt},
     packaging: {type: GraphQLString},
+    barcode: {type: GraphQLString},
+    disambiguation: {type: GraphQLString},
+    asin: {type: GraphQLString},
     labelInfo: {
       type: GraphQLList(MusicbrainzLabelInfo),
       resolve({labelInfo}) {
@@ -176,7 +194,6 @@ const MusicbrainzRelease = new GraphQLObjectType({
       resolve({releaseGroup}) {
         return {
           ...releaseGroup,
-
           typeId: releaseGroup['type-id'],
           primaryType: releaseGroup['primary-type'],
         };
