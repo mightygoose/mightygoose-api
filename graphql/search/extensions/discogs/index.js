@@ -12,14 +12,15 @@ import {
   GraphQLID,
 } from 'graphql';
 
-import { SearchItemInterface } from '../../interfaces';
+import {SearchItemInterface} from '../../interfaces';
 
 export {dataSources} from './dataSources';
+import {SearchParams} from './searchParams';
 
 const DiscogsConnection = new GraphQLObjectType({
   name: 'DiscogsConnection',
   fields: {
-    connectionsCount: { type: GraphQLInt },
+    connectionsCount: {type: GraphQLInt},
   },
 });
 
@@ -111,8 +112,17 @@ const DiscogsSearchResult = new GraphQLObjectType({
   fields: {
     releases: {
       type: DiscogsReleasesSearchResult,
-      async resolve(args, _, {dataSources}) {
-        return dataSources.discogsApi.searchRelease(args);
+      args: SearchParams,
+      async resolve(parent, args, {dataSources}) {
+        // TODO: check if "q" and "query" are the same
+        const {query, ...searchParams} = {
+          ...parent,
+          ...args,
+        };
+        if (query) {
+          Object.assign(searchParams, {q: query});
+        }
+        return dataSources.discogsApi.searchRelease(searchParams);
       },
     },
   },

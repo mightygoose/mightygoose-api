@@ -19,7 +19,7 @@ export class DiscogsAPI extends RESTDataSource {
   searchRelease(params) {
     return this.search({
       type: 'release',
-      q: encodeURI(params.query),
+      ...params,
     });
   }
 }
