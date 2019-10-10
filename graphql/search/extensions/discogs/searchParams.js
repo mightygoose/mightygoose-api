@@ -1,18 +1,18 @@
-import {GraphQLString, GraphQLInt} from 'graphql';
+import {GraphQLString, GraphQLInt, GraphQLInputObjectType} from 'graphql';
 
 export const SearchParams = {
-  query: {
+  q: {
     type: GraphQLString,
     description: `
 	Example: nirvana
 	Your search query
     `,
   },
-  type: {
+  query: {
     type: GraphQLString,
     description: `
-	Example: release
-	String. One of release, master, artist, label
+	Example: nirvana
+	Your search query
     `,
   },
   title: {
@@ -128,3 +128,8 @@ export const SearchParams = {
     `,
   },
 };
+
+export const Search = new GraphQLInputObjectType({
+  name: 'Search',
+  fields: SearchParams,
+});

@@ -39,6 +39,7 @@ export class SpotifyAPI extends RESTDataSource {
   }
 
   // workaround to prevent '+' sign escape
+  // TODO: remove it, do not replace it in query
   resolveURL(request) {
     const url = super.resolveURL(request);
     url.searchParams.append = () => {};

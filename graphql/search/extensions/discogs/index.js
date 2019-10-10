@@ -10,17 +10,47 @@ import {
   GraphQLInt,
   GraphQLBoolean,
   GraphQLID,
+  GraphQLScalarType,
+  GraphQLInputObjectType,
+  GraphQLNonNull,
 } from 'graphql';
 
 import {SearchItemInterface} from '../../interfaces';
+import {pickFields} from '../../helpers';
+import {createUseFields} from '../../types';
 
 export {dataSources} from './dataSources';
-import {SearchParams} from './searchParams';
+import {SearchParams, Search} from './searchParams';
 
 const DiscogsConnection = new GraphQLObjectType({
   name: 'DiscogsConnection',
   fields: {
     connectionsCount: {type: GraphQLInt},
+  },
+});
+
+const DiscogsCommunityInfo = new GraphQLObjectType({
+  name: 'DiscogsCommunityInfo',
+  fields: {
+    have: {type: GraphQLInt},
+    want: {type: GraphQLInt},
+  },
+});
+
+const DiscogsUserData = new GraphQLObjectType({
+  name: 'DiscogsUserData',
+  fields: {
+    in_collection: {type: GraphQLBoolean},
+    in_wantlist: {type: GraphQLBoolean},
+  },
+});
+
+const DiscogsFormats = new GraphQLObjectType({
+  name: 'DiscogsFormats',
+  fields: {
+    descriptions: {type: GraphQLList(GraphQLString)},
+    name: {type: GraphQLString},
+    qty: {type: GraphQLString},
   },
 });
 
@@ -31,29 +61,14 @@ const DiscogsRelease = new GraphQLObjectType({
     barcode: {type: GraphQLList(GraphQLString)},
     catno: {type: GraphQLString},
     community: {
-      type: new GraphQLObjectType({
-        name: 'DiscogsCommunityInfo',
-        fields: {
-          have: {type: GraphQLInt},
-          want: {type: GraphQLInt},
-        },
-      }),
+      type: DiscogsCommunityInfo,
     },
     country: {type: GraphQLString},
     cover_image: {type: GraphQLString},
     format: {type: GraphQLList(GraphQLString)},
     format_quantity: {type: GraphQLInt},
     formats: {
-      type: GraphQLList(
-        new GraphQLObjectType({
-          name: 'DiscogsFormats',
-          fields: {
-            descriptions: {type: GraphQLList(GraphQLString)},
-            name: {type: GraphQLString},
-            qty: {type: GraphQLString},
-          },
-        }),
-      ),
+      type: GraphQLList(DiscogsFormats),
     },
     genre: {type: GraphQLList(GraphQLString)},
     id: {type: GraphQLID},
@@ -67,15 +82,45 @@ const DiscogsRelease = new GraphQLObjectType({
     type: {type: GraphQLString},
     uri: {type: GraphQLString},
     user_data: {
-      type: new GraphQLObjectType({
-        name: 'DiscogsUserData',
-        fields: {
-          in_collection: {type: GraphQLBoolean},
-          in_wantlist: {type: GraphQLBoolean},
-        },
-      }),
+      type: DiscogsUserData,
     },
-    year: {type: GraphQLString},
+    year: {type: GraphQLInt},
+    connection: {
+      type: DiscogsConnection,
+      resolve(args) {
+        return args;
+      },
+    },
+  },
+});
+
+const DiscogsMaster = new GraphQLObjectType({
+  name: 'DiscogsMaster',
+  interfaces: [SearchItemInterface],
+  fields: {
+    barcode: {type: GraphQLList(GraphQLString)},
+    catno: {type: GraphQLString},
+    community: {
+      type: DiscogsCommunityInfo,
+    },
+    country: {type: GraphQLString},
+    cover_image: {type: GraphQLString},
+    format: {type: GraphQLList(GraphQLString)},
+    genre: {type: GraphQLList(GraphQLString)},
+    id: {type: GraphQLID},
+    label: {type: GraphQLList(GraphQLString)},
+    master_id: {type: GraphQLInt},
+    master_url: {type: GraphQLString},
+    resource_url: {type: GraphQLString},
+    style: {type: GraphQLList(GraphQLString)},
+    thumb: {type: GraphQLString},
+    title: {type: GraphQLString},
+    type: {type: GraphQLString},
+    uri: {type: GraphQLString},
+    user_data: {
+      type: DiscogsUserData,
+    },
+    year: {type: GraphQLInt},
     connection: {
       type: DiscogsConnection,
       resolve(args) {
@@ -107,22 +152,67 @@ const DiscogsReleasesSearchResult = new GraphQLObjectType({
   },
 });
 
-const DiscogsSearchResult = new GraphQLObjectType({
+const DiscogsMastersSearchResult = new GraphQLObjectType({
+  name: 'DiscogsMastersSearchResult',
+  fields: {
+    pagination: {
+      type: DiscogsPagination,
+    },
+    results: {
+      type: GraphQLList(DiscogsMaster),
+    },
+  },
+});
+
+const UseFields = createUseFields(
+  'DiscogsUseFields',
+  Object.keys(Search.getFields()),
+);
+
+const createSearchParams = (parent, {search, useFields, ...pageParams}) => {
+  return {
+    ...pickFields(parent, useFields),
+    ...search,
+    ...pickFields(pageParams, [
+      {key: 'per_page', use: 'perPage'},
+      {key: 'page'},
+    ]),
+  };
+};
+
+export const DiscogsSearchResult = new GraphQLObjectType({
   name: 'DiscogsSearchResult',
   fields: {
     releases: {
       type: DiscogsReleasesSearchResult,
-      args: SearchParams,
+      args: {
+        search: {type: Search},
+        useFields: {
+          type: GraphQLList(UseFields),
+          defaultValue: [{key: 'q', use: 'title'}],
+        },
+        page: {type: GraphQLInt},
+        perPage: {type: GraphQLInt, defaultValue: 1},
+      },
       async resolve(parent, args, {dataSources}) {
-        // TODO: check if "q" and "query" are the same
-        const {query, ...searchParams} = {
-          ...parent,
-          ...args,
-        };
-        if (query) {
-          Object.assign(searchParams, {q: query});
-        }
-        return dataSources.discogsApi.searchRelease(searchParams);
+        const searchParams = createSearchParams(parent, args);
+        return dataSources.discogsApi.searchReleases(searchParams);
+      },
+    },
+    masters: {
+      type: DiscogsMastersSearchResult,
+      args: {
+        search: {type: Search},
+        useFields: {
+          type: GraphQLList(UseFields),
+          defaultValue: [{key: 'q', use: 'title'}],
+        },
+        page: {type: GraphQLInt},
+        perPage: {type: GraphQLInt, defaultValue: 1},
+      },
+      async resolve(parent, args, {dataSources}) {
+        const searchParams = createSearchParams(parent, args);
+        return dataSources.discogsApi.searchMasters(searchParams);
       },
     },
   },

@@ -16,9 +16,16 @@ export class DiscogsAPI extends RESTDataSource {
     return this.get('search', params);
   }
 
-  searchRelease(params) {
+  searchReleases(params) {
     return this.search({
       type: 'release',
+      ...params,
+    });
+  }
+
+  searchMasters(params) {
+    return this.search({
+      type: 'master',
       ...params,
     });
   }
