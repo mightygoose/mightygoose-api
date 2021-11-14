@@ -16,7 +16,7 @@ export const typeDefs = gql`
   }
 
   type Search {
-    albums(q: String, filter: SearchAlbumFilter): SearchAlbums
+    albums(search: String, filter: SearchAlbumFilter): SearchAlbums
   }
 
   type Query {
@@ -24,14 +24,25 @@ export const typeDefs = gql`
   }
 `;
 
+export interface Search {
+  search: string | null;
+}
+
+export interface SearchAlbums extends Search {
+  filter: any | null;
+}
+
 export const resolvers = {
   Query: {
     search: () => ({}),
   },
   Search: {
-    albums: (_data: any, { filter, q }: { filter: any; q: string }) => {
-      console.log('search album resolver', filter);
-      return { filter, q };
+    albums: (
+      _parent: unknown,
+      { filter = null, search = null }: SearchAlbums
+    ): SearchAlbums => {
+      console.log('search album resolver');
+      return { filter, search };
     },
   },
 };

@@ -24,7 +24,7 @@ export const typeDefs = gql`
   }
 
   extend type SearchAlbums {
-    spotify(q: String, filter: SearchAlbumFilter): SearchSpotifyAlbum
+    spotify(search: String, filter: SearchAlbumFilter): SearchSpotifyAlbum
   }
 `;
 
@@ -32,10 +32,10 @@ export const resolvers = {
   SearchAlbums: {
     spotify: (
       parent: any,
-      { q, filter }: { q: string; filter: any },
+      { search, filter }: { search: string; filter: any },
       ...args: any[]
     ) => {
-      console.log('spotify search resolver', q, filter, parent);
+      console.log('spotify search resolver', search, filter, parent);
       return {
         info: null,
         results: [
