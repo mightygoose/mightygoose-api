@@ -1,4 +1,5 @@
 import { gql } from 'apollo-server';
+import { SearchAlbums } from '../packages/base';
 
 export const typeDefs = gql`
   scalar SearchAlbumsInfo
@@ -31,9 +32,8 @@ export const typeDefs = gql`
 export const resolvers = {
   SearchAlbums: {
     spotify: (
-      parent: any,
-      { search, filter }: { search: string; filter: any },
-      ...args: any[]
+      parent: SearchAlbums,
+      { search, filter }: { search: string; filter: any }
     ) => {
       console.log('spotify search resolver', search, filter, parent);
       return {

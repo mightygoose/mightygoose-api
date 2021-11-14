@@ -1,36 +1,13 @@
 import { gql } from 'apollo-server';
+import { SearchAlbums, typeDefs as baseTypeDefs } from '../packages/base';
 
 export const typeDefs = gql`
-  input SearchAlbumFilter {
-    q: String
-  }
-
-  type SearchAlbums {
-    searchInfo: String
-  }
-
-  scalar RelationInfo
-
-  type Relation {
-    info: RelationInfo
-  }
-
-  type Search {
-    albums(search: String, filter: SearchAlbumFilter): SearchAlbums
-  }
+  ${baseTypeDefs}
 
   type Query {
     search: Search
   }
 `;
-
-export interface Search {
-  search: string | null;
-}
-
-export interface SearchAlbums extends Search {
-  filter: any | null;
-}
 
 export const resolvers = {
   Query: {
