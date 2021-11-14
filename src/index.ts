@@ -1,4 +1,5 @@
-import { ApolloServer, gql } from 'apollo-server';
+import { ApolloServer } from 'apollo-server';
+import { buildSubgraphSchema } from '@apollo/subgraph';
 
 import {
   resolvers as rootResolvers,
@@ -9,14 +10,13 @@ import {
   typeDefs as spotifyTypeDefs,
 } from './schema/spotify';
 
-const typeDefs = [rootTypeDefs, spotifyTypeDefs];
-const resolvers = [rootResolvers, spotifyResolvers];
+const server = new ApolloServer({
+  schema: buildSubgraphSchema([
+    { typeDefs: rootTypeDefs, resolvers: rootResolvers },
+    { typeDefs: spotifyTypeDefs, resolvers: spotifyResolvers },
+  ]),
+});
 
-// The ApolloServer constructor requires two parameters: your schema
-// definition and your set of resolvers.
-const server = new ApolloServer({ typeDefs, resolvers });
-
-// The `listen` method launches a web server.
 server.listen().then(({ url }) => {
   console.log(`🚀  Server ready at ${url}`);
 });

@@ -6,6 +6,7 @@
   "author": "ni-azhukov <alexander.zhukov@native-instruments.de>",
   "license": "MIT",
   "dependencies": {
+    "@apollo/subgraph": "^0.1.4",
     "apollo-server": "^3.5.0",
     "graphql": "^16.0.1",
     "ts-node-dev": "^1.1.8",
