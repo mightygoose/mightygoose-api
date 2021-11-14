@@ -1,0 +1,8 @@
+{
+  "name": "mg-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:mightygoose/mightygoose-api.git",
+  "author": "ni-azhukov <alexander.zhukov@native-instruments.de>",
+  "license": "MIT"
+}
