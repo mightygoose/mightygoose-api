@@ -2,10 +2,11 @@ import { ApolloServer } from 'apollo-server';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 
 import rootSchema from './schema/root';
+import baseSchema from './packages/base';
 import spotifySchema from './schema/spotify';
 
 const server = new ApolloServer({
-  schema: buildSubgraphSchema([rootSchema, spotifySchema]),
+  schema: buildSubgraphSchema([rootSchema, baseSchema, spotifySchema]),
 });
 
 server.listen().then(({ url }) => {
