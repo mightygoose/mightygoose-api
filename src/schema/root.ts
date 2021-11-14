@@ -1,5 +1,9 @@
 import { gql } from 'apollo-server';
-import { SearchAlbums, typeDefs as baseTypeDefs } from '../packages/base';
+import {
+  SearchAlbums,
+  SearchAlbumsArguments,
+  typeDefs as baseTypeDefs,
+} from '../packages/base';
 
 export const typeDefs = gql`
   ${baseTypeDefs}
@@ -16,10 +20,12 @@ export const resolvers = {
   Search: {
     albums: (
       _parent: unknown,
-      { filter = null, search = null }: SearchAlbums
+      { filter = null, search = null }: SearchAlbumsArguments
     ): SearchAlbums => {
       console.log('search album resolver');
-      return { filter, search };
+      return {
+        _searchInfo: { filter, search },
+      };
     },
   },
 };

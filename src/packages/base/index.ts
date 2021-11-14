@@ -1,12 +1,19 @@
 import { gql } from 'apollo-server';
 
 export const typeDefs = gql`
-  input SearchAlbumFilter {
-    q: String
+  scalar SearchAlbumFilter
+
+  type SearchInfo {
+    search: String
+    filter: SearchAlbumFilter
   }
 
   type SearchAlbums {
-    searchInfo: String
+    _searchInfo: String
+  }
+
+  type Search {
+    albums(search: String, filter: SearchAlbumFilter): SearchAlbums
   }
 
   scalar RelationInfo
@@ -14,16 +21,15 @@ export const typeDefs = gql`
   type Relation {
     info: RelationInfo
   }
-
-  type Search {
-    albums(search: String, filter: SearchAlbumFilter): SearchAlbums
-  }
 `;
 
-export interface Search {
+export type SearchAlbumFilter = any;
+
+export interface SearchAlbumsArguments {
   search: string | null;
+  filter: SearchAlbumFilter;
 }
 
-export interface SearchAlbums extends Search {
-  filter: any | null;
+export interface SearchAlbums {
+  _searchInfo: SearchAlbumsArguments;
 }
