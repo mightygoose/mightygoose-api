@@ -29,7 +29,7 @@ export const typeDefs = gql`
 
   scalar RelationInfo
 
-  type Relation {
+  type AlbumRelation {
     info: RelationInfo
   }
 `;

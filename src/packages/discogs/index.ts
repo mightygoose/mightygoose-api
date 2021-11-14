@@ -2,41 +2,41 @@ import { gql } from 'apollo-server';
 import { SearchAlbums, SearchAlbumsArguments } from '../base';
 
 export const typeDefs = gql`
-  scalar SpotifySearchAlbumsInfo
+  scalar DiscogsSearchAlbumsInfo
 
-  type SpotifyAlbumRelation {
-    albums: SearchSpotifyAlbum
+  type DiscogsAlbumRelation {
+    albums: SearchDiscogsAlbum
     artists: String
   }
 
   extend type AlbumRelation {
-    spotify: SpotifyAlbumRelation
+    discogs: DiscogsAlbumRelation
   }
 
-  type SpotifyAlbum {
+  type DiscogsAlbum {
     id: ID
     title: String
     relation: AlbumRelation
   }
 
-  type SearchSpotifyAlbum {
-    info: SpotifySearchAlbumsInfo
-    results: [SpotifyAlbum]
+  type SearchDiscogsAlbum {
+    info: DiscogsSearchAlbumsInfo
+    results: [DiscogsAlbum]
   }
 
   extend type SearchAlbums {
-    spotify(search: String, filter: SearchAlbumFilter): SearchSpotifyAlbum
+    discogs(search: String, filter: SearchAlbumFilter): SearchDiscogsAlbum
   }
 `;
 
 export const resolvers = {
   SearchAlbums: {
-    spotify: (
+    discogs: (
       parent: SearchAlbums,
       { search, filter }: { search: string; filter: any }
     ) => {
       console.log(
-        'spotify search resolver',
+        'discogs search resolver',
         search,
         filter,
         parent._searchInfo
@@ -50,7 +50,7 @@ export const resolvers = {
       };
     },
   },
-  SpotifyAlbum: {
+  DiscogsAlbum: {
     relation: (_parent: any) => {
       return {
         id: _parent.id,
@@ -59,9 +59,9 @@ export const resolvers = {
     },
   },
   AlbumRelation: {
-    spotify: <T>(parent: T): T => parent,
+    discogs: <T>(parent: T): T => parent,
   },
-  SpotifyAlbumRelation: {
+  DiscogsAlbumRelation: {
     albums: (_parent: any) => {
       console.log(_parent);
       return {
@@ -69,7 +69,7 @@ export const resolvers = {
         results: [
           {
             id: 6,
-            title: `album related to ${_parent.id} : ${_parent.unifiedTitle}`,
+            title: `discogs album related to ${_parent.id} : ${_parent.unifiedTitle}`,
           },
         ],
       };
