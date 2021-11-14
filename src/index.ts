@@ -1,7 +1,7 @@
 import { ApolloServer } from 'apollo-server';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 
-import rootSchema from './schema/root';
+import rootSchema from './schema';
 import baseSchema from './packages/base';
 import spotifySchema from './packages/spotify';
 import discogsSchema from './packages/discogs';

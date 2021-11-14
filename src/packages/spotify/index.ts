@@ -1,5 +1,5 @@
 import { gql } from 'apollo-server';
-import { SearchAlbums, SearchAlbumsArguments } from '../base';
+import { SearchAlbums } from '../base';
 
 export const typeDefs = gql`
   scalar SpotifySearchAlbumsInfo
