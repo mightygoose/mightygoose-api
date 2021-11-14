@@ -4,7 +4,9 @@ import { buildSubgraphSchema } from '@apollo/subgraph';
 import rootSchema from './schema';
 import baseSchema from './packages/base';
 import spotifySchema from './packages/spotify';
-import discogsSchema from './packages/discogs';
+import discogsSchema, {
+  dataSources as discogsDataSources,
+} from './packages/discogs';
 
 const server = new ApolloServer({
   schema: buildSubgraphSchema([
@@ -13,6 +15,9 @@ const server = new ApolloServer({
     spotifySchema,
     discogsSchema,
   ]),
+  dataSources: () => ({
+    ...discogsDataSources,
+  }),
 });
 
 server.listen().then(({ url }) => {

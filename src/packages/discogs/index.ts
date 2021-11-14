@@ -1,5 +1,6 @@
 import { gql } from 'apollo-server';
 import { SearchAlbums } from '../base';
+import { DiscogsAPI } from './dataSource';
 
 export const typeDefs = gql`
   scalar DiscogsSearchAlbumsInfo
@@ -76,5 +77,7 @@ export const resolvers = {
     },
   },
 };
+
+export const dataSources = { discogsApi: new DiscogsAPI() };
 
 export default { typeDefs, resolvers };
