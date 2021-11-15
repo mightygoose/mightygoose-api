@@ -13,7 +13,7 @@ const server = new ApolloServer({
     rootSchema,
     baseSchema,
     spotifySchema,
-    discogsSchema,
+    ...discogsSchema,
   ]),
   dataSources: () => ({
     ...discogsDataSources,

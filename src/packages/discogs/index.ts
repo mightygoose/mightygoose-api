@@ -1,7 +1,9 @@
 import { gql } from 'apollo-server';
-import { BaseContext } from 'apollo-server-types';
-import { SearchAlbums } from '../base';
 import { DiscogsAPI } from './dataSource';
+import {
+  typeDefs as masterTypeDefs,
+  resolvers as masterResolvers,
+} from './types/master';
 
 export const typeDefs = gql`
   type DiscogsRelation {
@@ -38,72 +40,9 @@ export const typeDefs = gql`
     want: Int
     have: Int
   }
-
-  type DiscogsSearchResultMaster {
-    id: ID
-    country: String
-    year: String
-    format: [String]
-    label: [String]
-    type: String
-    genre: [String]
-    style: [String]
-    barcode: [String]
-    master_id: Int
-    master_url: String
-    uri: String
-    catno: String
-    title: String
-    thumb: String
-    cover_image: String
-    resource_url: String
-    community: DiscogsCommunity
-    #master: DiscogsMaster
-    relation: MasterRelation
-  }
-
-  type SearchDiscogsMaster {
-    pagination: DiscogsSearchPagination
-    results: [DiscogsSearchResultMaster]
-  }
-
-  extend type SearchMasters {
-    discogs(search: String, filter: SearchMasterFilter): SearchDiscogsMaster
-  }
 `;
 
 export const resolvers = {
-  SearchMasters: {
-    discogs: async (
-      parent: SearchAlbums,
-      { search, filter }: { search: string; filter: any },
-      { dataSources: { discogsApi } }: BaseContext
-    ) => {
-      console.log(
-        'discogs search resolver',
-        search,
-        filter,
-        parent._searchInfo
-      );
-
-      const foo = await discogsApi.searchMasters({
-        query: search,
-        page: 1,
-        per_page: 1,
-      });
-
-      console.log(JSON.stringify(foo, null, 2));
-      return foo;
-    },
-  },
-  DiscogsSearchResultMaster: {
-    relation: (_parent: any) => {
-      return {
-        id: _parent.id,
-        unifiedTitle: _parent.title || 'unknown title',
-      };
-    },
-  },
   AlbumRelation: {
     discogs: <T>(parent: T): T => parent,
   },
@@ -131,4 +70,7 @@ export const resolvers = {
 
 export const dataSources = { discogsApi: new DiscogsAPI() };
 
-export default { typeDefs, resolvers };
+export default [
+  { typeDefs, resolvers },
+  { typeDefs: masterTypeDefs, resolvers: masterResolvers },
+];
