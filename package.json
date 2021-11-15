@@ -14,12 +14,15 @@
     "typescript": "^4.4.4"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^2.2.2",
+    "@graphql-codegen/typescript": "^2.3.1",
     "@tsconfig/node16": "^1.0.2",
     "@types/node": "^16.11.7",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "@typescript-eslint/parser": "^5.3.1",
     "apollo-server-types": "^3.4.0",
-    "eslint": "^8.2.0"
+    "eslint": "^8.2.0",
+    "graphql-tag-pluck": "^0.8.7"
   },
   "scripts": {
     "start:dev": "env $(cat .env| xargs) ts-node-dev src/index.ts"
