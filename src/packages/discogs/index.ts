@@ -41,19 +41,24 @@ export const typeDefs = gql`
 
   type DiscogsSearchResultMaster {
     id: ID
-    style: [String]
-    thumb: String
-    title: String
     country: String
-    format: [String]
-    uri: String
-    community: DiscogsCommunity
-    label: [String]
-    catno: String
     year: String
-    genre: [String]
-    resource_url: String
+    format: [String]
+    label: [String]
     type: String
+    genre: [String]
+    style: [String]
+    barcode: [String]
+    master_id: Int
+    master_url: String
+    uri: String
+    catno: String
+    title: String
+    thumb: String
+    cover_image: String
+    resource_url: String
+    community: DiscogsCommunity
+    #master: DiscogsMaster
     relation: MasterRelation
   }
 
