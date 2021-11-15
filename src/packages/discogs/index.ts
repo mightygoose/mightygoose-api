@@ -1,40 +1,78 @@
 import { gql } from 'apollo-server';
+import { BaseContext } from 'apollo-server-types';
 import { SearchAlbums } from '../base';
 import { DiscogsAPI } from './dataSource';
 
 export const typeDefs = gql`
-  scalar DiscogsSearchAlbumsInfo
-
-  type DiscogsAlbumRelation {
-    albums: SearchDiscogsAlbum
+  type DiscogsRelation {
+    albums: SearchDiscogsMaster
     artists: String
   }
 
   extend type AlbumRelation {
-    discogs: DiscogsAlbumRelation
+    discogs: DiscogsRelation
   }
 
-  type DiscogsAlbum {
+  extend type MasterRelation {
+    discogs: DiscogsRelation
+  }
+
+  extend type ReleaseRelation {
+    discogs: DiscogsRelation
+  }
+
+  type DiscogsSearchPaginationUrls {
+    last: String
+    next: String
+  }
+
+  type DiscogsSearchPagination {
+    page: Int
+    pages: Int
+    per_page: Int
+    items: Int
+    urls: DiscogsSearchPaginationUrls
+  }
+
+  type DiscogsCommunity {
+    want: Int
+    have: Int
+  }
+
+  type DiscogsSearchResultMaster {
     id: ID
+    style: [String]
+    thumb: String
     title: String
-    relation: AlbumRelation
+    country: String
+    format: [String]
+    uri: String
+    community: DiscogsCommunity
+    label: [String]
+    catno: String
+    year: String
+    genre: [String]
+    resource_url: String
+    type: String
+    relation: MasterRelation
   }
 
-  type SearchDiscogsAlbum {
-    info: DiscogsSearchAlbumsInfo
-    results: [DiscogsAlbum]
+  type SearchDiscogsMaster {
+    pagination: DiscogsSearchPagination
+    results: [DiscogsSearchResultMaster]
   }
 
-  extend type SearchAlbums {
-    discogs(search: String, filter: SearchAlbumFilter): SearchDiscogsAlbum
+  extend type SearchMasters {
+    discogs(search: String, filter: SearchMasterFilter): SearchDiscogsMaster
   }
 `;
 
 export const resolvers = {
-  SearchAlbums: {
-    discogs: (
+  SearchMasters: {
+    discogs: async (
       parent: SearchAlbums,
-      { search, filter }: { search: string; filter: any }
+      { search, filter }: { search: string; filter: any },
+      { dataSources: { discogsApi } }: BaseContext
     ) => {
       console.log(
         'discogs search resolver',
@@ -42,16 +80,18 @@ export const resolvers = {
         filter,
         parent._searchInfo
       );
-      return {
-        info: null,
-        results: [
-          { id: 1, title: 'test' },
-          { foo: 234, id: 2 },
-        ],
-      };
+
+      const foo = await discogsApi.searchMasters({
+        query: search,
+        page: 1,
+        per_page: 1,
+      });
+
+      console.log(JSON.stringify(foo, null, 2));
+      return foo;
     },
   },
-  DiscogsAlbum: {
+  DiscogsSearchResultMaster: {
     relation: (_parent: any) => {
       return {
         id: _parent.id,
@@ -62,7 +102,13 @@ export const resolvers = {
   AlbumRelation: {
     discogs: <T>(parent: T): T => parent,
   },
-  DiscogsAlbumRelation: {
+  MasterRelation: {
+    discogs: <T>(parent: T): T => parent,
+  },
+  ReleaseRelation: {
+    discogs: <T>(parent: T): T => parent,
+  },
+  DiscogsRelation: {
     albums: (_parent: any) => {
       console.log(_parent);
       return {

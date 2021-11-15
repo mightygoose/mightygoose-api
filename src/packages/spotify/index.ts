@@ -4,13 +4,13 @@ import { SearchAlbums } from '../base';
 export const typeDefs = gql`
   scalar SpotifySearchAlbumsInfo
 
-  type SpotifyAlbumRelation {
+  type SpotifyRelation {
     albums: SearchSpotifyAlbum
     artists: String
   }
 
   extend type AlbumRelation {
-    spotify: SpotifyAlbumRelation
+    spotify: SpotifyRelation
   }
 
   type SpotifyAlbum {
