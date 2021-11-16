@@ -1,10 +1,8 @@
 import { gql } from 'apollo-server';
 
 export const typeDefs = gql`
-  scalar RelationInfo
-
   type Relation {
-    info: RelationInfo
+    id: ID!
   }
 
   type Search {

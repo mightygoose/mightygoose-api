@@ -97,14 +97,17 @@ export const resolvers = {
       { dataSources: { discogsApi } }: Context
     ): Promise<DiscogsMaster> => discogsApi.lookupMaster(master_id),
     relation: (_parent: any) => {
-      return {
-        id: _parent.id,
-        unifiedTitle: _parent.title || 'unknown title',
-      };
+      return _parent;
+    },
+  },
+  DiscogsMaster: {
+    relation: (_parent: any) => {
+      return _parent;
     },
   },
   DiscogsRelation: {
-    masters: () => {
+    masters: (_parent: any) => {
+      console.log('[make search masters]', _parent);
       return { results: [] };
     },
   },

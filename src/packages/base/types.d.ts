@@ -10,12 +10,11 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  RelationInfo: any;
 };
 
 export type Relation = {
   __typename: 'Relation';
-  info?: Maybe<Scalars['RelationInfo']>;
+  id: Scalars['ID'];
 };
 
 export type Search = {
