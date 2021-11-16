@@ -44,26 +44,28 @@ export const typeDefs = gql`
   }
 `;
 
+export const log = (message: string, fn: (...args: any[]) => {}) => {
+  return (...args: any[]) => {
+    console.log(message);
+    return fn(...args);
+  };
+};
+
 export const resolvers = {
   Search: {
-    albums: (
-      _parent: unknown,
-      _searchInfo: SearchAlbumsArgs
-    ): Search['albums'] => {
-      console.log('search album resolver', _searchInfo);
-      return {
+    albums: log(
+      'search album resolver',
+      (_parent: unknown, _searchInfo: SearchAlbumsArgs): Search['albums'] => ({
         _searchInfo,
-      };
-    },
-    masters: (
-      _parent: unknown,
-      _searchInfo: SearchMastersArgs
-    ): Search['masters'] => {
-      console.log('search master resolver', _searchInfo);
-      return {
-        _searchInfo,
-      };
-    },
+      })
+    ),
+    masters: log(
+      'search masters resolver',
+      (
+        _parent: unknown,
+        _searchInfo: SearchMastersArgs
+      ): Search['masters'] => ({ _searchInfo })
+    ),
   },
 };
 
