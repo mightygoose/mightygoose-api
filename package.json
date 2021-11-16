@@ -10,7 +10,6 @@
     "apollo-datasource-rest": "^3.4.0",
     "apollo-server": "^3.5.0",
     "graphql": "^16.0.1",
-    "ts-node-dev": "^1.1.8",
     "typescript": "^4.4.4"
   },
   "devDependencies": {
@@ -22,9 +21,13 @@
     "@typescript-eslint/parser": "^5.3.1",
     "apollo-server-types": "^3.4.0",
     "eslint": "^8.2.0",
-    "graphql-tag-pluck": "^0.8.7"
+    "graphql-tag-pluck": "^0.8.7",
+    "ndb": "^1.1.5",
+    "ts-node-dev": "^1.1.8"
   },
   "scripts": {
-    "start:dev": "env $(cat .env| xargs) ts-node-dev src/index.ts"
+    "generate:types": "graphql-codegen",
+    "start:dev": "env $(cat .env| xargs) ts-node-dev src/index.ts",
+    "debug": "ndb yarn start:dev"
   }
 }
