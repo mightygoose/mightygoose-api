@@ -1,8 +1,4 @@
 schema: http://localhost:4000/graphql
-pluckConfig:
-  modules:
-    - name: my-custom-module
-      identifier: gql
 generates:
   ./src/types.d.ts:
     plugins:
