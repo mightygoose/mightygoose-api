@@ -1,5 +1,4 @@
 import { gql } from 'apollo-server';
-// import { Search, SearchAlbumsArgs, SearchMastersArgs } from './types';
 
 export const typeDefs = gql`
   scalar RelationInfo
