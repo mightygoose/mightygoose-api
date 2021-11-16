@@ -33,9 +33,9 @@ export type ReleaseRelation = {
 
 export type Search = {
   __typename?: 'Search';
-  albums?: Maybe<SearchAlbums>;
-  masters?: Maybe<SearchMasters>;
-  releases?: Maybe<SearchReleases>;
+  albums: SearchAlbums;
+  masters: SearchMasters;
+  releases: SearchReleases;
 };
 
 
@@ -74,5 +74,5 @@ export type SearchMasters = {
 
 export type SearchReleases = {
   __typename?: 'SearchReleases';
-  _searchInfo?: Maybe<SearchInfo>;
+  _searchInfo: SearchInfo;
 };

@@ -1,27 +1,5 @@
 import { gql } from 'apollo-server';
-
-export type SearchAlbumFilter = any;
-export type SearchMasterFilter = any;
-
-export interface SearchArguments {
-  search: string | null;
-}
-
-export interface SearchMastersArguments extends SearchArguments {
-  filter: SearchMasterFilter;
-}
-
-export interface SearchMasters {
-  _searchInfo: SearchMastersArguments;
-}
-
-export interface SearchAlbumsArguments extends SearchArguments {
-  filter: SearchAlbumFilter;
-}
-
-export interface SearchAlbums {
-  _searchInfo: SearchAlbumsArguments;
-}
+import { Search, SearchAlbumsArgs, SearchMastersArgs } from './types';
 
 export const typeDefs = gql`
   scalar SearchAlbumFilter
@@ -42,13 +20,13 @@ export const typeDefs = gql`
   }
 
   type SearchReleases {
-    _searchInfo: SearchInfo
+    _searchInfo: SearchInfo!
   }
 
   type Search {
-    albums(search: String, filter: SearchAlbumFilter): SearchAlbums
-    masters(search: String, filter: SearchMasterFilter): SearchMasters
-    releases(search: String, filter: SearchReleaseFilter): SearchReleases
+    albums(search: String, filter: SearchAlbumFilter): SearchAlbums!
+    masters(search: String, filter: SearchMasterFilter): SearchMasters!
+    releases(search: String, filter: SearchReleaseFilter): SearchReleases!
   }
 
   scalar RelationInfo
@@ -70,20 +48,20 @@ export const resolvers = {
   Search: {
     albums: (
       _parent: unknown,
-      { filter = null, search = null }: SearchAlbumsArguments
-    ): SearchAlbums => {
-      console.log('search album resolver');
+      _searchInfo: SearchAlbumsArgs
+    ): Search['albums'] => {
+      console.log('search album resolver', _searchInfo);
       return {
-        _searchInfo: { filter, search },
+        _searchInfo,
       };
     },
     masters: (
       _parent: unknown,
-      { filter = null, search = null }: SearchMastersArguments
-    ): SearchMasters => {
-      console.log('search master resolver');
+      _searchInfo: SearchMastersArgs
+    ): Search['masters'] => {
+      console.log('search master resolver', _searchInfo);
       return {
-        _searchInfo: { filter, search },
+        _searchInfo,
       };
     },
   },
