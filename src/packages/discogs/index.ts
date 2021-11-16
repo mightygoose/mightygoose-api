@@ -44,8 +44,7 @@ export const typeDefs = gql`
   }
 
   type DiscogsRelation {
-    albums: SearchDiscogsMaster
-    artists: String
+    id: ID!
   }
 
   extend type Relation {
@@ -92,18 +91,7 @@ export const resolvers = {
     discogs: <T>(parent: T): T => parent,
   },
   DiscogsRelation: {
-    albums: (_parent: any) => {
-      console.log(_parent);
-      return {
-        info: null,
-        results: [
-          {
-            id: 6,
-            title: `discogs album related to ${_parent.id} : ${_parent.unifiedTitle}`,
-          },
-        ],
-      };
-    },
+    id: () => +new Date(),
   },
 };
 

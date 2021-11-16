@@ -65,6 +65,10 @@ export const typeDefs = gql`
   extend type DiscogsSearch {
     masters(search: String, filter: SearchDiscogsFilter): SearchDiscogsMaster!
   }
+
+  extend type DiscogsRelation {
+    masters: SearchDiscogsMaster
+  }
 `;
 
 interface Context extends BaseContext {
@@ -97,6 +101,11 @@ export const resolvers = {
         id: _parent.id,
         unifiedTitle: _parent.title || 'unknown title',
       };
+    },
+  },
+  DiscogsRelation: {
+    master: () => {
+      return null;
     },
   },
 };
