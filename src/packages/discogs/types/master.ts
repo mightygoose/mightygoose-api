@@ -10,41 +10,6 @@ import {
 import { dataSources } from '../';
 
 export const typeDefs = gql`
-  type DiscogsArtistShort {
-    id: ID!
-    name: String!
-    anv: String!
-    join: String!
-    role: String!
-    tracks: String!
-    resource_url: String!
-    thumbnail_url: String!
-  }
-
-  type DiscogsImageShort {
-    type: String!
-    uri: String!
-    resource_url: String!
-    uri150: String!
-    width: Int!
-    height: Int!
-  }
-
-  type DiscogsTrackShort {
-    position: String!
-    type_: String!
-    title: String!
-    duration: String!
-  }
-
-  type DiscogsVideo {
-    uri: String!
-    title: String!
-    description: String!
-    duration: Int!
-    embed: Boolean!
-  }
-
   type DiscogsMaster {
     id: ID!
     main_release: Int!
