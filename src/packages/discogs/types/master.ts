@@ -67,7 +67,7 @@ export const typeDefs = gql`
   }
 
   extend type DiscogsRelation {
-    masters: SearchDiscogsMaster
+    masters: SearchDiscogsMaster!
   }
 `;
 
@@ -104,8 +104,8 @@ export const resolvers = {
     },
   },
   DiscogsRelation: {
-    master: () => {
-      return null;
+    masters: () => {
+      return { results: [] };
     },
   },
 };

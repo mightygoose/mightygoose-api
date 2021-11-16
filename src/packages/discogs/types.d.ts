@@ -69,7 +69,7 @@ export type DiscogsMaster = {
 export type DiscogsRelation = {
   __typename: 'DiscogsRelation';
   id: Scalars['ID'];
-  masters?: Maybe<SearchDiscogsMaster>;
+  masters: SearchDiscogsMaster;
 };
 
 export type DiscogsSearch = {
