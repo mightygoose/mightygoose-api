@@ -14,11 +14,11 @@ export type Scalars = {
 };
 
 export type Relation = {
-  __typename?: 'Relation';
+  __typename: 'Relation';
   info?: Maybe<Scalars['RelationInfo']>;
 };
 
 export type Search = {
-  __typename?: 'Search';
+  __typename: 'Search';
   id: Scalars['ID'];
 };
