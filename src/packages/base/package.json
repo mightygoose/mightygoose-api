@@ -1,0 +1,16 @@
+{
+  "name": "base",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "generate:types": "graphql-codegen",
+    "generate:types:watch": "yarn generate:types --watch './**/*.ts'"
+  },
+  "dependencies": {
+    "@graphql-codegen/cli": "^2.3.0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/typescript-operations": "^2.2.0"
+  }
+}

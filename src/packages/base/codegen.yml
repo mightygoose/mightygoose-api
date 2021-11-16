@@ -1,0 +1,9 @@
+schema:
+  - './**/*.ts':
+      assumeValid: true
+generates:
+  ./types.d.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+
