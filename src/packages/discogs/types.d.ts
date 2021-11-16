@@ -27,8 +27,8 @@ export type DiscogsArtistShort = {
 
 export type DiscogsCommunity = {
   __typename: 'DiscogsCommunity';
-  have?: Maybe<Scalars['Int']>;
-  want?: Maybe<Scalars['Int']>;
+  have: Scalars['Int'];
+  want: Scalars['Int'];
 };
 
 export type DiscogsImageShort = {
@@ -86,11 +86,11 @@ export type DiscogsSearchMastersArgs = {
 
 export type DiscogsSearchPagination = {
   __typename: 'DiscogsSearchPagination';
-  items?: Maybe<Scalars['Int']>;
-  page?: Maybe<Scalars['Int']>;
-  pages?: Maybe<Scalars['Int']>;
-  per_page?: Maybe<Scalars['Int']>;
-  urls?: Maybe<DiscogsSearchPaginationUrls>;
+  items: Scalars['Int'];
+  page: Scalars['Int'];
+  pages: Scalars['Int'];
+  per_page: Scalars['Int'];
+  urls: DiscogsSearchPaginationUrls;
 };
 
 export type DiscogsSearchPaginationUrls = {
@@ -144,7 +144,7 @@ export type DiscogsVideo = {
 
 export type Relation = {
   __typename: 'Relation';
-  discogs?: Maybe<DiscogsRelation>;
+  discogs: DiscogsRelation;
 };
 
 export type Search = {

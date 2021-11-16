@@ -48,7 +48,7 @@ export const typeDefs = gql`
   }
 
   extend type Relation {
-    discogs: DiscogsRelation
+    discogs: DiscogsRelation!
   }
 
   type DiscogsSearchPaginationUrls {
@@ -59,16 +59,16 @@ export const typeDefs = gql`
   }
 
   type DiscogsSearchPagination {
-    page: Int
-    pages: Int
-    per_page: Int
-    items: Int
-    urls: DiscogsSearchPaginationUrls
+    page: Int!
+    pages: Int!
+    per_page: Int!
+    items: Int!
+    urls: DiscogsSearchPaginationUrls!
   }
 
   type DiscogsCommunity {
-    want: Int
-    have: Int
+    want: Int!
+    have: Int!
   }
 
   type DiscogsSearch {
