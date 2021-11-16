@@ -18,10 +18,57 @@ export type AlbumRelation = {
   discogs?: Maybe<DiscogsRelation>;
 };
 
+export type DiscogsArtistShort = {
+  __typename?: 'DiscogsArtistShort';
+  anv: Scalars['String'];
+  id: Scalars['ID'];
+  join: Scalars['String'];
+  name: Scalars['String'];
+  resource_url: Scalars['String'];
+  role: Scalars['String'];
+  thumbnail_url: Scalars['String'];
+  tracks: Scalars['String'];
+};
+
 export type DiscogsCommunity = {
   __typename?: 'DiscogsCommunity';
   have?: Maybe<Scalars['Int']>;
   want?: Maybe<Scalars['Int']>;
+};
+
+export type DiscogsImageShort = {
+  __typename?: 'DiscogsImageShort';
+  height: Scalars['Int'];
+  resource_url: Scalars['String'];
+  type: Scalars['String'];
+  uri: Scalars['String'];
+  uri150: Scalars['String'];
+  width: Scalars['Int'];
+};
+
+export type DiscogsMaster = {
+  __typename?: 'DiscogsMaster';
+  artists: Array<Maybe<DiscogsArtistShort>>;
+  data_quality: Scalars['String'];
+  genres: Array<Scalars['String']>;
+  id: Scalars['ID'];
+  images: Array<Maybe<DiscogsImageShort>>;
+  lowest_price: Scalars['Float'];
+  main_release: Scalars['Int'];
+  main_release_url: Scalars['String'];
+  most_recent_release: Scalars['Int'];
+  most_recent_release_url: Scalars['String'];
+  notes: Scalars['String'];
+  num_for_sale: Scalars['Int'];
+  relation: MasterRelation;
+  resource_url: Scalars['String'];
+  styles: Array<Scalars['String']>;
+  title: Scalars['String'];
+  tracklist: Array<Maybe<DiscogsTrackShort>>;
+  uri: Scalars['String'];
+  versions_url: Scalars['String'];
+  videos: Array<Maybe<DiscogsVideo>>;
+  year: Scalars['Int'];
 };
 
 export type DiscogsRelation = {
@@ -33,7 +80,7 @@ export type DiscogsRelation = {
 export type DiscogsSearch = {
   __typename?: 'DiscogsSearch';
   id: Scalars['ID'];
-  masters?: Maybe<SearchDiscogsMaster>;
+  masters: SearchDiscogsMaster;
 };
 
 
@@ -53,31 +100,51 @@ export type DiscogsSearchPagination = {
 
 export type DiscogsSearchPaginationUrls = {
   __typename?: 'DiscogsSearchPaginationUrls';
+  first?: Maybe<Scalars['String']>;
   last?: Maybe<Scalars['String']>;
   next?: Maybe<Scalars['String']>;
+  prev?: Maybe<Scalars['String']>;
 };
 
 export type DiscogsSearchResultMaster = {
   __typename?: 'DiscogsSearchResultMaster';
-  barcode?: Maybe<Array<Maybe<Scalars['String']>>>;
-  catno?: Maybe<Scalars['String']>;
-  community?: Maybe<DiscogsCommunity>;
-  country?: Maybe<Scalars['String']>;
-  cover_image?: Maybe<Scalars['String']>;
-  format?: Maybe<Array<Maybe<Scalars['String']>>>;
-  genre?: Maybe<Array<Maybe<Scalars['String']>>>;
-  id?: Maybe<Scalars['ID']>;
-  label?: Maybe<Array<Maybe<Scalars['String']>>>;
-  master_id?: Maybe<Scalars['Int']>;
-  master_url?: Maybe<Scalars['String']>;
-  relation?: Maybe<MasterRelation>;
-  resource_url?: Maybe<Scalars['String']>;
-  style?: Maybe<Array<Maybe<Scalars['String']>>>;
-  thumb?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-  uri?: Maybe<Scalars['String']>;
-  year?: Maybe<Scalars['String']>;
+  barcode: Array<Maybe<Scalars['String']>>;
+  catno: Scalars['String'];
+  community: DiscogsCommunity;
+  country: Scalars['String'];
+  cover_image: Scalars['String'];
+  format: Array<Scalars['String']>;
+  genre: Array<Scalars['String']>;
+  id: Scalars['ID'];
+  label: Array<Scalars['String']>;
+  master: DiscogsMaster;
+  master_id: Scalars['Int'];
+  master_url: Scalars['String'];
+  relation: MasterRelation;
+  resource_url: Scalars['String'];
+  style: Array<Scalars['String']>;
+  thumb: Scalars['String'];
+  title: Scalars['String'];
+  type: Scalars['String'];
+  uri: Scalars['String'];
+  year: Scalars['String'];
+};
+
+export type DiscogsTrackShort = {
+  __typename?: 'DiscogsTrackShort';
+  duration: Scalars['String'];
+  position: Scalars['String'];
+  title: Scalars['String'];
+  type_: Scalars['String'];
+};
+
+export type DiscogsVideo = {
+  __typename?: 'DiscogsVideo';
+  description: Scalars['String'];
+  duration: Scalars['Int'];
+  embed: Scalars['Boolean'];
+  title: Scalars['String'];
+  uri: Scalars['String'];
 };
 
 export type MasterRelation = {
@@ -97,6 +164,6 @@ export type Search = {
 
 export type SearchDiscogsMaster = {
   __typename?: 'SearchDiscogsMaster';
-  pagination?: Maybe<DiscogsSearchPagination>;
-  results?: Maybe<Array<Maybe<DiscogsSearchResultMaster>>>;
+  pagination: DiscogsSearchPagination;
+  results: Array<DiscogsSearchResultMaster>;
 };

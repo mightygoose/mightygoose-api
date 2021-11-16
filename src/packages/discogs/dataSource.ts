@@ -1,31 +1,36 @@
 import { RESTDataSource } from 'apollo-datasource-rest';
 import { DISCOGS_TOKEN } from './config';
+import { DiscogsMaster, SearchDiscogsMaster } from './types';
 
 export class DiscogsAPI extends RESTDataSource {
   constructor() {
     super();
-    this.baseURL = 'https://api.discogs.com/database';
+    this.baseURL = 'https://api.discogs.com';
   }
 
   willSendRequest(request: any) {
     request.params.set('token', DISCOGS_TOKEN);
   }
 
-  search(params: any) {
-    return this.get('search', params);
+  async search<T>(params: any) {
+    return this.get<T>('/database/search', params);
   }
 
-  searchReleases(params: any) {
+  async searchReleases(params: any) {
     return this.search({
       type: 'release',
       ...params,
     });
   }
 
-  searchMasters(params: any) {
-    return this.search({
+  async searchMasters(params: any): Promise<SearchDiscogsMaster> {
+    return this.search<SearchDiscogsMaster>({
       type: 'master',
       ...params,
     });
+  }
+
+  async lookupMaster(id: number): Promise<DiscogsMaster> {
+    return this.get<DiscogsMaster>(`/masters/${id}`);
   }
 }

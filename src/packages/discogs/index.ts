@@ -34,7 +34,9 @@ export const typeDefs = gql`
   }
 
   type DiscogsSearchPaginationUrls {
+    first: String
     last: String
+    prev: String
     next: String
   }
 

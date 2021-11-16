@@ -1,48 +1,118 @@
 import { gql } from 'apollo-server';
 import { BaseContext } from 'apollo-server-types';
-import { DiscogsSearchMastersArgs } from '../types';
+import {
+  DiscogsSearchMastersArgs,
+  DiscogsSearchResultMaster,
+  DiscogsMaster,
+  SearchDiscogsMaster,
+} from '../types';
+
+import { dataSources } from '../';
 
 export const typeDefs = gql`
+  type DiscogsArtistShort {
+    id: ID!
+    name: String!
+    anv: String!
+    join: String!
+    role: String!
+    tracks: String!
+    resource_url: String!
+    thumbnail_url: String!
+  }
+
+  type DiscogsImageShort {
+    type: String!
+    uri: String!
+    resource_url: String!
+    uri150: String!
+    width: Int!
+    height: Int!
+  }
+
+  type DiscogsTrackShort {
+    position: String!
+    type_: String!
+    title: String!
+    duration: String!
+  }
+
+  type DiscogsVideo {
+    uri: String!
+    title: String!
+    description: String!
+    duration: Int!
+    embed: Boolean!
+  }
+
+  type DiscogsMaster {
+    id: ID!
+    main_release: Int!
+    most_recent_release: Int!
+    resource_url: String!
+    uri: String!
+    versions_url: String!
+    main_release_url: String!
+    most_recent_release_url: String!
+    num_for_sale: Int!
+    lowest_price: Float!
+    images: [DiscogsImageShort]!
+    genres: [String!]!
+    styles: [String!]!
+    year: Int!
+    tracklist: [DiscogsTrackShort]!
+    artists: [DiscogsArtistShort]!
+    title: String!
+    notes: String!
+    data_quality: String!
+    videos: [DiscogsVideo]!
+    relation: MasterRelation!
+  }
+
   type DiscogsSearchResultMaster {
-    id: ID
-    country: String
-    year: String
-    format: [String]
-    label: [String]
-    type: String
-    genre: [String]
-    style: [String]
-    barcode: [String]
-    master_id: Int
-    master_url: String
-    uri: String
-    catno: String
-    title: String
-    thumb: String
-    cover_image: String
-    resource_url: String
-    community: DiscogsCommunity
-    #master: DiscogsMaster
-    relation: MasterRelation
+    id: ID!
+    master_id: Int!
+    master_url: String!
+    country: String!
+    year: String!
+    format: [String!]!
+    label: [String!]!
+    type: String!
+    genre: [String!]!
+    style: [String!]!
+    barcode: [String]!
+    uri: String!
+    catno: String!
+    title: String!
+    thumb: String!
+    cover_image: String!
+    resource_url: String!
+    community: DiscogsCommunity!
+    master: DiscogsMaster!
+    relation: MasterRelation!
   }
 
   type SearchDiscogsMaster {
-    pagination: DiscogsSearchPagination
-    results: [DiscogsSearchResultMaster]
+    pagination: DiscogsSearchPagination!
+    results: [DiscogsSearchResultMaster!]!
   }
 
   extend type DiscogsSearch {
-    masters(search: String, filter: SearchDiscogsFilter): SearchDiscogsMaster
+    masters(search: String, filter: SearchDiscogsFilter): SearchDiscogsMaster!
   }
 `;
+
+interface Context extends BaseContext {
+  dataSources: typeof dataSources;
+}
 
 export const resolvers = {
   DiscogsSearch: {
     masters: (
       _parent: unknown,
       params: DiscogsSearchMastersArgs,
-      { dataSources: { discogsApi } }: BaseContext
-    ) => {
+      { dataSources: { discogsApi } }: Context
+    ): Promise<SearchDiscogsMaster> => {
       console.log('discogs search resolver');
       return discogsApi.searchMasters({
         query: params.search,
@@ -52,6 +122,11 @@ export const resolvers = {
     },
   },
   DiscogsSearchResultMaster: {
+    master: (
+      { master_id }: DiscogsSearchResultMaster,
+      _params: unknown,
+      { dataSources: { discogsApi } }: Context
+    ): Promise<DiscogsMaster> => discogsApi.lookupMaster(master_id),
     relation: (_parent: any) => {
       return {
         id: _parent.id,
