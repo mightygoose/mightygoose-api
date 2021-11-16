@@ -1,5 +1,6 @@
 import { gql } from 'apollo-server';
 import { BaseContext } from 'apollo-server-types';
+import { DiscogsSearchMastersArgs } from '../types';
 
 export const typeDefs = gql`
   type DiscogsSearchResultMaster {
@@ -38,17 +39,13 @@ export const typeDefs = gql`
 export const resolvers = {
   DiscogsSearch: {
     masters: (
-      parent: any,
-      params: { search: string; filter: any },
+      _parent: unknown,
+      params: DiscogsSearchMastersArgs,
       { dataSources: { discogsApi } }: BaseContext
     ) => {
       console.log('discogs search resolver');
-      const mergedParams = {
-        ...parent._searchInfo,
-        ...params,
-      };
       return discogsApi.searchMasters({
-        query: mergedParams.search,
+        query: params.search,
         page: 1,
         per_page: 1,
       });
