@@ -8,9 +8,7 @@
     "generate:types:watch": "yarn generate:types --watch './**/*.ts'"
   },
   "dependencies": {
-    "@graphql-codegen/cli": "^2.3.0"
-  },
-  "devDependencies": {
+    "@graphql-codegen/cli": "^2.3.0",
     "@graphql-codegen/typescript-operations": "^2.2.0"
   }
 }
