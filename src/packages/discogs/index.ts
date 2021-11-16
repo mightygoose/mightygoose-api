@@ -76,7 +76,7 @@ export const typeDefs = gql`
   }
 
   extend type Search {
-    discogs: DiscogsSearch
+    discogs: DiscogsSearch!
   }
 `;
 

@@ -149,7 +149,7 @@ export type Relation = {
 
 export type Search = {
   __typename: 'Search';
-  discogs?: Maybe<DiscogsSearch>;
+  discogs: DiscogsSearch;
 };
 
 export type SearchDiscogsMaster = {
