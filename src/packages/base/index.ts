@@ -3,15 +3,7 @@ import { gql } from 'apollo-server';
 export const typeDefs = gql`
   scalar RelationInfo
 
-  type AlbumRelation {
-    info: RelationInfo
-  }
-
-  type MasterRelation {
-    info: RelationInfo
-  }
-
-  type ReleaseRelation {
+  type Relation {
     info: RelationInfo
   }
 

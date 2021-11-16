@@ -48,24 +48,8 @@ export const typeDefs = gql`
     artists: String
   }
 
-  extend type AlbumRelation {
+  extend type Relation {
     discogs: DiscogsRelation
-  }
-
-  extend type MasterRelation {
-    discogs: DiscogsRelation
-  }
-
-  extend type ReleaseRelation {
-    discogs: DiscogsRelation
-  }
-
-  type DiscogsSearch {
-    id: ID!
-  }
-
-  extend type Search {
-    discogs: DiscogsSearch
   }
 
   type DiscogsSearchPaginationUrls {
@@ -87,6 +71,14 @@ export const typeDefs = gql`
     want: Int
     have: Int
   }
+
+  type DiscogsSearch {
+    id: ID!
+  }
+
+  extend type Search {
+    discogs: DiscogsSearch
+  }
 `;
 
 export const resolvers = {
@@ -96,13 +88,7 @@ export const resolvers = {
   DiscogsSearch: {
     id: () => +new Date(),
   },
-  AlbumRelation: {
-    discogs: <T>(parent: T): T => parent,
-  },
-  MasterRelation: {
-    discogs: <T>(parent: T): T => parent,
-  },
-  ReleaseRelation: {
+  Relation: {
     discogs: <T>(parent: T): T => parent,
   },
   DiscogsRelation: {

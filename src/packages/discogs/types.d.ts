@@ -13,11 +13,6 @@ export type Scalars = {
   SearchDiscogsFilter: any;
 };
 
-export type AlbumRelation = {
-  __typename?: 'AlbumRelation';
-  discogs?: Maybe<DiscogsRelation>;
-};
-
 export type DiscogsArtistShort = {
   __typename?: 'DiscogsArtistShort';
   anv: Scalars['String'];
@@ -60,7 +55,7 @@ export type DiscogsMaster = {
   most_recent_release_url: Scalars['String'];
   notes: Scalars['String'];
   num_for_sale: Scalars['Int'];
-  relation: MasterRelation;
+  relation: Relation;
   resource_url: Scalars['String'];
   styles: Array<Scalars['String']>;
   title: Scalars['String'];
@@ -120,7 +115,7 @@ export type DiscogsSearchResultMaster = {
   master: DiscogsMaster;
   master_id: Scalars['Int'];
   master_url: Scalars['String'];
-  relation: MasterRelation;
+  relation: Relation;
   resource_url: Scalars['String'];
   style: Array<Scalars['String']>;
   thumb: Scalars['String'];
@@ -147,13 +142,8 @@ export type DiscogsVideo = {
   uri: Scalars['String'];
 };
 
-export type MasterRelation = {
-  __typename?: 'MasterRelation';
-  discogs?: Maybe<DiscogsRelation>;
-};
-
-export type ReleaseRelation = {
-  __typename?: 'ReleaseRelation';
+export type Relation = {
+  __typename?: 'Relation';
   discogs?: Maybe<DiscogsRelation>;
 };
 

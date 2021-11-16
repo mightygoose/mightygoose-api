@@ -31,7 +31,7 @@ export const typeDefs = gql`
     notes: String!
     data_quality: String!
     videos: [DiscogsVideo]!
-    relation: MasterRelation!
+    relation: Relation!
   }
 
   type DiscogsSearchResultMaster {
@@ -54,7 +54,7 @@ export const typeDefs = gql`
     resource_url: String!
     community: DiscogsCommunity!
     master: DiscogsMaster!
-    relation: MasterRelation!
+    relation: Relation!
   }
 
   type SearchDiscogsMaster {

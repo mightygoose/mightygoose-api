@@ -13,18 +13,8 @@ export type Scalars = {
   RelationInfo: any;
 };
 
-export type AlbumRelation = {
-  __typename?: 'AlbumRelation';
-  info?: Maybe<Scalars['RelationInfo']>;
-};
-
-export type MasterRelation = {
-  __typename?: 'MasterRelation';
-  info?: Maybe<Scalars['RelationInfo']>;
-};
-
-export type ReleaseRelation = {
-  __typename?: 'ReleaseRelation';
+export type Relation = {
+  __typename?: 'Relation';
   info?: Maybe<Scalars['RelationInfo']>;
 };
 
