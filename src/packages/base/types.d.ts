@@ -11,9 +11,6 @@ export type Scalars = {
   Int: number;
   Float: number;
   RelationInfo: any;
-  SearchAlbumFilter: any;
-  SearchMasterFilter: any;
-  SearchReleaseFilter: any;
 };
 
 export type AlbumRelation = {
@@ -33,46 +30,5 @@ export type ReleaseRelation = {
 
 export type Search = {
   __typename?: 'Search';
-  albums: SearchAlbums;
-  masters: SearchMasters;
-  releases: SearchReleases;
-};
-
-
-export type SearchAlbumsArgs = {
-  filter?: InputMaybe<Scalars['SearchAlbumFilter']>;
-  search?: InputMaybe<Scalars['String']>;
-};
-
-
-export type SearchMastersArgs = {
-  filter?: InputMaybe<Scalars['SearchMasterFilter']>;
-  search?: InputMaybe<Scalars['String']>;
-};
-
-
-export type SearchReleasesArgs = {
-  filter?: InputMaybe<Scalars['SearchReleaseFilter']>;
-  search?: InputMaybe<Scalars['String']>;
-};
-
-export type SearchAlbums = {
-  __typename?: 'SearchAlbums';
-  _searchInfo?: Maybe<SearchInfo>;
-};
-
-export type SearchInfo = {
-  __typename?: 'SearchInfo';
-  filter?: Maybe<Scalars['SearchAlbumFilter']>;
-  search?: Maybe<Scalars['String']>;
-};
-
-export type SearchMasters = {
-  __typename?: 'SearchMasters';
-  _searchInfo?: Maybe<SearchInfo>;
-};
-
-export type SearchReleases = {
-  __typename?: 'SearchReleases';
-  _searchInfo: SearchInfo;
+  id: Scalars['ID'];
 };

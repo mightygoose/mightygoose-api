@@ -1,6 +1,5 @@
 import { gql } from 'apollo-server';
 import { BaseContext } from 'apollo-server-types';
-import { SearchAlbums } from '../../base';
 
 export const typeDefs = gql`
   type DiscogsSearchResultMaster {
@@ -31,15 +30,15 @@ export const typeDefs = gql`
     results: [DiscogsSearchResultMaster]
   }
 
-  extend type SearchMasters {
-    discogs(search: String, filter: SearchMasterFilter): SearchDiscogsMaster
+  extend type DiscogsSearch {
+    masters(search: String, filter: SearchDiscogsFilter): SearchDiscogsMaster
   }
 `;
 
 export const resolvers = {
-  SearchMasters: {
-    discogs: (
-      parent: SearchAlbums,
+  DiscogsSearch: {
+    masters: (
+      parent: any,
       params: { search: string; filter: any },
       { dataSources: { discogsApi } }: BaseContext
     ) => {

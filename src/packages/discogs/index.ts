@@ -6,6 +6,8 @@ import {
 } from './types/master';
 
 export const typeDefs = gql`
+  scalar SearchDiscogsFilter
+
   type DiscogsRelation {
     albums: SearchDiscogsMaster
     artists: String
@@ -21,6 +23,14 @@ export const typeDefs = gql`
 
   extend type ReleaseRelation {
     discogs: DiscogsRelation
+  }
+
+  type DiscogsSearch {
+    id: ID!
+  }
+
+  extend type Search {
+    discogs: DiscogsSearch
   }
 
   type DiscogsSearchPaginationUrls {
@@ -43,6 +53,12 @@ export const typeDefs = gql`
 `;
 
 export const resolvers = {
+  Search: {
+    discogs: <T>(parent: T): T => parent,
+  },
+  DiscogsSearch: {
+    id: () => +new Date(),
+  },
   AlbumRelation: {
     discogs: <T>(parent: T): T => parent,
   },
