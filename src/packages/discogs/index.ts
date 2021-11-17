@@ -10,7 +10,103 @@ export const typeDefs = gql`
     Discogs
   }
 
-  scalar SearchDiscogsFilter
+  """
+  discogs general search parameters
+  """
+  input SearchDiscogsFilter {
+    """
+    Example: nirvana
+    """
+    query: String
+
+    """
+    Example: nirvana - nevermind
+    """
+    title: String
+
+    """
+    Example: nevermind
+    """
+    release_title: String
+
+    """
+    Example: kurt
+    """
+    credit: String
+
+    """
+    Example: nirvana
+    """
+    artist: String
+
+    """
+    Example: nirvana
+    """
+    anv: String
+
+    """
+    Example: dgc
+    """
+    label: String
+
+    """
+    Example: rock
+    """
+    genre: String
+
+    """
+    Example: grunge
+    """
+    style: String
+
+    """
+    Example: canada
+    """
+    country: String
+
+    """
+    Example: 1991
+    """
+    year: Int
+
+    """
+    Example: album
+    """
+    format: String
+
+    """
+    Example: DGCD-24425
+    """
+    catno: String
+
+    """
+    Example: 7 2064-24425-2 4
+    """
+    barcode: String
+
+    """
+    Example: smells like teen spirit
+    """
+    track: String
+
+    """
+    Example: milKt
+    """
+    submitter: String
+
+    """
+    Example: jerome99
+    """
+    contributor: String
+  }
+
+  """
+  discogs pagination parameters
+  """
+  input DiscogsPaginationParameters {
+    page: Int! = 1
+    per_page: Int! = 5
+  }
 
   type DiscogsArtistShort {
     id: ID!

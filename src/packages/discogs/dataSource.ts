@@ -1,6 +1,11 @@
 import { RESTDataSource } from 'apollo-datasource-rest';
 import { DISCOGS_TOKEN } from './config';
-import { DiscogsMaster, SearchDiscogsMaster } from './types';
+import {
+  DiscogsMaster,
+  SearchDiscogsMaster,
+  SearchDiscogsFilter,
+  DiscogsPaginationParameters,
+} from './types';
 
 export class DiscogsAPI extends RESTDataSource {
   constructor() {
@@ -23,7 +28,9 @@ export class DiscogsAPI extends RESTDataSource {
     });
   }
 
-  async searchMasters(params: any): Promise<SearchDiscogsMaster> {
+  async searchMasters(
+    params: SearchDiscogsFilter & DiscogsPaginationParameters
+  ): Promise<SearchDiscogsMaster> {
     return this.search<SearchDiscogsMaster>({
       type: 'master',
       ...params,

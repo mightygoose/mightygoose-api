@@ -10,7 +10,6 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  SearchDiscogsFilter: any;
 };
 
 export type DiscogsArtistShort = {
@@ -66,6 +65,12 @@ export type DiscogsMaster = {
   year: Scalars['Int'];
 };
 
+/** discogs pagination parameters */
+export type DiscogsPaginationParameters = {
+  page?: Scalars['Int'];
+  per_page?: Scalars['Int'];
+};
+
 export type DiscogsRelation = {
   __typename?: 'DiscogsRelation';
   id: Scalars['ID'];
@@ -80,7 +85,8 @@ export type DiscogsSearch = {
 
 
 export type DiscogsSearchMastersArgs = {
-  filter?: InputMaybe<Scalars['SearchDiscogsFilter']>;
+  filter?: InputMaybe<SearchDiscogsFilter>;
+  pagination?: InputMaybe<DiscogsPaginationParameters>;
   search?: InputMaybe<Scalars['String']>;
 };
 
@@ -150,6 +156,44 @@ export type Relation = {
 export type Search = {
   __typename?: 'Search';
   discogs: DiscogsSearch;
+};
+
+/** discogs general search parameters */
+export type SearchDiscogsFilter = {
+  /** Example: nirvana */
+  anv?: InputMaybe<Scalars['String']>;
+  /** Example: nirvana */
+  artist?: InputMaybe<Scalars['String']>;
+  /** Example: 7 2064-24425-2 4 */
+  barcode?: InputMaybe<Scalars['String']>;
+  /** Example: DGCD-24425 */
+  catno?: InputMaybe<Scalars['String']>;
+  /** Example: jerome99 */
+  contributor?: InputMaybe<Scalars['String']>;
+  /** Example: canada */
+  country?: InputMaybe<Scalars['String']>;
+  /** Example: kurt */
+  credit?: InputMaybe<Scalars['String']>;
+  /** Example: album */
+  format?: InputMaybe<Scalars['String']>;
+  /** Example: rock */
+  genre?: InputMaybe<Scalars['String']>;
+  /** Example: dgc */
+  label?: InputMaybe<Scalars['String']>;
+  /** Example: nirvana */
+  query?: InputMaybe<Scalars['String']>;
+  /** Example: nevermind */
+  release_title?: InputMaybe<Scalars['String']>;
+  /** Example: grunge */
+  style?: InputMaybe<Scalars['String']>;
+  /** Example: milKt */
+  submitter?: InputMaybe<Scalars['String']>;
+  /** Example: nirvana - nevermind */
+  title?: InputMaybe<Scalars['String']>;
+  /** Example: smells like teen spirit */
+  track?: InputMaybe<Scalars['String']>;
+  /** Example: 1991 */
+  year?: InputMaybe<Scalars['Int']>;
 };
 
 export type SearchDiscogsMaster = {

@@ -65,7 +65,11 @@ export const typeDefs = gql`
   }
 
   extend type DiscogsSearch {
-    masters(search: String, filter: SearchDiscogsFilter): SearchDiscogsMaster!
+    masters(
+      search: String
+      filter: SearchDiscogsFilter
+      pagination: DiscogsPaginationParameters = { page: 1, per_page: 1 }
+    ): SearchDiscogsMaster!
   }
 
   extend type DiscogsRelation {
@@ -85,14 +89,14 @@ export const resolvers = {
   DiscogsSearch: {
     masters: (
       _parent: unknown,
-      params: DiscogsSearchMastersArgs,
+      { search, filter, pagination }: DiscogsSearchMastersArgs,
       { dataSources: { discogsApi } }: Context
     ): Promise<SearchDiscogsMaster> => {
-      console.log('discogs search resolver');
+      console.log('discogs search resolver', pagination, filter);
       return discogsApi.searchMasters({
-        query: params.search,
-        page: 1,
-        per_page: 1,
+        query: search,
+        ...filter,
+        ...pagination,
       });
     },
   },
