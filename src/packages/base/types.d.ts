@@ -20,7 +20,8 @@ export type Relation = {
 export type RelationData = {
   __typename?: 'RelationData';
   album?: Maybe<Scalars['String']>;
-  artists?: Maybe<Scalars['String']>;
+  artist?: Maybe<Scalars['String']>;
+  artists?: Maybe<Array<Scalars['String']>>;
   country?: Maybe<Scalars['String']>;
   genre?: Maybe<Array<Scalars['String']>>;
   title?: Maybe<Scalars['String']>;

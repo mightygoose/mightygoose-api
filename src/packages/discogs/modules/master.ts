@@ -97,13 +97,20 @@ export const resolvers = {
       { dataSources: { discogsApi } }: Context
     ): Promise<DiscogsMaster> => discogsApi.lookupMaster(master_id),
     relation: ({
+      type,
       year,
       title,
-      ..._parent
+      country,
+      genre,
     }: DiscogsSearchResultMaster): Relation =>
       createRelation({
-        year: parseInt(year),
+        type,
         title,
+        album: title.split(' - ')[1],
+        artist: title.split(' - ')[0],
+        year: parseInt(year),
+        country,
+        genre,
       }),
   },
   DiscogsMaster: {
@@ -112,9 +119,20 @@ export const resolvers = {
     },
   },
   DiscogsRelation: {
-    masters: (_parent: any) => {
-      console.log('[make search masters]', _parent);
-      return { results: [] };
+    masters: (
+      {
+        _relationData: { title, year, artist, album, country, ...rest },
+      }: Relation,
+      _params: unknown,
+      { dataSources: { discogsApi } }: Context
+    ): Promise<SearchDiscogsMaster> => {
+      console.log('[make search masters]', rest);
+      return discogsApi.searchMasters({
+        year,
+        artist,
+        country,
+        query: title,
+      });
     },
   },
 };
