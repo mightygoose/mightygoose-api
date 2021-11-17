@@ -7,7 +7,7 @@ import {
 } from '../types';
 
 import { Relation } from '../../base/types';
-import { createRelation } from '../../base';
+import { createRelation, log } from '../../base';
 
 import { Context } from '../';
 
@@ -96,7 +96,11 @@ export const resolvers = {
       _params: unknown,
       { dataSources: { discogsApi } }: Context
     ): Promise<DiscogsMaster> => discogsApi.lookupMaster(master_id),
-    relation: ({ year, title, ..._parent }: DiscogsSearchResultMaster): Relation =>
+    relation: ({
+      year,
+      title,
+      ..._parent
+    }: DiscogsSearchResultMaster): Relation =>
       createRelation({
         year: parseInt(year),
         title,

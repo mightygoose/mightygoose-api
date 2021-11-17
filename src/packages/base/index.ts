@@ -8,9 +8,13 @@ export const typeDefs = gql`
 
   type RelationData {
     #service: Services!
-    year: Int
+    type: String
     title: String
-    artist: String
+    album: String
+    artists: String
+    year: Int
+    country: String
+    genre: [String!]
   }
 
   type Relation {
@@ -22,9 +26,16 @@ export const typeDefs = gql`
   }
 `;
 
-export const log = (message: string, fn: (...args: any[]) => {}) => {
+export const log = (
+  message: string,
+  fn: (...args: any[]) => {},
+  debug?: boolean
+) => {
   return (...args: any[]) => {
     console.log(message);
+    if (debug) {
+      console.log(message, args[0], args[1]);
+    }
     return fn(...args);
   };
 };
