@@ -5,8 +5,10 @@ import {
   DiscogsSearchResultMaster,
   DiscogsMaster,
   SearchDiscogsMaster,
-  RelationData,
+  Services,
 } from '../types';
+
+import { Relation } from '../../base/types';
 
 import { dataSources } from '../';
 
@@ -101,11 +103,14 @@ export const resolvers = {
       title,
       year,
       ...rest
-    }: DiscogsSearchResultMaster): RelationData => {
-      console.log(555, { title, year, rest });
+    }: DiscogsSearchResultMaster): Partial<Relation> => {
+      // console.log(555, { title, year, rest }, Services.Discogs);
       return {
-        __typename: 'RelationData',
-        service: 'Discogs',
+        // __typename: "Relation",
+        // _relationData: {}
+        // _relationData: {
+        // service: Services,
+        // },
       };
     },
   },

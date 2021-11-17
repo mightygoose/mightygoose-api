@@ -13,7 +13,6 @@ export const typeDefs = gql`
   }
 
   type Relation {
-    id: ID!
     _relationData: RelationData!
   }
 
@@ -30,6 +29,11 @@ export const log = (message: string, fn: (...args: any[]) => {}) => {
 };
 
 export const resolvers = {
+  // Relation: {
+  // _relationData: () => {
+  // console.log(456456456456456);
+  // },
+  // },
   Search: {
     id: () => +new Date(),
   },

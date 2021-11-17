@@ -3,7 +3,7 @@ import { DiscogsAPI } from './dataSource';
 import {
   typeDefs as masterTypeDefs,
   resolvers as masterResolvers,
-} from './types/master';
+} from './modules/master';
 
 export const typeDefs = gql`
   extend enum Services {
