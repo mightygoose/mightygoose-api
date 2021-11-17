@@ -8,7 +8,7 @@ import {
   Services,
 } from '../types';
 
-import { Relation } from '../../base/types';
+import { RelationData } from '../../base/types';
 
 import { dataSources } from '../';
 
@@ -100,19 +100,15 @@ export const resolvers = {
       { dataSources: { discogsApi } }: Context
     ): Promise<DiscogsMaster> => discogsApi.lookupMaster(master_id),
     relation: ({
-      title,
       year,
-      ...rest
-    }: DiscogsSearchResultMaster): Partial<Relation> => {
-      // console.log(555, { title, year, rest }, Services.Discogs);
-      return {
-        // __typename: "Relation",
-        // _relationData: {}
-        // _relationData: {
-        // service: Services,
-        // },
-      };
-    },
+      ..._parent
+    }: DiscogsSearchResultMaster): {
+      _relationData: Partial<RelationData>;
+    } => ({
+      _relationData: {
+        year: parseInt(year),
+      },
+    }),
   },
   DiscogsMaster: {
     relation: (_parent: any) => {

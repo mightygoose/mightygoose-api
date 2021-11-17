@@ -159,5 +159,5 @@ export type SearchDiscogsMaster = {
 };
 
 export enum Services {
-  Discogs = 'DISCOGS'
+  Discogs = 'Discogs'
 }

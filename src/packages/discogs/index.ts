@@ -7,7 +7,7 @@ import {
 
 export const typeDefs = gql`
   extend enum Services {
-    DISCOGS
+    Discogs
   }
 
   scalar SearchDiscogsFilter
