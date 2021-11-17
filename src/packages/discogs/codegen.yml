@@ -1,8 +1,6 @@
 schema:
   - './**/*.ts':
       assumeValid: true
-config:
-  nonOptionalTypename: true
 generates:
   ./types.d.ts:
     plugins:
