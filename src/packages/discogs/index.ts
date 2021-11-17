@@ -47,7 +47,15 @@ export const typeDefs = gql`
     id: ID!
   }
 
+  type RelationData {
+    service: String
+    year: Int
+    title: String
+    artist: String
+  }
+
   extend type Relation {
+    _relationData: RelationData
     discogs: DiscogsRelation!
   }
 

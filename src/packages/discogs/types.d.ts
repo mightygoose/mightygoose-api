@@ -144,7 +144,16 @@ export type DiscogsVideo = {
 
 export type Relation = {
   __typename: 'Relation';
+  _relationData?: Maybe<RelationData>;
   discogs: DiscogsRelation;
+};
+
+export type RelationData = {
+  __typename: 'RelationData';
+  artist?: Maybe<Scalars['String']>;
+  service?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  year?: Maybe<Scalars['Int']>;
 };
 
 export type Search = {
