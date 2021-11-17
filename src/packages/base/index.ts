@@ -1,8 +1,20 @@
 import { gql } from 'apollo-server';
 
 export const typeDefs = gql`
+  enum Services {
+    BASE
+  }
+
+  type RelationData {
+    service: Services!
+    year: Int
+    title: String
+    artist: String
+  }
+
   type Relation {
     id: ID!
+    _relationData: RelationData!
   }
 
   type Search {

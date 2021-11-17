@@ -6,6 +6,10 @@ import {
 } from './types/master';
 
 export const typeDefs = gql`
+  extend enum Services {
+    DISCOGS
+  }
+
   scalar SearchDiscogsFilter
 
   type DiscogsArtistShort {
@@ -47,15 +51,7 @@ export const typeDefs = gql`
     id: ID!
   }
 
-  type RelationData {
-    service: String
-    year: Int
-    title: String
-    artist: String
-  }
-
   extend type Relation {
-    _relationData: RelationData
     discogs: DiscogsRelation!
   }
 

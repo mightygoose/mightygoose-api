@@ -5,6 +5,7 @@ import {
   DiscogsSearchResultMaster,
   DiscogsMaster,
   SearchDiscogsMaster,
+  RelationData,
 } from '../types';
 
 import { dataSources } from '../';
@@ -96,8 +97,16 @@ export const resolvers = {
       _params: unknown,
       { dataSources: { discogsApi } }: Context
     ): Promise<DiscogsMaster> => discogsApi.lookupMaster(master_id),
-    relation: (_parent: any) => {
-      return _parent;
+    relation: ({
+      title,
+      year,
+      ...rest
+    }: DiscogsSearchResultMaster): RelationData => {
+      console.log(555, { title, year, rest });
+      return {
+        __typename: 'RelationData',
+        service: 'Discogs',
+      };
     },
   },
   DiscogsMaster: {

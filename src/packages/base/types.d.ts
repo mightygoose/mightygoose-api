@@ -14,10 +14,23 @@ export type Scalars = {
 
 export type Relation = {
   __typename: 'Relation';
+  _relationData: RelationData;
   id: Scalars['ID'];
+};
+
+export type RelationData = {
+  __typename: 'RelationData';
+  artist?: Maybe<Scalars['String']>;
+  service: Services;
+  title?: Maybe<Scalars['String']>;
+  year?: Maybe<Scalars['Int']>;
 };
 
 export type Search = {
   __typename: 'Search';
   id: Scalars['ID'];
 };
+
+export enum Services {
+  Base = 'BASE'
+}
