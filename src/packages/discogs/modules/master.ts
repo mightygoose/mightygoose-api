@@ -1,5 +1,4 @@
 import { gql } from 'apollo-server';
-import { BaseContext } from 'apollo-server-types';
 import {
   DiscogsSearchMastersArgs,
   DiscogsSearchResultMaster,
@@ -9,7 +8,7 @@ import {
 
 import { Relation, RelationData } from '../../base/types';
 
-import { dataSources } from '../';
+import { Context } from '../';
 
 export const typeDefs = gql`
   type DiscogsMaster {
@@ -77,10 +76,6 @@ export const typeDefs = gql`
   }
 `;
 
-interface Context extends BaseContext {
-  dataSources: typeof dataSources;
-}
-
 const wrapData = (data: RelationData): Relation => ({
   _relationData: data,
 });
@@ -91,14 +86,12 @@ export const resolvers = {
       _parent: unknown,
       { search, filter, pagination }: DiscogsSearchMastersArgs,
       { dataSources: { discogsApi } }: Context
-    ): Promise<SearchDiscogsMaster> => {
-      console.log('discogs search resolver', pagination, filter);
-      return discogsApi.searchMasters({
+    ): Promise<SearchDiscogsMaster> =>
+      discogsApi.searchMasters({
         query: search,
         ...filter,
         ...pagination,
-      });
-    },
+      }),
   },
   DiscogsSearchResultMaster: {
     master: (

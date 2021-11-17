@@ -1,4 +1,5 @@
 import { gql } from 'apollo-server';
+import { BaseContext } from 'apollo-server-types';
 import { DiscogsAPI } from './dataSource';
 import {
   typeDefs as masterTypeDefs,
@@ -179,6 +180,10 @@ export const typeDefs = gql`
     discogs: DiscogsSearch!
   }
 `;
+
+export interface Context extends BaseContext {
+  dataSources: typeof dataSources;
+}
 
 export const resolvers = {
   Search: {
