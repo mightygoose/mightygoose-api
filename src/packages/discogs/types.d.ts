@@ -14,7 +14,7 @@ export type Scalars = {
 };
 
 export type DiscogsArtistShort = {
-  __typename: 'DiscogsArtistShort';
+  __typename?: 'DiscogsArtistShort';
   anv: Scalars['String'];
   id: Scalars['ID'];
   join: Scalars['String'];
@@ -26,13 +26,13 @@ export type DiscogsArtistShort = {
 };
 
 export type DiscogsCommunity = {
-  __typename: 'DiscogsCommunity';
+  __typename?: 'DiscogsCommunity';
   have: Scalars['Int'];
   want: Scalars['Int'];
 };
 
 export type DiscogsImageShort = {
-  __typename: 'DiscogsImageShort';
+  __typename?: 'DiscogsImageShort';
   height: Scalars['Int'];
   resource_url: Scalars['String'];
   type: Scalars['String'];
@@ -42,7 +42,7 @@ export type DiscogsImageShort = {
 };
 
 export type DiscogsMaster = {
-  __typename: 'DiscogsMaster';
+  __typename?: 'DiscogsMaster';
   artists: Array<Maybe<DiscogsArtistShort>>;
   data_quality: Scalars['String'];
   genres: Array<Scalars['String']>;
@@ -67,13 +67,13 @@ export type DiscogsMaster = {
 };
 
 export type DiscogsRelation = {
-  __typename: 'DiscogsRelation';
+  __typename?: 'DiscogsRelation';
   id: Scalars['ID'];
   masters: SearchDiscogsMaster;
 };
 
 export type DiscogsSearch = {
-  __typename: 'DiscogsSearch';
+  __typename?: 'DiscogsSearch';
   id: Scalars['ID'];
   masters: SearchDiscogsMaster;
 };
@@ -85,7 +85,7 @@ export type DiscogsSearchMastersArgs = {
 };
 
 export type DiscogsSearchPagination = {
-  __typename: 'DiscogsSearchPagination';
+  __typename?: 'DiscogsSearchPagination';
   items: Scalars['Int'];
   page: Scalars['Int'];
   pages: Scalars['Int'];
@@ -94,7 +94,7 @@ export type DiscogsSearchPagination = {
 };
 
 export type DiscogsSearchPaginationUrls = {
-  __typename: 'DiscogsSearchPaginationUrls';
+  __typename?: 'DiscogsSearchPaginationUrls';
   first?: Maybe<Scalars['String']>;
   last?: Maybe<Scalars['String']>;
   next?: Maybe<Scalars['String']>;
@@ -102,7 +102,7 @@ export type DiscogsSearchPaginationUrls = {
 };
 
 export type DiscogsSearchResultMaster = {
-  __typename: 'DiscogsSearchResultMaster';
+  __typename?: 'DiscogsSearchResultMaster';
   barcode: Array<Maybe<Scalars['String']>>;
   catno: Scalars['String'];
   community: DiscogsCommunity;
@@ -126,7 +126,7 @@ export type DiscogsSearchResultMaster = {
 };
 
 export type DiscogsTrackShort = {
-  __typename: 'DiscogsTrackShort';
+  __typename?: 'DiscogsTrackShort';
   duration: Scalars['String'];
   position: Scalars['String'];
   title: Scalars['String'];
@@ -134,7 +134,7 @@ export type DiscogsTrackShort = {
 };
 
 export type DiscogsVideo = {
-  __typename: 'DiscogsVideo';
+  __typename?: 'DiscogsVideo';
   description: Scalars['String'];
   duration: Scalars['Int'];
   embed: Scalars['Boolean'];
@@ -143,17 +143,17 @@ export type DiscogsVideo = {
 };
 
 export type Relation = {
-  __typename: 'Relation';
+  __typename?: 'Relation';
   discogs: DiscogsRelation;
 };
 
 export type Search = {
-  __typename: 'Search';
+  __typename?: 'Search';
   discogs: DiscogsSearch;
 };
 
 export type SearchDiscogsMaster = {
-  __typename: 'SearchDiscogsMaster';
+  __typename?: 'SearchDiscogsMaster';
   pagination: DiscogsSearchPagination;
   results: Array<DiscogsSearchResultMaster>;
 };

@@ -6,7 +6,7 @@ export const typeDefs = gql`
   }
 
   type RelationData {
-    service: Services!
+    #service: Services!
     year: Int
     title: String
     artist: String

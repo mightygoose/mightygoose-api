@@ -5,10 +5,9 @@ import {
   DiscogsSearchResultMaster,
   DiscogsMaster,
   SearchDiscogsMaster,
-  Services,
 } from '../types';
 
-import { RelationData } from '../../base/types';
+import { Relation, RelationData } from '../../base/types';
 
 import { dataSources } from '../';
 
@@ -78,6 +77,10 @@ interface Context extends BaseContext {
   dataSources: typeof dataSources;
 }
 
+const wrapData = (data: RelationData): Relation => ({
+  _relationData: data,
+});
+
 export const resolvers = {
   DiscogsSearch: {
     masters: (
@@ -99,16 +102,10 @@ export const resolvers = {
       _params: unknown,
       { dataSources: { discogsApi } }: Context
     ): Promise<DiscogsMaster> => discogsApi.lookupMaster(master_id),
-    relation: ({
-      year,
-      ..._parent
-    }: DiscogsSearchResultMaster): {
-      _relationData: Partial<RelationData>;
-    } => ({
-      _relationData: {
+    relation: ({ year, ..._parent }: DiscogsSearchResultMaster): Relation =>
+      wrapData({
         year: parseInt(year),
-      },
-    }),
+      }),
   },
   DiscogsMaster: {
     relation: (_parent: any) => {
