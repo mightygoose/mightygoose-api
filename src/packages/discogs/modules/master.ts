@@ -6,7 +6,8 @@ import {
   SearchDiscogsMaster,
 } from '../types';
 
-import { Relation, RelationData } from '../../base/types';
+import { Relation } from '../../base/types';
+import { createRelation } from '../../base';
 
 import { Context } from '../';
 
@@ -76,10 +77,6 @@ export const typeDefs = gql`
   }
 `;
 
-const wrapData = (data: RelationData): Relation => ({
-  _relationData: data,
-});
-
 export const resolvers = {
   DiscogsSearch: {
     masters: (
@@ -99,9 +96,10 @@ export const resolvers = {
       _params: unknown,
       { dataSources: { discogsApi } }: Context
     ): Promise<DiscogsMaster> => discogsApi.lookupMaster(master_id),
-    relation: ({ year, ..._parent }: DiscogsSearchResultMaster): Relation =>
-      wrapData({
+    relation: ({ year, title, ..._parent }: DiscogsSearchResultMaster): Relation =>
+      createRelation({
         year: parseInt(year),
+        title,
       }),
   },
   DiscogsMaster: {
