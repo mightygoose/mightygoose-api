@@ -88,6 +88,11 @@ export type DiscogsRelation = {
   masters: SearchDiscogsMaster;
 };
 
+
+export type DiscogsRelationMastersArgs = {
+  pagination?: InputMaybe<DiscogsPaginationParameters>;
+};
+
 export type DiscogsSearch = {
   __typename?: 'DiscogsSearch';
   id: Scalars['ID'];

@@ -5,6 +5,7 @@ import {
   DiscogsMaster,
   SearchDiscogsMaster,
   DiscogsLookupMastersArgs,
+  DiscogsRelationMastersArgs,
 } from '../types';
 
 import { Relation } from '../../base/types';
@@ -74,7 +75,9 @@ export const typeDefs = gql`
   }
 
   extend type DiscogsRelation {
-    masters: SearchDiscogsMaster!
+    masters(
+      pagination: DiscogsPaginationParameters = { page: 1, per_page: 1 }
+    ): SearchDiscogsMaster!
   }
 
   extend type DiscogsLookup {
@@ -146,7 +149,7 @@ export const resolvers = {
       {
         _relationData: { title, year, artist, album, country, ...rest },
       }: Relation,
-      _params: unknown,
+      { pagination }: DiscogsRelationMastersArgs,
       { dataSources: { discogsApi } }: Context
     ): Promise<SearchDiscogsMaster> => {
       console.log(
@@ -163,6 +166,7 @@ export const resolvers = {
         artist,
         country,
         query: title,
+        ...pagination,
       });
     },
   },
