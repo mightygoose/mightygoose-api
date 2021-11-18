@@ -7,21 +7,35 @@ import {
   DiscogsPaginationParameters,
 } from './types';
 
-const processParams = <T extends Record<string, any>>(obj: T) =>
-  Object.keys(obj).reduce((acc, key) => {
+const processParams = <T extends Record<string, any>>(
+  obj: T
+): { [K in keyof T]: NonNullable<T[K]> } => {
+  const res = Object.keys(obj).reduce((acc, key) => {
     const value = obj[key];
-    if (typeof value === 'undefined') {
+    if (typeof value === 'undefined' || value === null) {
       return acc;
     }
     return {
       ...acc,
       [key]: value,
     };
-  }, {});
+  }, {} as { [K in keyof T]: NonNullable<T[K]> });
+
+  return res;
+};
 
 interface SearchParams
   extends SearchDiscogsFilter,
     DiscogsPaginationParameters {}
+
+enum types {
+  release = 'release',
+  master = 'master',
+}
+
+interface SearchRequestParams extends SearchParams {
+  type: types;
+}
 
 export class DiscogsAPI extends RESTDataSource {
   constructor() {
@@ -33,7 +47,7 @@ export class DiscogsAPI extends RESTDataSource {
     request.params.set('token', DISCOGS_TOKEN);
   }
 
-  async search<T>(params: any) {
+  async search<T>(params: SearchRequestParams) {
     return this.get<T>('/database/search', processParams(params));
   }
 
@@ -46,7 +60,7 @@ export class DiscogsAPI extends RESTDataSource {
 
   async searchMasters(params: SearchParams): Promise<SearchDiscogsMaster> {
     return this.search<SearchDiscogsMaster>({
-      type: 'master',
+      type: types.master,
       ...params,
     });
   }
