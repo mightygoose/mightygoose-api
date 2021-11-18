@@ -5,6 +5,7 @@ import {
   SearchDiscogsMaster,
   SearchDiscogsFilter,
   DiscogsPaginationParameters,
+  Scalars,
 } from './types';
 
 export class DiscogsAPI extends RESTDataSource {

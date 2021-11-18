@@ -25,6 +25,15 @@ export const typeDefs = gql`
   type Search {
     id: ID!
   }
+
+  type Lookup {
+    id: ID!
+  }
+
+  extend type Query {
+    search: Search!
+    lookup: Lookup!
+  }
 `;
 
 export const log = (
@@ -46,7 +55,14 @@ export const createRelation = (data: RelationData): Relation => ({
 });
 
 export const resolvers = {
+  Query: {
+    search: () => ({}),
+    lookup: () => ({}),
+  },
   Search: {
+    id: () => +new Date(),
+  },
+  Lookup: {
     id: () => +new Date(),
   },
 };

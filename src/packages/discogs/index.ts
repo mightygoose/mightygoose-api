@@ -179,6 +179,14 @@ export const typeDefs = gql`
   extend type Search {
     discogs: DiscogsSearch!
   }
+
+  type DiscogsLookup {
+    id: ID!
+  }
+
+  extend type Lookup {
+    discogs: DiscogsLookup!
+  }
 `;
 
 export interface Context extends BaseContext {
@@ -187,6 +195,9 @@ export interface Context extends BaseContext {
 
 export const resolvers = {
   Search: {
+    discogs: <T>(parent: T): T => parent,
+  },
+  Lookup: {
     discogs: <T>(parent: T): T => parent,
   },
   DiscogsSearch: {

@@ -12,6 +12,17 @@ export type Scalars = {
   Float: number;
 };
 
+export type Lookup = {
+  __typename?: 'Lookup';
+  id: Scalars['ID'];
+};
+
+export type Query = {
+  __typename?: 'Query';
+  lookup: Lookup;
+  search: Search;
+};
+
 export type Relation = {
   __typename?: 'Relation';
   _relationData: RelationData;

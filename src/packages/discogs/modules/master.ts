@@ -4,6 +4,7 @@ import {
   DiscogsSearchResultMaster,
   DiscogsMaster,
   SearchDiscogsMaster,
+  DiscogsLookupMastersArgs,
 } from '../types';
 
 import { Relation } from '../../base/types';
@@ -75,6 +76,10 @@ export const typeDefs = gql`
   extend type DiscogsRelation {
     masters: SearchDiscogsMaster!
   }
+
+  extend type DiscogsLookup {
+    masters(id: Int!): DiscogsMaster
+  }
 `;
 
 export const resolvers = {
@@ -89,6 +94,13 @@ export const resolvers = {
         ...filter,
         ...pagination,
       }),
+  },
+  DiscogsLookup: {
+    masters: (
+      _parent: unknown,
+      { id }: DiscogsLookupMastersArgs,
+      { dataSources: { discogsApi } }: Context
+    ): Promise<DiscogsMaster> => discogsApi.lookupMaster(id),
   },
   DiscogsSearchResultMaster: {
     master: (

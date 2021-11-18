@@ -40,6 +40,17 @@ export type DiscogsImageShort = {
   width: Scalars['Int'];
 };
 
+export type DiscogsLookup = {
+  __typename?: 'DiscogsLookup';
+  id: Scalars['ID'];
+  masters?: Maybe<DiscogsMaster>;
+};
+
+
+export type DiscogsLookupMastersArgs = {
+  id: Scalars['Int'];
+};
+
 export type DiscogsMaster = {
   __typename?: 'DiscogsMaster';
   artists: Array<Maybe<DiscogsArtistShort>>;
@@ -146,6 +157,11 @@ export type DiscogsVideo = {
   embed: Scalars['Boolean'];
   title: Scalars['String'];
   uri: Scalars['String'];
+};
+
+export type Lookup = {
+  __typename?: 'Lookup';
+  discogs: DiscogsLookup;
 };
 
 export type Relation = {
