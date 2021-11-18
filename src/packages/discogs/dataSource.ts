@@ -7,21 +7,17 @@ import {
   DiscogsPaginationParameters,
 } from './types';
 
-const processParams = <T extends Record<string, any>>(
-  obj: T
-): { [K in keyof T]: NonNullable<T[K]> } => {
-  const res = Object.keys(obj).reduce((acc, key) => {
-    const value = obj[key];
-    if (typeof value === 'undefined' || value === null) {
-      return acc;
-    }
-    return {
-      ...acc,
-      [key]: value,
-    };
-  }, {} as { [K in keyof T]: NonNullable<T[K]> });
+const omitInvalidParams = <T extends Record<string, any>>(params: T) => {
+  const acc: Record<string, string | number> = {};
 
-  return res;
+  for (let key in params) {
+    const value = params[key];
+
+    if (typeof value === 'string' || typeof value === 'number') {
+      acc[key] = value;
+    }
+  }
+  return acc;
 };
 
 interface SearchParams
@@ -45,10 +41,13 @@ export class DiscogsAPI extends RESTDataSource {
 
   willSendRequest(request: any) {
     request.params.set('token', DISCOGS_TOKEN);
+    console.log(
+      `${request.method} ${request.path}?${request.params.toString()}`
+    );
   }
 
   async search<T>(params: SearchRequestParams) {
-    return this.get<T>('/database/search', processParams(params));
+    return this.get<T>('/database/search', omitInvalidParams(params));
   }
 
   async searchReleases(params: any) {
