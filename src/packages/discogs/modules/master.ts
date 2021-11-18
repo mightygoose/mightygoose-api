@@ -126,8 +126,19 @@ export const resolvers = {
       }),
   },
   DiscogsMaster: {
-    relation: (_parent: any) => {
-      return _parent;
+    relation: ({ year, title, artists }: DiscogsMaster): Relation => {
+      const artist = artists
+        ?.map((artist) => (artist ? artist.name : ''))
+        .join(' & ');
+      const album = title;
+
+      return createRelation({
+        type: 'master',
+        artist,
+        album,
+        title: `${artist} - ${album}`,
+        year,
+      });
     },
   },
   DiscogsRelation: {
@@ -138,7 +149,15 @@ export const resolvers = {
       _params: unknown,
       { dataSources: { discogsApi } }: Context
     ): Promise<SearchDiscogsMaster> => {
-      console.log('[make search masters]', rest);
+      console.log(
+        '[make search masters]',
+        title,
+        year,
+        artist,
+        album,
+        country,
+        rest
+      );
       return discogsApi.searchMasters({
         year,
         artist,

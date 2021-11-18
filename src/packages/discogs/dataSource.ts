@@ -5,8 +5,23 @@ import {
   SearchDiscogsMaster,
   SearchDiscogsFilter,
   DiscogsPaginationParameters,
-  Scalars,
 } from './types';
+
+const processParams = <T extends Record<string, any>>(obj: T) =>
+  Object.keys(obj).reduce((acc, key) => {
+    const value = obj[key];
+    if (typeof value === 'undefined') {
+      return acc;
+    }
+    return {
+      ...acc,
+      [key]: value,
+    };
+  }, {});
+
+interface SearchParams
+  extends SearchDiscogsFilter,
+    DiscogsPaginationParameters {}
 
 export class DiscogsAPI extends RESTDataSource {
   constructor() {
@@ -19,7 +34,7 @@ export class DiscogsAPI extends RESTDataSource {
   }
 
   async search<T>(params: any) {
-    return this.get<T>('/database/search', params);
+    return this.get<T>('/database/search', processParams(params));
   }
 
   async searchReleases(params: any) {
@@ -29,9 +44,7 @@ export class DiscogsAPI extends RESTDataSource {
     });
   }
 
-  async searchMasters(
-    params: SearchDiscogsFilter & DiscogsPaginationParameters
-  ): Promise<SearchDiscogsMaster> {
+  async searchMasters(params: SearchParams): Promise<SearchDiscogsMaster> {
     return this.search<SearchDiscogsMaster>({
       type: 'master',
       ...params,
