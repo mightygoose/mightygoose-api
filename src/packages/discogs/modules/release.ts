@@ -95,7 +95,7 @@ export const typeDefs = gql`
     thumb: String!
     estimated_weight: Int!
     blocked_from_sale: Boolean!
-    #relation: Relation!
+    relation: Relation!
   }
 
   type DiscogsSearchResultRelease {
@@ -120,7 +120,7 @@ export const typeDefs = gql`
     format_quantity: Int!
     formats: [DiscogsReleaseFormat!]
     release: DiscogsRelease!
-    #relation: Relation!
+    relation: Relation!
   }
 
   type SearchDiscogsRelease {
@@ -173,39 +173,44 @@ export const resolvers = {
       _params: unknown,
       { dataSources: { discogsApi } }: Context
     ): Promise<DiscogsRelease> => discogsApi.lookupRelease(parseInt(id)),
-    // relation: ({
-    // type,
-    // year,
-    // title,
-    // country,
-    // genre,
-    // }: DiscogsSearchResultRelease): Relation =>
-    // createRelation({
-    // type,
-    // title,
-    // album: title.split(' - ')[1],
-    // artist: title.split(' - ')[0],
-    // year: parseInt(year),
-    // country,
-    // genre,
-    // }),
+    relation: ({
+      type,
+      year,
+      title,
+      country,
+      genre,
+    }: DiscogsSearchResultRelease): Relation =>
+      createRelation({
+        type,
+        title,
+        album: title.split(' - ')[1],
+        artist: title.split(' - ')[0],
+        artists: [title.split(' - ')[0]],
+        year: parseInt(year),
+        country,
+        genre,
+      }),
   },
-  // DiscogsRelease: {
-  // relation: ({ year, title, artists }: DiscogsRelease): Relation => {
-  // const artist = artists
-  // ?.map((artist) => (artist ? artist.name : ''))
-  // .join(' & ');
-  // const album = title;
+  DiscogsRelease: {
+    relation: ({
+      year,
+      title,
+      artists: artistsList,
+    }: DiscogsRelease): Relation => {
+      const artists = artistsList?.map((artist) => (artist ? artist.name : ''));
+      const artist = artists.join(' & ');
+      const album = title;
 
-  // return createRelation({
-  // type: 'release',
-  // artist,
-  // album,
-  // title: `${artist} - ${album}`,
-  // year,
-  // });
-  // },
-  // },
+      return createRelation({
+        type: 'release',
+        artist,
+        artists,
+        album,
+        title: `${artist} - ${album}`,
+        year,
+      });
+    },
+  },
   DiscogsRelation: {
     releases: (
       {

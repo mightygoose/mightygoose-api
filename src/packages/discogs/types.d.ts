@@ -132,6 +132,7 @@ export type DiscogsRelease = {
   master_url: Scalars['String'];
   notes: Scalars['String'];
   num_for_sale: Scalars['Int'];
+  relation: Relation;
   released: Scalars['String'];
   released_formatted: Scalars['String'];
   resource_url: Scalars['String'];
@@ -271,6 +272,7 @@ export type DiscogsSearchResultRelease = {
   master: DiscogsMaster;
   master_id: Scalars['Int'];
   master_url: Scalars['String'];
+  relation: Relation;
   release: DiscogsRelease;
   resource_url: Scalars['String'];
   style: Array<Scalars['String']>;
