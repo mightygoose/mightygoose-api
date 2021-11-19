@@ -44,7 +44,9 @@ export class DiscogsAPI extends RESTDataSource {
   willSendRequest(request: any) {
     request.params.set('token', DISCOGS_TOKEN);
     console.log(
-      `${request.method} ${request.path}?${request.params.toString()}`
+      `${request.method} ${this.baseURL}${
+        request.path
+      }?${request.params.toString()}`
     );
   }
 
