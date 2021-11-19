@@ -111,7 +111,6 @@ export type DiscogsRelease = {
   artists_sort: Scalars['String'];
   blocked_from_sale: Scalars['Boolean'];
   community: DiscogsReleaseCommunity;
-  /** not sure about type here */
   companies: Array<DiscogsReleaseLabel>;
   country: Scalars['String'];
   data_quality: Scalars['String'];
@@ -136,6 +135,7 @@ export type DiscogsRelease = {
   released: Scalars['String'];
   released_formatted: Scalars['String'];
   resource_url: Scalars['String'];
+  series: Array<DiscogsReleaseLabel>;
   status: Scalars['String'];
   styles: Array<Scalars['String']>;
   thumb: Scalars['String'];

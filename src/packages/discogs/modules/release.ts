@@ -65,10 +65,7 @@ export const typeDefs = gql`
     artists: [DiscogsArtistShort]!
     artists_sort: String!
     labels: [DiscogsReleaseLabel!]!
-    #series: undefined!
-    """
-    not sure about type here
-    """
+    series: [DiscogsReleaseLabel!]!
     companies: [DiscogsReleaseLabel!]!
     formats: [DiscogsReleaseFormat!]
     data_quality: String!
