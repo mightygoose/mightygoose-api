@@ -2,6 +2,7 @@ import { gql } from 'apollo-server';
 import {
   DiscogsSearchMastersArgs,
   DiscogsSearchResultMaster,
+  DiscogsSearchResultRelease,
   DiscogsMaster,
   SearchDiscogsMaster,
   DiscogsLookupMastersArgs,
@@ -64,6 +65,10 @@ export const typeDefs = gql`
   type SearchDiscogsMaster {
     pagination: DiscogsSearchPagination!
     results: [DiscogsSearchResultMaster!]!
+  }
+
+  extend type DiscogsSearchResultRelease {
+    master: DiscogsMaster!
   }
 
   extend type DiscogsSearch {
@@ -169,5 +174,12 @@ export const resolvers = {
         ...pagination,
       });
     },
+  },
+  DiscogsSearchResultRelease: {
+    master: (
+      { master_id }: DiscogsSearchResultRelease,
+      _params: unknown,
+      { dataSources: { discogsApi } }: Context
+    ): Promise<DiscogsMaster> => discogsApi.lookupMaster(master_id),
   },
 };

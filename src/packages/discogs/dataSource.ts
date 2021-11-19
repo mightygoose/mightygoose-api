@@ -3,6 +3,7 @@ import { DISCOGS_TOKEN } from './config';
 import {
   DiscogsMaster,
   SearchDiscogsMaster,
+  SearchDiscogsRelease,
   SearchDiscogsFilter,
   DiscogsPaginationParameters,
 } from './types';
@@ -50,9 +51,9 @@ export class DiscogsAPI extends RESTDataSource {
     return this.get<T>('/database/search', omitInvalidParams(params));
   }
 
-  async searchReleases(params: any) {
-    return this.search({
-      type: 'release',
+  async searchReleases(params: SearchParams): Promise<SearchDiscogsRelease> {
+    return this.search<SearchDiscogsRelease>({
+      type: types.release,
       ...params,
     });
   }

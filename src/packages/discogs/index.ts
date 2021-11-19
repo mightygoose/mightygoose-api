@@ -5,6 +5,10 @@ import {
   typeDefs as masterTypeDefs,
   resolvers as masterResolvers,
 } from './modules/master';
+import {
+  typeDefs as releaseTypeDefs,
+  resolvers as releaseResolvers,
+} from './modules/release';
 
 export const typeDefs = gql`
   extend enum Services {
@@ -144,6 +148,11 @@ export const typeDefs = gql`
     embed: Boolean!
   }
 
+  type DiscogsUserData {
+    in_wantlist: Boolean
+    in_collection: Boolean
+  }
+
   type DiscogsRelation {
     id: ID!
   }
@@ -216,4 +225,5 @@ export const dataSources = { discogsApi: new DiscogsAPI() };
 export default [
   { typeDefs, resolvers },
   { typeDefs: masterTypeDefs, resolvers: masterResolvers },
+  { typeDefs: releaseTypeDefs, resolvers: releaseResolvers },
 ];
