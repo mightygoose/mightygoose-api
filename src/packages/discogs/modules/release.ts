@@ -14,15 +14,88 @@ import { createRelation, log } from '../../base';
 import { Context } from '../';
 
 export const typeDefs = gql`
-  type DiscogsRelease {
-    id: ID!
+  type DiscogsReleaseCommunityRating {
+    count: Int!
+    average: Float!
   }
 
-  type DiscogsFormat {
+  type DiscogsReleaseCommunityUser {
+    count: Int!
+    average: Float!
+  }
+
+  type DiscogsReleaseIdentifier {
+    count: Int!
+    average: Float!
+  }
+
+  type DiscogsReleaseCommunity {
+    have: Int!
+    want: Int!
+    rating: DiscogsReleaseCommunityRating!
+    submitter: DiscogsReleaseCommunityUser!
+    contributors: [DiscogsReleaseCommunityUser!]!
+    data_quality: String!
+    status: String!
+  }
+
+  type DiscogsReleaseLabel {
+    id: ID!
+    name: String!
+    catno: String!
+    entity_type: String!
+    entity_type_name: String!
+    resource_url: String!
+    thumbnail_url: String!
+  }
+
+  type DiscogsReleaseFormat {
     name: String!
     qty: String!
     text: String
     descriptions: [String!]!
+  }
+
+  type DiscogsRelease {
+    id: ID!
+    status: String!
+    year: Int!
+    resource_url: String!
+    uri: String!
+    artists: [DiscogsArtistShort]!
+    artists_sort: String!
+    labels: [DiscogsReleaseLabel!]!
+    #series: undefined!
+    """
+    not sure about type here
+    """
+    companies: [DiscogsReleaseLabel!]!
+    formats: [DiscogsReleaseFormat!]
+    data_quality: String!
+    community: DiscogsReleaseCommunity!
+    format_quantity: Int!
+    date_added: String!
+    date_changed: String!
+    num_for_sale: Int!
+    lowest_price: Float
+    master_id: Int!
+    master_url: String!
+    title: String!
+    country: String!
+    released: String!
+    notes: String!
+    released_formatted: String!
+    identifiers: [DiscogsReleaseIdentifier!]!
+    videos: [DiscogsVideo!]!
+    genres: [String!]!
+    styles: [String!]!
+    tracklist: [DiscogsTrackShort]!
+    extraartists: [DiscogsArtistShort!]!
+    images: [DiscogsImageShort]!
+    thumb: String!
+    estimated_weight: Int!
+    blocked_from_sale: Boolean!
+    #relation: Relation!
   }
 
   type DiscogsSearchResultRelease {
@@ -45,7 +118,7 @@ export const typeDefs = gql`
     cover_image: String!
     community: DiscogsCommunity!
     format_quantity: Int!
-    formats: [DiscogsFormat!]
+    formats: [DiscogsReleaseFormat!]
     release: DiscogsRelease!
     #relation: Relation!
   }
@@ -87,36 +160,36 @@ export const resolvers = {
         ...pagination,
       }),
   },
-  // DiscogsLookup: {
-  // releases: (
-  // _parent: unknown,
-  // { id }: DiscogsLookupReleasesArgs,
-  // { dataSources: { discogsApi } }: Context
-  // ): Promise<DiscogsRelease> => discogsApi.lookupRelease(id),
-  // },
-  // DiscogsSearchResultRelease: {
-  // release: (
-  // { release_id }: DiscogsSearchResultRelease,
-  // _params: unknown,
-  // { dataSources: { discogsApi } }: Context
-  // ): Promise<DiscogsRelease> => discogsApi.lookupRelease(release_id),
-  // relation: ({
-  // type,
-  // year,
-  // title,
-  // country,
-  // genre,
-  // }: DiscogsSearchResultRelease): Relation =>
-  // createRelation({
-  // type,
-  // title,
-  // album: title.split(' - ')[1],
-  // artist: title.split(' - ')[0],
-  // year: parseInt(year),
-  // country,
-  // genre,
-  // }),
-  // },
+  DiscogsLookup: {
+    releases: (
+      _parent: unknown,
+      { id }: DiscogsLookupReleasesArgs,
+      { dataSources: { discogsApi } }: Context
+    ): Promise<DiscogsRelease> => discogsApi.lookupRelease(id),
+  },
+  DiscogsSearchResultRelease: {
+    release: (
+      { id }: DiscogsSearchResultRelease,
+      _params: unknown,
+      { dataSources: { discogsApi } }: Context
+    ): Promise<DiscogsRelease> => discogsApi.lookupRelease(parseInt(id)),
+    // relation: ({
+    // type,
+    // year,
+    // title,
+    // country,
+    // genre,
+    // }: DiscogsSearchResultRelease): Relation =>
+    // createRelation({
+    // type,
+    // title,
+    // album: title.split(' - ')[1],
+    // artist: title.split(' - ')[0],
+    // year: parseInt(year),
+    // country,
+    // genre,
+    // }),
+  },
   // DiscogsRelease: {
   // relation: ({ year, title, artists }: DiscogsRelease): Relation => {
   // const artist = artists

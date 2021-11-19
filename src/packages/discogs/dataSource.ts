@@ -2,6 +2,7 @@ import { RESTDataSource } from 'apollo-datasource-rest';
 import { DISCOGS_TOKEN } from './config';
 import {
   DiscogsMaster,
+  DiscogsRelease,
   SearchDiscogsMaster,
   SearchDiscogsRelease,
   SearchDiscogsFilter,
@@ -25,13 +26,13 @@ interface SearchParams
   extends SearchDiscogsFilter,
     DiscogsPaginationParameters {}
 
-enum types {
+enum SEARCH_TYPES {
   release = 'release',
   master = 'master',
 }
 
 interface SearchRequestParams extends SearchParams {
-  type: types;
+  type: SEARCH_TYPES;
 }
 
 export class DiscogsAPI extends RESTDataSource {
@@ -53,14 +54,18 @@ export class DiscogsAPI extends RESTDataSource {
 
   async searchReleases(params: SearchParams): Promise<SearchDiscogsRelease> {
     return this.search<SearchDiscogsRelease>({
-      type: types.release,
+      type: SEARCH_TYPES.release,
       ...params,
     });
   }
 
+  async lookupRelease(id: number): Promise<DiscogsRelease> {
+    return this.get<DiscogsRelease>(`/releases/${id}`);
+  }
+
   async searchMasters(params: SearchParams): Promise<SearchDiscogsMaster> {
     return this.search<SearchDiscogsMaster>({
-      type: types.master,
+      type: SEARCH_TYPES.master,
       ...params,
     });
   }

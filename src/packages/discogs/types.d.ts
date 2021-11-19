@@ -30,14 +30,6 @@ export type DiscogsCommunity = {
   want: Scalars['Int'];
 };
 
-export type DiscogsFormat = {
-  __typename?: 'DiscogsFormat';
-  descriptions: Array<Scalars['String']>;
-  name: Scalars['String'];
-  qty: Scalars['String'];
-  text?: Maybe<Scalars['String']>;
-};
-
 export type DiscogsImageShort = {
   __typename?: 'DiscogsImageShort';
   height: Scalars['Int'];
@@ -115,7 +107,90 @@ export type DiscogsRelationReleasesArgs = {
 
 export type DiscogsRelease = {
   __typename?: 'DiscogsRelease';
+  artists: Array<Maybe<DiscogsArtistShort>>;
+  artists_sort: Scalars['String'];
+  blocked_from_sale: Scalars['Boolean'];
+  community: DiscogsReleaseCommunity;
+  /** not sure about type here */
+  companies: Array<DiscogsReleaseLabel>;
+  country: Scalars['String'];
+  data_quality: Scalars['String'];
+  date_added: Scalars['String'];
+  date_changed: Scalars['String'];
+  estimated_weight: Scalars['Int'];
+  extraartists: Array<DiscogsArtistShort>;
+  format_quantity: Scalars['Int'];
+  formats?: Maybe<Array<DiscogsReleaseFormat>>;
+  genres: Array<Scalars['String']>;
   id: Scalars['ID'];
+  identifiers: Array<DiscogsReleaseIdentifier>;
+  images: Array<Maybe<DiscogsImageShort>>;
+  labels: Array<DiscogsReleaseLabel>;
+  lowest_price?: Maybe<Scalars['Float']>;
+  master: DiscogsMaster;
+  master_id: Scalars['Int'];
+  master_url: Scalars['String'];
+  notes: Scalars['String'];
+  num_for_sale: Scalars['Int'];
+  released: Scalars['String'];
+  released_formatted: Scalars['String'];
+  resource_url: Scalars['String'];
+  status: Scalars['String'];
+  styles: Array<Scalars['String']>;
+  thumb: Scalars['String'];
+  title: Scalars['String'];
+  tracklist: Array<Maybe<DiscogsTrackShort>>;
+  uri: Scalars['String'];
+  videos: Array<DiscogsVideo>;
+  year: Scalars['Int'];
+};
+
+export type DiscogsReleaseCommunity = {
+  __typename?: 'DiscogsReleaseCommunity';
+  contributors: Array<DiscogsReleaseCommunityUser>;
+  data_quality: Scalars['String'];
+  have: Scalars['Int'];
+  rating: DiscogsReleaseCommunityRating;
+  status: Scalars['String'];
+  submitter: DiscogsReleaseCommunityUser;
+  want: Scalars['Int'];
+};
+
+export type DiscogsReleaseCommunityRating = {
+  __typename?: 'DiscogsReleaseCommunityRating';
+  average: Scalars['Float'];
+  count: Scalars['Int'];
+};
+
+export type DiscogsReleaseCommunityUser = {
+  __typename?: 'DiscogsReleaseCommunityUser';
+  average: Scalars['Float'];
+  count: Scalars['Int'];
+};
+
+export type DiscogsReleaseFormat = {
+  __typename?: 'DiscogsReleaseFormat';
+  descriptions: Array<Scalars['String']>;
+  name: Scalars['String'];
+  qty: Scalars['String'];
+  text?: Maybe<Scalars['String']>;
+};
+
+export type DiscogsReleaseIdentifier = {
+  __typename?: 'DiscogsReleaseIdentifier';
+  average: Scalars['Float'];
+  count: Scalars['Int'];
+};
+
+export type DiscogsReleaseLabel = {
+  __typename?: 'DiscogsReleaseLabel';
+  catno: Scalars['String'];
+  entity_type: Scalars['String'];
+  entity_type_name: Scalars['String'];
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  resource_url: Scalars['String'];
+  thumbnail_url: Scalars['String'];
 };
 
 export type DiscogsSearch = {
@@ -189,7 +264,7 @@ export type DiscogsSearchResultRelease = {
   cover_image: Scalars['String'];
   format: Array<Scalars['String']>;
   format_quantity: Scalars['Int'];
-  formats?: Maybe<Array<DiscogsFormat>>;
+  formats?: Maybe<Array<DiscogsReleaseFormat>>;
   genre: Array<Scalars['String']>;
   id: Scalars['ID'];
   label: Array<Scalars['String']>;

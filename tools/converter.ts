@@ -53,7 +53,7 @@ const getType = (value: unknown, key: string) => {
 export const generateSchema = (input: Record<string, any>) => {
   const keys = Object.keys(input);
 
-  return keys.map((key) => `${key}: ${getType(input[key], key)}`).join('\n');
+  return keys.map((key) => `${key}: ${getType(input[key], key)}!`).join('\n');
 };
 
 // console.log(generateSchema(input));
