@@ -9,6 +9,10 @@ import {
   typeDefs as releaseTypeDefs,
   resolvers as releaseResolvers,
 } from './modules/release';
+import {
+  typeDefs as masterVersionTypeDefs,
+  resolvers as masterVersionResolvers,
+} from './modules/masterVersion';
 
 export const typeDefs = gql`
   extend enum Services {
@@ -109,7 +113,13 @@ export const typeDefs = gql`
   discogs pagination parameters
   """
   input DiscogsPaginationParameters {
+    """
+    number (optional) Example: 3
+    """
     page: Int! = 1
+    """
+    number (optional) Example: 25
+    """
     per_page: Int! = 5
   }
 
@@ -146,11 +156,6 @@ export const typeDefs = gql`
     description: String!
     duration: Int!
     embed: Boolean!
-  }
-
-  type DiscogsUserData {
-    in_wantlist: Boolean
-    in_collection: Boolean
   }
 
   type DiscogsRelation {
@@ -212,6 +217,9 @@ export const resolvers = {
   DiscogsSearch: {
     id: () => +new Date(),
   },
+  DiscogsLookup: {
+    id: () => +new Date(),
+  },
   Relation: {
     discogs: <T>(parent: T): T => parent,
   },
@@ -226,4 +234,5 @@ export default [
   { typeDefs, resolvers },
   { typeDefs: masterTypeDefs, resolvers: masterResolvers },
   { typeDefs: releaseTypeDefs, resolvers: releaseResolvers },
+  { typeDefs: masterVersionTypeDefs, resolvers: masterVersionResolvers },
 ];

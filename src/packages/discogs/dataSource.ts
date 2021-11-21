@@ -7,6 +7,8 @@ import {
   SearchDiscogsRelease,
   SearchDiscogsFilter,
   DiscogsPaginationParameters,
+  GetDiscogsMasterVersions,
+  DiscogsMasterVersionsFilterInput,
 } from './types';
 
 const omitInvalidParams = <T extends Record<string, any>>(params: T) => {
@@ -24,6 +26,10 @@ const omitInvalidParams = <T extends Record<string, any>>(params: T) => {
 
 interface SearchParams
   extends SearchDiscogsFilter,
+    DiscogsPaginationParameters {}
+
+interface MasterVersionParams
+  extends DiscogsMasterVersionsFilterInput,
     DiscogsPaginationParameters {}
 
 enum SEARCH_TYPES {
@@ -74,5 +80,15 @@ export class DiscogsAPI extends RESTDataSource {
 
   async lookupMaster(id: number): Promise<DiscogsMaster> {
     return this.get<DiscogsMaster>(`/masters/${id}`);
+  }
+
+  async lookupMasterVersions(
+    id: number,
+    params: MasterVersionParams
+  ): Promise<GetDiscogsMasterVersions> {
+    return this.get<GetDiscogsMasterVersions>(
+      `/masters/${id}/versions`,
+      omitInvalidParams(params)
+    );
   }
 }

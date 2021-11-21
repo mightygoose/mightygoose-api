@@ -10,6 +10,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  AvailableFilters: any;
 };
 
 export type DiscogsArtistShort = {
@@ -62,6 +63,7 @@ export type DiscogsMaster = {
   artists: Array<Maybe<DiscogsArtistShort>>;
   data_quality: Scalars['String'];
   genres: Array<Scalars['String']>;
+  getVersions: GetDiscogsMasterVersions;
   id: Scalars['ID'];
   images: Array<Maybe<DiscogsImageShort>>;
   lowest_price: Scalars['Float'];
@@ -82,9 +84,86 @@ export type DiscogsMaster = {
   year: Scalars['Int'];
 };
 
+
+export type DiscogsMasterGetVersionsArgs = {
+  filter?: InputMaybe<DiscogsMasterVersionsFilterInput>;
+  pagination?: InputMaybe<DiscogsPaginationParameters>;
+};
+
+export type DiscogsMasterVersion = {
+  __typename?: 'DiscogsMasterVersion';
+  catno: Scalars['String'];
+  country: Scalars['String'];
+  format: Scalars['String'];
+  id: Scalars['Int'];
+  label: Scalars['String'];
+  major_formats: Array<Scalars['String']>;
+  released: Scalars['String'];
+  resource_url: Scalars['String'];
+  stats: DiscogsMasterVersionStats;
+  status: Scalars['String'];
+  thumb: Scalars['String'];
+  title: Scalars['String'];
+};
+
+export type DiscogsMasterVersionStats = {
+  __typename?: 'DiscogsMasterVersionStats';
+  community: DiscogsMasterVersionStatsCommunity;
+};
+
+export type DiscogsMasterVersionStatsCommunity = {
+  __typename?: 'DiscogsMasterVersionStatsCommunity';
+  in_collection: Scalars['Boolean'];
+  in_wantlist: Scalars['Boolean'];
+};
+
+export type DiscogsMasterVersionsFilterFacets = {
+  __typename?: 'DiscogsMasterVersionsFilterFacets';
+  allows_multiple_values: Scalars['Boolean'];
+  id: Scalars['String'];
+  title: Scalars['String'];
+  values: Array<DiscogsVersionsFilterFacetsValues>;
+};
+
+export type DiscogsMasterVersionsFilterInput = {
+  /** Example: Belgium */
+  country?: InputMaybe<Scalars['String']>;
+  /** Example: Vinyl */
+  format?: InputMaybe<Scalars['String']>;
+  /** Example: Scorpio Music */
+  label?: InputMaybe<Scalars['String']>;
+  /** Example: 1992 */
+  released?: InputMaybe<Scalars['String']>;
+  /** Example: released */
+  sort?: InputMaybe<DiscogsMasterVersionsFilterSort>;
+  /** Example: asc */
+  sort_order?: InputMaybe<DiscogsMasterVersionsFilterSortOrder>;
+};
+
+export enum DiscogsMasterVersionsFilterSort {
+  Catno = 'catno',
+  Country = 'country',
+  Format = 'format',
+  Label = 'label',
+  Released = 'released',
+  Title = 'title'
+}
+
+export enum DiscogsMasterVersionsFilterSortOrder {
+  Asc = 'asc',
+  Desc = 'desc'
+}
+
+export type DiscogsMasterVersionsFilters = {
+  __typename?: 'DiscogsMasterVersionsFilters';
+  available: Scalars['AvailableFilters'];
+};
+
 /** discogs pagination parameters */
 export type DiscogsPaginationParameters = {
+  /** number (optional) Example: 3 */
   page?: Scalars['Int'];
+  /** number (optional) Example: 25 */
   per_page?: Scalars['Int'];
 };
 
@@ -241,6 +320,7 @@ export type DiscogsSearchResultMaster = {
   cover_image: Scalars['String'];
   format: Array<Scalars['String']>;
   genre: Array<Scalars['String']>;
+  getVersions: GetDiscogsMasterVersions;
   id: Scalars['ID'];
   label: Array<Scalars['String']>;
   master: DiscogsMaster;
@@ -254,6 +334,12 @@ export type DiscogsSearchResultMaster = {
   type: Scalars['String'];
   uri: Scalars['String'];
   year: Scalars['String'];
+};
+
+
+export type DiscogsSearchResultMasterGetVersionsArgs = {
+  filter?: InputMaybe<DiscogsMasterVersionsFilterInput>;
+  pagination?: InputMaybe<DiscogsPaginationParameters>;
 };
 
 export type DiscogsSearchResultRelease = {
@@ -291,10 +377,11 @@ export type DiscogsTrackShort = {
   type_: Scalars['String'];
 };
 
-export type DiscogsUserData = {
-  __typename?: 'DiscogsUserData';
-  in_collection?: Maybe<Scalars['Boolean']>;
-  in_wantlist?: Maybe<Scalars['Boolean']>;
+export type DiscogsVersionsFilterFacetsValues = {
+  __typename?: 'DiscogsVersionsFilterFacetsValues';
+  count: Scalars['Int'];
+  title: Scalars['String'];
+  value: Scalars['String'];
 };
 
 export type DiscogsVideo = {
@@ -304,6 +391,14 @@ export type DiscogsVideo = {
   embed: Scalars['Boolean'];
   title: Scalars['String'];
   uri: Scalars['String'];
+};
+
+export type GetDiscogsMasterVersions = {
+  __typename?: 'GetDiscogsMasterVersions';
+  filter_facets: Array<Maybe<DiscogsMasterVersionsFilterFacets>>;
+  filters: DiscogsMasterVersionsFilters;
+  pagination: DiscogsSearchPagination;
+  versions: Array<Maybe<DiscogsMasterVersion>>;
 };
 
 export type Lookup = {
