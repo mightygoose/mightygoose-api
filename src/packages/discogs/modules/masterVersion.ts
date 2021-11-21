@@ -1,13 +1,7 @@
 import { gql } from 'apollo-server';
 import {
-  DiscogsSearchMastersArgs,
   DiscogsSearchResultMaster,
-  DiscogsSearchResultRelease,
   DiscogsMaster,
-  DiscogsRelease,
-  SearchDiscogsMaster,
-  DiscogsLookupMastersArgs,
-  DiscogsRelationMastersArgs,
   GetDiscogsMasterVersions,
   DiscogsSearchResultMasterGetVersionsArgs,
 } from '../types';

@@ -44,17 +44,17 @@ export type DiscogsImageShort = {
 export type DiscogsLookup = {
   __typename?: 'DiscogsLookup';
   id: Scalars['ID'];
-  masters?: Maybe<DiscogsMaster>;
-  releases?: Maybe<DiscogsRelease>;
+  master?: Maybe<DiscogsMaster>;
+  release?: Maybe<DiscogsRelease>;
 };
 
 
-export type DiscogsLookupMastersArgs = {
+export type DiscogsLookupMasterArgs = {
   id: Scalars['Int'];
 };
 
 
-export type DiscogsLookupReleasesArgs = {
+export type DiscogsLookupReleaseArgs = {
   id: Scalars['Int'];
 };
 

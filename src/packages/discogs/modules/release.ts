@@ -4,7 +4,7 @@ import {
   DiscogsSearchResultRelease,
   DiscogsRelease,
   SearchDiscogsRelease,
-  DiscogsLookupReleasesArgs,
+  DiscogsLookupReleaseArgs,
   DiscogsRelationReleasesArgs,
   DiscogsMasterVersion,
 } from '../types';
@@ -145,7 +145,7 @@ export const typeDefs = gql`
   }
 
   extend type DiscogsLookup {
-    releases(id: Int!): DiscogsRelease
+    release(id: Int!): DiscogsRelease
   }
 `;
 
@@ -163,9 +163,9 @@ export const resolvers = {
       }),
   },
   DiscogsLookup: {
-    releases: (
+    release: (
       _parent: unknown,
-      { id }: DiscogsLookupReleasesArgs,
+      { id }: DiscogsLookupReleaseArgs,
       { dataSources: { discogsApi } }: Context
     ): Promise<DiscogsRelease> => discogsApi.lookupRelease(id),
   },
