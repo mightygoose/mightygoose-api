@@ -6,6 +6,7 @@ import {
   SearchDiscogsRelease,
   DiscogsLookupReleasesArgs,
   DiscogsRelationReleasesArgs,
+  DiscogsMasterVersion,
 } from '../types';
 
 import { Relation } from '../../base/types';
@@ -125,6 +126,10 @@ export const typeDefs = gql`
     results: [DiscogsSearchResultRelease!]!
   }
 
+  extend type DiscogsMasterVersion {
+    release: DiscogsRelease!
+  }
+
   extend type DiscogsSearch {
     releases(
       search: String
@@ -187,6 +192,13 @@ export const resolvers = {
         country,
         genre,
       }),
+  },
+  DiscogsMasterVersion: {
+    release: (
+      { id }: DiscogsMasterVersion,
+      _params: unknown,
+      { dataSources: { discogsApi } }: Context
+    ): Promise<DiscogsRelease> => discogsApi.lookupRelease(id),
   },
   DiscogsRelease: {
     relation: ({

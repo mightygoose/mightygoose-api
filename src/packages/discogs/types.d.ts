@@ -98,6 +98,7 @@ export type DiscogsMasterVersion = {
   id: Scalars['Int'];
   label: Scalars['String'];
   major_formats: Array<Scalars['String']>;
+  release: DiscogsRelease;
   released: Scalars['String'];
   resource_url: Scalars['String'];
   stats: DiscogsMasterVersionStats;
