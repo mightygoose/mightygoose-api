@@ -127,31 +127,38 @@ export const resolvers = {
       title,
       country,
       genre,
-    }: DiscogsSearchResultMaster): Relation =>
-      createRelation({
+    }: DiscogsSearchResultMaster): Relation => {
+      const [artist, album] = title.split(' - ');
+      return createRelation({
         type,
         title,
-        album: title.split(' - ')[1],
-        artist: title.split(' - ')[0],
-        //artists: []
+        album,
+        artist,
+        artists: artist.split(' / '),
         year: parseInt(year),
         country,
         genre,
-      }),
+      });
+    },
   },
   DiscogsMaster: {
     relation: ({ year, title, artists }: DiscogsMaster): Relation => {
-      const artist = artists
-        ?.map((artist) => (artist ? artist.name : ''))
-        .join(' & ');
-      const album = title;
+      const artistsFlatened =
+        artists?.reduce<Array<string>>((acc, artist) => {
+          if (typeof artist?.name !== 'undefined') {
+            return [...acc, artist.name];
+          }
+          return acc;
+        }, []) || [];
+
+      const artist = artistsFlatened.join(' / ');
 
       return createRelation({
         type: 'master',
         artist,
-        //artists: []
-        album,
-        title: `${artist} - ${album}`,
+        artists: artistsFlatened,
+        album: title,
+        title: `${artist} - ${title}`,
         year,
       });
     },
