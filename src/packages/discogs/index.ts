@@ -19,6 +19,21 @@ export const typeDefs = gql`
     Discogs
   }
 
+  enum DiscogsCurrencies {
+    USD
+    GBP
+    EUR
+    CAD
+    AUD
+    JPY
+    CHF
+    MXN
+    BRL
+    NZD
+    SEK
+    ZAR
+  }
+
   """
   discogs general search parameters
   """

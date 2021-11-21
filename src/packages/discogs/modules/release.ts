@@ -7,6 +7,8 @@ import {
   DiscogsLookupReleaseArgs,
   DiscogsRelationReleasesArgs,
   DiscogsMasterVersion,
+  DiscogsSearchResultReleaseReleaseArgs,
+  DiscogsMasterVersionReleaseArgs,
 } from '../types';
 
 import { Relation } from '../../base/types';
@@ -57,6 +59,9 @@ export const typeDefs = gql`
     descriptions: [String!]!
   }
 
+  """
+  The Release resource represents a particular physical or digital object released by one or more Artists.
+  """
   type DiscogsRelease {
     id: ID!
     status: String!
@@ -117,7 +122,7 @@ export const typeDefs = gql`
     community: DiscogsCommunity!
     format_quantity: Int!
     formats: [DiscogsReleaseFormat!]
-    release: DiscogsRelease!
+    release(curr_abbr: DiscogsCurrencies): DiscogsRelease!
     relation: Relation!
   }
 
@@ -127,7 +132,7 @@ export const typeDefs = gql`
   }
 
   extend type DiscogsMasterVersion {
-    release: DiscogsRelease!
+    release(curr_abbr: DiscogsCurrencies): DiscogsRelease!
   }
 
   extend type DiscogsSearch {
@@ -145,7 +150,19 @@ export const typeDefs = gql`
   }
 
   extend type DiscogsLookup {
-    release(id: Int!): DiscogsRelease
+    release(
+      """
+      The Release ID
+
+      Example: 249504
+      """
+      id: Int!
+
+      """
+      Currency for marketplace data. Defaults to the authenticated users currency
+      """
+      curr_abbr: DiscogsCurrencies
+    ): DiscogsRelease
   }
 `;
 
@@ -165,16 +182,17 @@ export const resolvers = {
   DiscogsLookup: {
     release: (
       _parent: unknown,
-      { id }: DiscogsLookupReleaseArgs,
+      { id, curr_abbr }: DiscogsLookupReleaseArgs,
       { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsRelease> => discogsApi.lookupRelease(id),
+    ): Promise<DiscogsRelease> => discogsApi.lookupRelease(id, curr_abbr),
   },
   DiscogsSearchResultRelease: {
     release: (
       { id }: DiscogsSearchResultRelease,
-      _params: unknown,
+      { curr_abbr }: DiscogsSearchResultReleaseReleaseArgs,
       { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsRelease> => discogsApi.lookupRelease(parseInt(id)),
+    ): Promise<DiscogsRelease> =>
+      discogsApi.lookupRelease(parseInt(id), curr_abbr),
     relation: ({
       type,
       year,
@@ -196,9 +214,9 @@ export const resolvers = {
   DiscogsMasterVersion: {
     release: (
       { id }: DiscogsMasterVersion,
-      _params: unknown,
+      { curr_abbr }: DiscogsMasterVersionReleaseArgs,
       { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsRelease> => discogsApi.lookupRelease(id),
+    ): Promise<DiscogsRelease> => discogsApi.lookupRelease(id, curr_abbr),
   },
   DiscogsRelease: {
     relation: ({

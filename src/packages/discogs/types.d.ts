@@ -31,6 +31,21 @@ export type DiscogsCommunity = {
   want: Scalars['Int'];
 };
 
+export enum DiscogsCurrencies {
+  Aud = 'AUD',
+  Brl = 'BRL',
+  Cad = 'CAD',
+  Chf = 'CHF',
+  Eur = 'EUR',
+  Gbp = 'GBP',
+  Jpy = 'JPY',
+  Mxn = 'MXN',
+  Nzd = 'NZD',
+  Sek = 'SEK',
+  Usd = 'USD',
+  Zar = 'ZAR'
+}
+
 export type DiscogsImageShort = {
   __typename?: 'DiscogsImageShort';
   height: Scalars['Int'];
@@ -55,6 +70,7 @@ export type DiscogsLookupMasterArgs = {
 
 
 export type DiscogsLookupReleaseArgs = {
+  curr_abbr?: InputMaybe<DiscogsCurrencies>;
   id: Scalars['Int'];
 };
 
@@ -105,6 +121,11 @@ export type DiscogsMasterVersion = {
   status: Scalars['String'];
   thumb: Scalars['String'];
   title: Scalars['String'];
+};
+
+
+export type DiscogsMasterVersionReleaseArgs = {
+  curr_abbr?: InputMaybe<DiscogsCurrencies>;
 };
 
 export type DiscogsMasterVersionStats = {
@@ -217,6 +238,7 @@ export type DiscogsRelationReleasesArgs = {
   pagination?: InputMaybe<DiscogsPaginationParameters>;
 };
 
+/** The Release resource represents a particular physical or digital object released by one or more Artists. */
 export type DiscogsRelease = {
   __typename?: 'DiscogsRelease';
   artists: Array<Maybe<DiscogsArtistShort>>;
@@ -400,6 +422,11 @@ export type DiscogsSearchResultRelease = {
   type: Scalars['String'];
   uri: Scalars['String'];
   year: Scalars['String'];
+};
+
+
+export type DiscogsSearchResultReleaseReleaseArgs = {
+  curr_abbr?: InputMaybe<DiscogsCurrencies>;
 };
 
 export type DiscogsTrackShort = {

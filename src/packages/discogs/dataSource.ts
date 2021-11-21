@@ -1,6 +1,7 @@
 import { RESTDataSource } from 'apollo-datasource-rest';
 import { DISCOGS_TOKEN } from './config';
 import {
+  InputMaybe,
   DiscogsMaster,
   DiscogsRelease,
   SearchDiscogsMaster,
@@ -9,6 +10,7 @@ import {
   DiscogsPaginationParameters,
   GetDiscogsMasterVersions,
   DiscogsMasterVersionsFilterInput,
+  DiscogsCurrencies,
 } from './types';
 
 const omitInvalidParams = <T extends Record<string, any>>(params: T) => {
@@ -67,8 +69,14 @@ export class DiscogsAPI extends RESTDataSource {
     });
   }
 
-  async lookupRelease(id: number): Promise<DiscogsRelease> {
-    return this.get<DiscogsRelease>(`/releases/${id}`);
+  async lookupRelease(
+    id: number,
+    curr_abbr?: InputMaybe<DiscogsCurrencies>
+  ): Promise<DiscogsRelease> {
+    return this.get<DiscogsRelease>(
+      `/releases/${id}`,
+      omitInvalidParams({ curr_abbr })
+    );
   }
 
   async searchMasters(params: SearchParams): Promise<SearchDiscogsMaster> {
