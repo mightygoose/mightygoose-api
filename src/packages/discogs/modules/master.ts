@@ -133,6 +133,7 @@ export const resolvers = {
         title,
         album: title.split(' - ')[1],
         artist: title.split(' - ')[0],
+        //artists: []
         year: parseInt(year),
         country,
         genre,
@@ -148,6 +149,7 @@ export const resolvers = {
       return createRelation({
         type: 'master',
         artist,
+        //artists: []
         album,
         title: `${artist} - ${album}`,
         year,
