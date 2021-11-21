@@ -146,11 +146,16 @@ export const typeDefs = gql`
   """
   input DiscogsPaginationParameters {
     """
-    number (optional) Example: 3
+    The page you want to request
+
+    Example: 3
     """
     page: Int! = 1
+
     """
-    number (optional) Example: 25
+    The number of items per page
+
+    Example: 5
     """
     per_page: Int! = 5
   }

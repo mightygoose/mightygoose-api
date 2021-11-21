@@ -34,26 +34,43 @@ export const typeDefs = gql`
 
   input DiscogsMasterVersionsFilterInput {
     """
+    The format to filter
+
     Example: Vinyl
     """
     format: String
+
     """
+    The format to filter
+
     Example: Scorpio Music
     """
     label: String
+
     """
+    The release year to filter
+
     Example: 1992
     """
     released: String
+
     """
+    The country to filter
+
     Example: Belgium
     """
     country: String
+
     """
+    Sort items by this field
+
     Example: released
     """
     sort: DiscogsMasterVersionsFilterSort
+
     """
+    Sort items in a particular order
+
     Example: asc
     """
     sort_order: DiscogsMasterVersionsFilterSortOrder

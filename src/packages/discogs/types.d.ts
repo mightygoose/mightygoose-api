@@ -126,17 +126,41 @@ export type DiscogsMasterVersionsFilterFacets = {
 };
 
 export type DiscogsMasterVersionsFilterInput = {
-  /** Example: Belgium */
+  /**
+   * The country to filter
+   *
+   * Example: Belgium
+   */
   country?: InputMaybe<Scalars['String']>;
-  /** Example: Vinyl */
+  /**
+   * The format to filter
+   *
+   * Example: Vinyl
+   */
   format?: InputMaybe<Scalars['String']>;
-  /** Example: Scorpio Music */
+  /**
+   * The format to filter
+   *
+   * Example: Scorpio Music
+   */
   label?: InputMaybe<Scalars['String']>;
-  /** Example: 1992 */
+  /**
+   * The release year to filter
+   *
+   * Example: 1992
+   */
   released?: InputMaybe<Scalars['String']>;
-  /** Example: released */
+  /**
+   * Sort items by this field
+   *
+   * Example: released
+   */
   sort?: InputMaybe<DiscogsMasterVersionsFilterSort>;
-  /** Example: asc */
+  /**
+   * Sort items in a particular order
+   *
+   * Example: asc
+   */
   sort_order?: InputMaybe<DiscogsMasterVersionsFilterSortOrder>;
 };
 
@@ -161,9 +185,17 @@ export type DiscogsMasterVersionsFilters = {
 
 /** discogs pagination parameters */
 export type DiscogsPaginationParameters = {
-  /** number (optional) Example: 3 */
+  /**
+   * The page you want to request
+   *
+   * Example: 3
+   */
   page?: Scalars['Int'];
-  /** number (optional) Example: 25 */
+  /**
+   * The number of items per page
+   *
+   * Example: 5
+   */
   per_page?: Scalars['Int'];
 };
 
