@@ -24,6 +24,8 @@ export const typeDefs = gql`
   """
   input SearchDiscogsFilter {
     """
+    Your search query
+
     Example: nirvana
     """
     query: String
@@ -34,76 +36,106 @@ export const typeDefs = gql`
     title: String
 
     """
+    Search release titles
+
     Example: nevermind
     """
     release_title: String
 
     """
+    Search release credits
+
     Example: kurt
     """
     credit: String
 
     """
+    Search artist names
+
     Example: nirvana
     """
     artist: String
 
     """
+    Search artist ANV (Artist Name Variation)
+
     Example: nirvana
     """
     anv: String
 
     """
+    Search label names
+
     Example: dgc
     """
     label: String
 
     """
+    Search genres
+
     Example: rock
     """
     genre: String
 
     """
+    Search styles
+
     Example: grunge
     """
     style: String
 
     """
+    Search release country
+
     Example: canada
     """
     country: String
 
     """
+    Search release year
+
     Example: 1991
     """
     year: Int
 
     """
+    Search formats
+
     Example: album
     """
     format: String
 
     """
+    Search catalog number
+
     Example: DGCD-24425
     """
     catno: String
 
     """
+    Search barcodes
+
     Example: 7 2064-24425-2 4
     """
     barcode: String
 
     """
+    Search track titles
+
     Example: smells like teen spirit
     """
     track: String
 
     """
+    Search submitter username
+
     Example: milKt
     """
     submitter: String
 
     """
+    Search contributor usernames
+
     Example: jerome99
     """
     contributor: String

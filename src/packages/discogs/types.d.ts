@@ -418,39 +418,103 @@ export type Search = {
 
 /** discogs general search parameters */
 export type SearchDiscogsFilter = {
-  /** Example: nirvana */
+  /**
+   * Search artist ANV (Artist Name Variation)
+   *
+   * Example: nirvana
+   */
   anv?: InputMaybe<Scalars['String']>;
-  /** Example: nirvana */
+  /**
+   * Search artist names
+   *
+   * Example: nirvana
+   */
   artist?: InputMaybe<Scalars['String']>;
-  /** Example: 7 2064-24425-2 4 */
+  /**
+   * Search barcodes
+   *
+   * Example: 7 2064-24425-2 4
+   */
   barcode?: InputMaybe<Scalars['String']>;
-  /** Example: DGCD-24425 */
+  /**
+   * Search catalog number
+   *
+   * Example: DGCD-24425
+   */
   catno?: InputMaybe<Scalars['String']>;
-  /** Example: jerome99 */
+  /**
+   * Search contributor usernames
+   *
+   * Example: jerome99
+   */
   contributor?: InputMaybe<Scalars['String']>;
-  /** Example: canada */
+  /**
+   * Search release country
+   *
+   * Example: canada
+   */
   country?: InputMaybe<Scalars['String']>;
-  /** Example: kurt */
+  /**
+   * Search release credits
+   *
+   * Example: kurt
+   */
   credit?: InputMaybe<Scalars['String']>;
-  /** Example: album */
+  /**
+   * Search formats
+   *
+   * Example: album
+   */
   format?: InputMaybe<Scalars['String']>;
-  /** Example: rock */
+  /**
+   * Search genres
+   *
+   * Example: rock
+   */
   genre?: InputMaybe<Scalars['String']>;
-  /** Example: dgc */
+  /**
+   * Search label names
+   *
+   * Example: dgc
+   */
   label?: InputMaybe<Scalars['String']>;
-  /** Example: nirvana */
+  /**
+   * Your search query
+   *
+   * Example: nirvana
+   */
   query?: InputMaybe<Scalars['String']>;
-  /** Example: nevermind */
+  /**
+   * Search release titles
+   *
+   * Example: nevermind
+   */
   release_title?: InputMaybe<Scalars['String']>;
-  /** Example: grunge */
+  /**
+   * Search styles
+   *
+   * Example: grunge
+   */
   style?: InputMaybe<Scalars['String']>;
-  /** Example: milKt */
+  /**
+   * Search submitter username
+   *
+   * Example: milKt
+   */
   submitter?: InputMaybe<Scalars['String']>;
   /** Example: nirvana - nevermind */
   title?: InputMaybe<Scalars['String']>;
-  /** Example: smells like teen spirit */
+  /**
+   * Search track titles
+   *
+   * Example: smells like teen spirit
+   */
   track?: InputMaybe<Scalars['String']>;
-  /** Example: 1991 */
+  /**
+   * Search release year
+   *
+   * Example: 1991
+   */
   year?: InputMaybe<Scalars['Int']>;
 };
 
