@@ -90,6 +90,7 @@ export type DiscogsMaster = {
   notes: Scalars['String'];
   num_for_sale: Scalars['Int'];
   relation: Relation;
+  release: DiscogsRelease;
   resource_url: Scalars['String'];
   styles: Array<Scalars['String']>;
   title: Scalars['String'];
@@ -105,6 +106,16 @@ export type DiscogsMasterGetVersionsArgs = {
   filter?: InputMaybe<DiscogsMasterVersionsFilterInput>;
   pagination?: InputMaybe<DiscogsPaginationParameters>;
 };
+
+
+export type DiscogsMasterReleaseArgs = {
+  type?: InputMaybe<DiscogsMasterReleaseType>;
+};
+
+export enum DiscogsMasterReleaseType {
+  Main = 'main',
+  MostRecent = 'most_recent'
+}
 
 export type DiscogsMasterVersion = {
   __typename?: 'DiscogsMasterVersion';

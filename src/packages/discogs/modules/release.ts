@@ -6,9 +6,11 @@ import {
   SearchDiscogsRelease,
   DiscogsLookupReleaseArgs,
   DiscogsRelationReleasesArgs,
+  DiscogsMaster,
   DiscogsMasterVersion,
   DiscogsSearchResultReleaseReleaseArgs,
   DiscogsMasterVersionReleaseArgs,
+  DiscogsMasterReleaseArgs,
   DiscogsReleaseRatingWrapper,
 } from '../types';
 
@@ -152,6 +154,15 @@ export const typeDefs = gql`
     results: [DiscogsSearchResultRelease!]!
   }
 
+  enum DiscogsMasterReleaseType {
+    main
+    most_recent
+  }
+
+  extend type DiscogsMaster {
+    release(type: DiscogsMasterReleaseType = main): DiscogsRelease!
+  }
+
   extend type DiscogsMasterVersion {
     release(curr_abbr: DiscogsCurrencies): DiscogsRelease!
     rating: DiscogsReleaseRatingWrapper!
@@ -238,6 +249,17 @@ export const resolvers = {
       { dataSources: { discogsApi } }: Context
     ): Promise<DiscogsReleaseRatingWrapper> =>
       dataSources.discogsApi.lookupReleaseRating(parseInt(id)),
+  },
+  DiscogsMaster: {
+    release: (
+      { main_release, most_recent_release }: DiscogsMaster,
+      { type }: DiscogsMasterReleaseArgs,
+      { dataSources: { discogsApi } }: Context
+    ): Promise<DiscogsRelease> => {
+      return discogsApi.lookupRelease(
+        type === 'main' ? main_release : most_recent_release
+      );
+    },
   },
   DiscogsMasterVersion: {
     release: (
