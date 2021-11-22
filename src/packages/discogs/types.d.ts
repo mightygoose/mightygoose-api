@@ -42,9 +42,11 @@ export type DiscogsArtistMembers = {
 export type DiscogsArtistShort = {
   __typename?: 'DiscogsArtistShort';
   anv: Scalars['String'];
+  artist: DiscogsArtist;
   id: Scalars['ID'];
   join: Scalars['String'];
   name: Scalars['String'];
+  relation: Relation;
   resource_url: Scalars['String'];
   role: Scalars['String'];
   thumbnail_url: Scalars['String'];

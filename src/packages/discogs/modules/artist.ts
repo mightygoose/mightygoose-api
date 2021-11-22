@@ -7,6 +7,7 @@ import {
   SearchDiscogsArtist,
   DiscogsSearchArtistsArgs,
   DiscogsSearchResultArtist,
+  DiscogsArtistShort,
 } from '../types';
 
 import { Relation } from '../../base/types';
@@ -51,6 +52,19 @@ export const typeDefs = gql`
     resource_url: String!
     user_data: DiscogsMasterVersionStatsCommunity!
     relation: Relation!
+  }
+
+  type DiscogsArtistShort {
+    id: ID!
+    name: String!
+    anv: String!
+    join: String!
+    role: String!
+    tracks: String!
+    resource_url: String!
+    thumbnail_url: String!
+    relation: Relation!
+    artist: DiscogsArtist!
   }
 
   type SearchDiscogsArtist {
@@ -114,6 +128,7 @@ export const resolvers = {
     relation: ({ name: artist }: DiscogsArtist): Relation =>
       createRelation({
         type: 'artist',
+        title: artist,
         artist,
         artists: [artist],
       }),
@@ -122,6 +137,20 @@ export const resolvers = {
     relation: ({ type, title: artist }: DiscogsSearchResultArtist): Relation =>
       createRelation({
         type,
+        artist,
+        artists: [artist],
+      }),
+  },
+  DiscogsArtistShort: {
+    artist: (
+      { id }: DiscogsArtistShort,
+      _params: unknown,
+      { dataSources: { discogsApi } }: Context
+    ): Promise<DiscogsArtist> => discogsApi.lookupArtist(parseInt(id)),
+    relation: ({ name: artist }: DiscogsArtistShort): Relation =>
+      createRelation({
+        type: 'artist',
+        title: artist,
         artist,
         artists: [artist],
       }),

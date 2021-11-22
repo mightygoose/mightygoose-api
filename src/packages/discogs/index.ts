@@ -180,17 +180,6 @@ export const typeDefs = gql`
     per_page: Int! = 5
   }
 
-  type DiscogsArtistShort {
-    id: ID!
-    name: String!
-    anv: String!
-    join: String!
-    role: String!
-    tracks: String!
-    resource_url: String!
-    thumbnail_url: String!
-  }
-
   type DiscogsImageShort {
     type: String!
     uri: String!
