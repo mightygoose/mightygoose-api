@@ -114,6 +114,7 @@ export type DiscogsMasterVersion = {
   id: Scalars['Int'];
   label: Scalars['String'];
   major_formats: Array<Scalars['String']>;
+  rating: DiscogsReleaseRatingWrapper;
   release: DiscogsRelease;
   released: Scalars['String'];
   resource_url: Scalars['String'];
@@ -265,6 +266,8 @@ export type DiscogsRelease = {
   master_url: Scalars['String'];
   notes: Scalars['String'];
   num_for_sale: Scalars['Int'];
+  /** The Community Release Rating endpoint retrieves the average rating and the total number of user ratings for a given release */
+  rating: DiscogsReleaseRatingWrapper;
   relation: Relation;
   released: Scalars['String'];
   released_formatted: Scalars['String'];
@@ -326,6 +329,19 @@ export type DiscogsReleaseLabel = {
   name: Scalars['String'];
   resource_url: Scalars['String'];
   thumbnail_url: Scalars['String'];
+};
+
+/** Retrieves the community release rating average and count */
+export type DiscogsReleaseRating = {
+  __typename?: 'DiscogsReleaseRating';
+  average: Scalars['Float'];
+  count: Scalars['Int'];
+};
+
+export type DiscogsReleaseRatingWrapper = {
+  __typename?: 'DiscogsReleaseRatingWrapper';
+  rating: DiscogsReleaseRating;
+  release_id: Scalars['Int'];
 };
 
 export type DiscogsSearch = {
@@ -413,6 +429,7 @@ export type DiscogsSearchResultRelease = {
   master: DiscogsMaster;
   master_id: Scalars['Int'];
   master_url: Scalars['String'];
+  rating: DiscogsReleaseRatingWrapper;
   relation: Relation;
   release: DiscogsRelease;
   resource_url: Scalars['String'];

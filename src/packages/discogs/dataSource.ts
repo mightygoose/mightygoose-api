@@ -11,6 +11,7 @@ import {
   GetDiscogsMasterVersions,
   DiscogsMasterVersionsFilterInput,
   DiscogsCurrencies,
+  DiscogsReleaseRatingWrapper,
 } from './types';
 
 const omitInvalidParams = <T extends Record<string, any>>(params: T) => {
@@ -77,6 +78,10 @@ export class DiscogsAPI extends RESTDataSource {
       `/releases/${id}`,
       omitInvalidParams({ curr_abbr })
     );
+  }
+
+  async lookupReleaseRating(id: number): Promise<DiscogsReleaseRatingWrapper> {
+    return this.get<DiscogsReleaseRatingWrapper>(`/releases/${id}/rating`);
   }
 
   async searchMasters(params: SearchParams): Promise<SearchDiscogsMaster> {

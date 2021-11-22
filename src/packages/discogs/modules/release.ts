@@ -9,12 +9,13 @@ import {
   DiscogsMasterVersion,
   DiscogsSearchResultReleaseReleaseArgs,
   DiscogsMasterVersionReleaseArgs,
+  DiscogsReleaseRatingWrapper,
 } from '../types';
 
 import { Relation } from '../../base/types';
 import { createRelation, log } from '../../base';
 
-import { Context } from '../';
+import { Context, dataSources } from '../';
 
 export const typeDefs = gql`
   type DiscogsReleaseCommunityRating {
@@ -60,6 +61,19 @@ export const typeDefs = gql`
   }
 
   """
+  Retrieves the community release rating average and count
+  """
+  type DiscogsReleaseRating {
+    count: Int!
+    average: Float!
+  }
+
+  type DiscogsReleaseRatingWrapper {
+    release_id: Int!
+    rating: DiscogsReleaseRating!
+  }
+
+  """
   The Release resource represents a particular physical or digital object released by one or more Artists.
   """
   type DiscogsRelease {
@@ -98,6 +112,12 @@ export const typeDefs = gql`
     thumb: String!
     estimated_weight: Int!
     blocked_from_sale: Boolean!
+
+    """
+    The Community Release Rating endpoint retrieves the average rating and the total number of user ratings for a given release
+    """
+    rating: DiscogsReleaseRatingWrapper!
+
     relation: Relation!
   }
 
@@ -123,6 +143,7 @@ export const typeDefs = gql`
     format_quantity: Int!
     formats: [DiscogsReleaseFormat!]
     release(curr_abbr: DiscogsCurrencies): DiscogsRelease!
+    rating: DiscogsReleaseRatingWrapper!
     relation: Relation!
   }
 
@@ -133,6 +154,7 @@ export const typeDefs = gql`
 
   extend type DiscogsMasterVersion {
     release(curr_abbr: DiscogsCurrencies): DiscogsRelease!
+    rating: DiscogsReleaseRatingWrapper!
   }
 
   extend type DiscogsSearch {
@@ -210,6 +232,12 @@ export const resolvers = {
         country,
         genre,
       }),
+    rating: (
+      { id }: DiscogsSearchResultRelease,
+      _params: unknown,
+      { dataSources: { discogsApi } }: Context
+    ): Promise<DiscogsReleaseRatingWrapper> =>
+      dataSources.discogsApi.lookupReleaseRating(parseInt(id)),
   },
   DiscogsMasterVersion: {
     release: (
@@ -217,6 +245,12 @@ export const resolvers = {
       { curr_abbr }: DiscogsMasterVersionReleaseArgs,
       { dataSources: { discogsApi } }: Context
     ): Promise<DiscogsRelease> => discogsApi.lookupRelease(id, curr_abbr),
+    rating: (
+      { id }: DiscogsMasterVersion,
+      _params: unknown,
+      { dataSources: { discogsApi } }: Context
+    ): Promise<DiscogsReleaseRatingWrapper> =>
+      dataSources.discogsApi.lookupReleaseRating(id),
   },
   DiscogsRelease: {
     relation: ({
@@ -237,6 +271,12 @@ export const resolvers = {
         year,
       });
     },
+    rating: (
+      { id }: DiscogsRelease,
+      _params: unknown,
+      { dataSources: { discogsApi } }: Context
+    ): Promise<DiscogsReleaseRatingWrapper> =>
+      dataSources.discogsApi.lookupReleaseRating(parseInt(id)),
   },
   DiscogsRelation: {
     releases: (
