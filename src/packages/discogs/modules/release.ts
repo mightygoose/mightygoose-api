@@ -160,7 +160,7 @@ export const typeDefs = gql`
   }
 
   extend type DiscogsMaster {
-    release(type: DiscogsMasterReleaseType = main): DiscogsRelease!
+    release(type: DiscogsMasterReleaseType! = main): DiscogsRelease!
   }
 
   extend type DiscogsMasterVersion {

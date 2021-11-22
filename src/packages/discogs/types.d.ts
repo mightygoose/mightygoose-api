@@ -109,7 +109,7 @@ export type DiscogsMasterGetVersionsArgs = {
 
 
 export type DiscogsMasterReleaseArgs = {
-  type?: InputMaybe<DiscogsMasterReleaseType>;
+  type?: DiscogsMasterReleaseType;
 };
 
 export enum DiscogsMasterReleaseType {
