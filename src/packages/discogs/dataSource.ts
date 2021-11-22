@@ -40,6 +40,7 @@ interface MasterVersionParams
 enum SEARCH_TYPES {
   release = 'release',
   master = 'master',
+  artist = 'artist',
 }
 
 interface SearchRequestParams extends SearchParams {
@@ -102,6 +103,13 @@ export class DiscogsAPI extends RESTDataSource {
       `/masters/${id}/versions`,
       omitInvalidParams(params)
     );
+  }
+
+  async searchArtists(params: SearchParams): Promise<SearchDiscogsArtist> {
+    return this.search<SearchDiscogsArtist>({
+      type: SEARCH_TYPES.artist,
+      ...params,
+    });
   }
 
   async lookupArtist(id: number): Promise<DiscogsArtist> {

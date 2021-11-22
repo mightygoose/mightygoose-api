@@ -441,7 +441,15 @@ export type DiscogsSearchPaginationUrls = {
 
 export type DiscogsSearchResultArtist = {
   __typename?: 'DiscogsSearchResultArtist';
+  cover_image: Scalars['String'];
   id: Scalars['ID'];
+  relation: Relation;
+  resource_url: Scalars['String'];
+  thumb: Scalars['String'];
+  title: Scalars['String'];
+  type: Scalars['String'];
+  uri: Scalars['String'];
+  user_data: DiscogsMasterVersionStatsCommunity;
 };
 
 export type DiscogsSearchResultMaster = {

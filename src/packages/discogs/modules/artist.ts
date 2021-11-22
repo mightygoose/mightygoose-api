@@ -1,11 +1,10 @@
 import { gql } from 'apollo-server';
 import {
-  DiscogsSearchResultMaster,
-  DiscogsMaster,
-  GetDiscogsMasterVersions,
-  DiscogsSearchResultMasterGetVersionsArgs,
   DiscogsArtist,
+  SearchDiscogsArtist,
   DiscogsLookupArtistArgs,
+  DiscogsSearchArtistsArgs,
+  DiscogsSearchResultArtist,
 } from '../types';
 
 import { Relation } from '../../base/types';
@@ -42,6 +41,14 @@ export const typeDefs = gql`
 
   type DiscogsSearchResultArtist {
     id: ID!
+    type: String!
+    uri: String!
+    title: String!
+    thumb: String!
+    cover_image: String!
+    resource_url: String!
+    user_data: DiscogsMasterVersionStatsCommunity!
+    relation: Relation!
   }
 
   type SearchDiscogsArtist {
@@ -74,12 +81,41 @@ export const typeDefs = gql`
 
 export const resolvers = {
   DiscogsLookup: {
-    artist: async (
+    artist: (
       _parent: unknown,
       { id }: DiscogsLookupArtistArgs,
       { dataSources: { discogsApi } }: Context
     ): Promise<DiscogsArtist> => {
       return discogsApi.lookupArtist(id);
     },
+  },
+  DiscogsSearch: {
+    artists: (
+      _parent: unknown,
+      { search, filter, pagination }: DiscogsSearchArtistsArgs,
+      { dataSources: { discogsApi } }: Context
+    ): Promise<SearchDiscogsArtist> => {
+      return discogsApi.searchArtists({
+        query: search,
+        ...filter,
+        ...pagination,
+      });
+    },
+  },
+  DiscogsArtist: {
+    relation: ({ name: artist }: DiscogsArtist): Relation =>
+      createRelation({
+        type: 'artist',
+        artist,
+        artists: [artist],
+      }),
+  },
+  DiscogsSearchResultArtist: {
+    relation: ({ type, title: artist }: DiscogsSearchResultArtist): Relation =>
+      createRelation({
+        type,
+        artist,
+        artists: [artist],
+      }),
   },
 };
