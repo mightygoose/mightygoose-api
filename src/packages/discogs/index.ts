@@ -14,6 +14,11 @@ import {
   resolvers as masterVersionResolvers,
 } from './modules/masterVersion';
 
+import {
+  typeDefs as artistTypeDefs,
+  resolvers as artistResolvers,
+} from './modules/artist';
+
 export const typeDefs = gql`
   extend enum Services {
     Discogs
@@ -287,4 +292,5 @@ export default [
   { typeDefs: masterTypeDefs, resolvers: masterResolvers },
   { typeDefs: releaseTypeDefs, resolvers: releaseResolvers },
   { typeDefs: masterVersionTypeDefs, resolvers: masterVersionResolvers },
+  { typeDefs: artistTypeDefs, resolvers: artistResolvers },
 ];

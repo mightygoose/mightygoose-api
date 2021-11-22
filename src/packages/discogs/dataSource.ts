@@ -6,12 +6,14 @@ import {
   DiscogsRelease,
   SearchDiscogsMaster,
   SearchDiscogsRelease,
+  SearchDiscogsArtist,
   SearchDiscogsFilter,
   DiscogsPaginationParameters,
   GetDiscogsMasterVersions,
   DiscogsMasterVersionsFilterInput,
   DiscogsCurrencies,
   DiscogsReleaseRatingWrapper,
+  DiscogsArtist,
 } from './types';
 
 const omitInvalidParams = <T extends Record<string, any>>(params: T) => {
@@ -100,5 +102,9 @@ export class DiscogsAPI extends RESTDataSource {
       `/masters/${id}/versions`,
       omitInvalidParams(params)
     );
+  }
+
+  async lookupArtist(id: number): Promise<DiscogsArtist> {
+    return this.get<DiscogsArtist>(`/artists/${id}`);
   }
 }

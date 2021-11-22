@@ -13,6 +13,32 @@ export type Scalars = {
   AvailableFilters: any;
 };
 
+/** The Artist resource represents a person in the Discogs database who contributed to a Release in some capacity */
+export type DiscogsArtist = {
+  __typename?: 'DiscogsArtist';
+  data_quality: Scalars['String'];
+  id: Scalars['ID'];
+  images: Array<DiscogsImageShort>;
+  members: Array<DiscogsArtistMembers>;
+  name: Scalars['String'];
+  namevariations: Array<Scalars['String']>;
+  profile: Scalars['String'];
+  relation: Relation;
+  releases_url: Scalars['String'];
+  resource_url: Scalars['String'];
+  uri: Scalars['String'];
+  urls: Array<Scalars['String']>;
+};
+
+export type DiscogsArtistMembers = {
+  __typename?: 'DiscogsArtistMembers';
+  active?: Maybe<Scalars['Boolean']>;
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  resource_url?: Maybe<Scalars['String']>;
+  thumbnail_url?: Maybe<Scalars['String']>;
+};
+
 export type DiscogsArtistShort = {
   __typename?: 'DiscogsArtistShort';
   anv: Scalars['String'];
@@ -58,9 +84,16 @@ export type DiscogsImageShort = {
 
 export type DiscogsLookup = {
   __typename?: 'DiscogsLookup';
+  /** Get an artist */
+  artist?: Maybe<DiscogsArtist>;
   id: Scalars['ID'];
   master?: Maybe<DiscogsMaster>;
   release?: Maybe<DiscogsRelease>;
+};
+
+
+export type DiscogsLookupArtistArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -362,9 +395,17 @@ export type DiscogsReleaseRatingWrapper = {
 
 export type DiscogsSearch = {
   __typename?: 'DiscogsSearch';
+  artists: SearchDiscogsArtist;
   id: Scalars['ID'];
   masters: SearchDiscogsMaster;
   releases: SearchDiscogsRelease;
+};
+
+
+export type DiscogsSearchArtistsArgs = {
+  filter?: InputMaybe<SearchDiscogsFilter>;
+  pagination?: InputMaybe<DiscogsPaginationParameters>;
+  search?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -396,6 +437,11 @@ export type DiscogsSearchPaginationUrls = {
   last?: Maybe<Scalars['String']>;
   next?: Maybe<Scalars['String']>;
   prev?: Maybe<Scalars['String']>;
+};
+
+export type DiscogsSearchResultArtist = {
+  __typename?: 'DiscogsSearchResultArtist';
+  id: Scalars['ID'];
 };
 
 export type DiscogsSearchResultMaster = {
@@ -507,6 +553,12 @@ export type Relation = {
 export type Search = {
   __typename?: 'Search';
   discogs: DiscogsSearch;
+};
+
+export type SearchDiscogsArtist = {
+  __typename?: 'SearchDiscogsArtist';
+  pagination: DiscogsSearchPagination;
+  results: Array<DiscogsSearchResultArtist>;
 };
 
 /** discogs general search parameters */
