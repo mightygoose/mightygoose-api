@@ -273,9 +273,15 @@ export type DiscogsPaginationParameters = {
 
 export type DiscogsRelation = {
   __typename?: 'DiscogsRelation';
+  artists?: Maybe<SearchDiscogsArtist>;
   id: Scalars['ID'];
   masters: SearchDiscogsMaster;
   releases: SearchDiscogsRelease;
+};
+
+
+export type DiscogsRelationArtistsArgs = {
+  pagination?: InputMaybe<DiscogsPaginationParameters>;
 };
 
 

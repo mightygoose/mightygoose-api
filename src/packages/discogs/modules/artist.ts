@@ -1,8 +1,10 @@
 import { gql } from 'apollo-server';
+
 import {
+  DiscogsRelationArtistsArgs,
+  DiscogsLookupArtistArgs,
   DiscogsArtist,
   SearchDiscogsArtist,
-  DiscogsLookupArtistArgs,
   DiscogsSearchArtistsArgs,
   DiscogsSearchResultArtist,
 } from '../types';
@@ -77,6 +79,12 @@ export const typeDefs = gql`
       id: Int!
     ): DiscogsArtist
   }
+
+  extend type DiscogsRelation {
+    artists(
+      pagination: DiscogsPaginationParameters = { page: 1, per_page: 1 }
+    ): SearchDiscogsArtist
+  }
 `;
 
 export const resolvers = {
@@ -117,5 +125,18 @@ export const resolvers = {
         artist,
         artists: [artist],
       }),
+  },
+  DiscogsRelation: {
+    artists: (
+      { _relationData: { artist, artists, ...rest } }: Relation,
+      { pagination }: DiscogsRelationArtistsArgs,
+      { dataSources: { discogsApi } }: Context
+    ): Promise<SearchDiscogsArtist> | null =>
+      artist
+        ? discogsApi.searchArtists({
+            title: artists?.join(' / '),
+            ...pagination,
+          })
+        : null,
   },
 };
