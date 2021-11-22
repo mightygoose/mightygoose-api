@@ -45,10 +45,7 @@ interface SearchRequestParams extends SearchParams {
 }
 
 export class DiscogsAPI extends RESTDataSource {
-  constructor() {
-    super();
-    this.baseURL = 'https://api.discogs.com';
-  }
+  baseURL = 'https://api.discogs.com';
 
   willSendRequest(request: any) {
     request.params.set('token', DISCOGS_TOKEN);
