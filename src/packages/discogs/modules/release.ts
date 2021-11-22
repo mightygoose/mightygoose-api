@@ -248,7 +248,7 @@ export const resolvers = {
       _params: unknown,
       { dataSources: { discogsApi } }: Context
     ): Promise<DiscogsReleaseRatingWrapper> =>
-      dataSources.discogsApi.lookupReleaseRating(parseInt(id)),
+      discogsApi.lookupReleaseRating(parseInt(id)),
   },
   DiscogsMaster: {
     release: (
@@ -272,7 +272,7 @@ export const resolvers = {
       _params: unknown,
       { dataSources: { discogsApi } }: Context
     ): Promise<DiscogsReleaseRatingWrapper> =>
-      dataSources.discogsApi.lookupReleaseRating(id),
+      discogsApi.lookupReleaseRating(id),
   },
   DiscogsRelease: {
     relation: ({
@@ -298,7 +298,7 @@ export const resolvers = {
       _params: unknown,
       { dataSources: { discogsApi } }: Context
     ): Promise<DiscogsReleaseRatingWrapper> =>
-      dataSources.discogsApi.lookupReleaseRating(parseInt(id)),
+      discogsApi.lookupReleaseRating(parseInt(id)),
   },
   DiscogsRelation: {
     releases: (
