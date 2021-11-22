@@ -74,6 +74,7 @@ export type DiscogsLookupReleaseArgs = {
   id: Scalars['Int'];
 };
 
+/** The Master resource represents a set of similar Releases. Masters (also known as “master releases”) have a “main release” which is often the chronologically earliest */
 export type DiscogsMaster = {
   __typename?: 'DiscogsMaster';
   artists: Array<Maybe<DiscogsArtistShort>>;
@@ -102,12 +103,14 @@ export type DiscogsMaster = {
 };
 
 
+/** The Master resource represents a set of similar Releases. Masters (also known as “master releases”) have a “main release” which is often the chronologically earliest */
 export type DiscogsMasterGetVersionsArgs = {
   filter?: InputMaybe<DiscogsMasterVersionsFilterInput>;
   pagination?: InputMaybe<DiscogsPaginationParameters>;
 };
 
 
+/** The Master resource represents a set of similar Releases. Masters (also known as “master releases”) have a “main release” which is often the chronologically earliest */
 export type DiscogsMasterReleaseArgs = {
   type?: DiscogsMasterReleaseType;
 };
@@ -117,6 +120,7 @@ export enum DiscogsMasterReleaseType {
   MostRecent = 'most_recent'
 }
 
+/** Retrieves a list of all Releases that are versions of this master */
 export type DiscogsMasterVersion = {
   __typename?: 'DiscogsMasterVersion';
   catno: Scalars['String'];
@@ -136,6 +140,7 @@ export type DiscogsMasterVersion = {
 };
 
 
+/** Retrieves a list of all Releases that are versions of this master */
 export type DiscogsMasterVersionReleaseArgs = {
   curr_abbr?: InputMaybe<DiscogsCurrencies>;
 };

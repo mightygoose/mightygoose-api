@@ -79,6 +79,9 @@ export const typeDefs = gql`
     community: DiscogsMasterVersionStatsCommunity!
   }
 
+  """
+  Retrieves a list of all Releases that are versions of this master
+  """
   type DiscogsMasterVersion {
     id: Int!
     label: String!

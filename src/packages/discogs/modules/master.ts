@@ -16,6 +16,9 @@ import { createRelation, log } from '../../base';
 import { Context } from '../';
 
 export const typeDefs = gql`
+  """
+  The Master resource represents a set of similar Releases. Masters (also known as “master releases”) have a “main release” which is often the chronologically earliest
+  """
   type DiscogsMaster {
     id: ID!
     main_release: Int!
