@@ -14,6 +14,8 @@ import {
   DiscogsCurrencies,
   DiscogsReleaseRatingWrapper,
   DiscogsArtist,
+  DiscogsArtistGetReleasesSort,
+  DiscogsArtistReleases,
 } from './types';
 
 const omitInvalidParams = <T extends Record<string, any>>(params: T) => {
@@ -35,6 +37,10 @@ interface SearchParams
 
 interface MasterVersionParams
   extends DiscogsMasterVersionsFilterInput,
+    DiscogsPaginationParameters {}
+
+interface ArtistReleasesParams
+  extends DiscogsArtistGetReleasesSort,
     DiscogsPaginationParameters {}
 
 enum SEARCH_TYPES {
@@ -82,6 +88,16 @@ export class DiscogsAPI extends RESTDataSource {
 
   async lookupReleaseRating(id: number): Promise<DiscogsReleaseRatingWrapper> {
     return this.get<DiscogsReleaseRatingWrapper>(`/releases/${id}/rating`);
+  }
+
+  async lookupArtistReleases(
+    id: number,
+    params: ArtistReleasesParams
+  ): Promise<DiscogsArtistReleases> {
+    return this.get<DiscogsArtistReleases>(
+      `/artists/${id}/releases`,
+      omitInvalidParams(params)
+    );
   }
 
   async searchMasters(params: SearchParams): Promise<SearchDiscogsMaster> {

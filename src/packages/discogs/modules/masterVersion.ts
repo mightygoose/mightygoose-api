@@ -95,6 +95,7 @@ export const typeDefs = gql`
     thumb: String!
     major_formats: [String!]!
     stats: DiscogsMasterVersionStats!
+    relation: Relation!
   }
 
   type DiscogsVersionsFilterFacetsValues {

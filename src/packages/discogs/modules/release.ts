@@ -168,6 +168,20 @@ export const typeDefs = gql`
     rating: DiscogsReleaseRatingWrapper!
   }
 
+  enum DiscogsArtistRelesesSort {
+    """
+    (i.e. year of the release)
+    """
+    year
+
+    """
+    (i.e. title of the release)
+    """
+    title
+
+    format
+  }
+
   extend type DiscogsSearch {
     releases(
       search: String

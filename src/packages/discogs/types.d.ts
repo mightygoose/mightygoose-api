@@ -17,6 +17,7 @@ export type Scalars = {
 export type DiscogsArtist = {
   __typename?: 'DiscogsArtist';
   data_quality: Scalars['String'];
+  getReleases: DiscogsArtistReleases;
   id: Scalars['ID'];
   images: Array<DiscogsImageShort>;
   members: Array<DiscogsArtistMembers>;
@@ -30,6 +31,31 @@ export type DiscogsArtist = {
   urls: Array<Scalars['String']>;
 };
 
+
+/** The Artist resource represents a person in the Discogs database who contributed to a Release in some capacity */
+export type DiscogsArtistGetReleasesArgs = {
+  pagination?: InputMaybe<DiscogsPaginationParameters>;
+  sort?: InputMaybe<DiscogsArtistGetReleasesSort>;
+};
+
+export type DiscogsArtistGetReleasesSort = {
+  sort?: InputMaybe<DiscogsArtistRelesesSort>;
+  sort_order?: InputMaybe<DiscogsMasterVersionsFilterSortOrder>;
+};
+
+export type DiscogsArtistMaster = DiscogsArtistReleaseResult & {
+  __typename?: 'DiscogsArtistMaster';
+  artist: Scalars['String'];
+  id: Scalars['ID'];
+  main_release: Scalars['Int'];
+  resource_url: Scalars['String'];
+  role: Scalars['String'];
+  thumb: Scalars['String'];
+  title: Scalars['String'];
+  type: DiscogsArtistReleaseResultTypes;
+  year: Scalars['Int'];
+};
+
 export type DiscogsArtistMembers = {
   __typename?: 'DiscogsArtistMembers';
   active?: Maybe<Scalars['Boolean']>;
@@ -39,10 +65,56 @@ export type DiscogsArtistMembers = {
   thumbnail_url?: Maybe<Scalars['String']>;
 };
 
+export type DiscogsArtistRelease = DiscogsArtistReleaseResult & {
+  __typename?: 'DiscogsArtistRelease';
+  artist: Scalars['String'];
+  format: Scalars['String'];
+  id: Scalars['ID'];
+  label: Scalars['String'];
+  resource_url: Scalars['String'];
+  role: Scalars['String'];
+  status: Scalars['String'];
+  thumb: Scalars['String'];
+  title: Scalars['String'];
+  type: DiscogsArtistReleaseResultTypes;
+  year: Scalars['Int'];
+};
+
+export type DiscogsArtistReleaseResult = {
+  artist: Scalars['String'];
+  id: Scalars['ID'];
+  resource_url: Scalars['String'];
+  role: Scalars['String'];
+  thumb: Scalars['String'];
+  title: Scalars['String'];
+  type: DiscogsArtistReleaseResultTypes;
+  year: Scalars['Int'];
+};
+
+export enum DiscogsArtistReleaseResultTypes {
+  Master = 'master',
+  Release = 'release'
+}
+
+export type DiscogsArtistReleases = {
+  __typename?: 'DiscogsArtistReleases';
+  pagination: DiscogsSearchPagination;
+  releases: Array<DiscogsArtistReleaseResult>;
+};
+
+export enum DiscogsArtistRelesesSort {
+  Format = 'format',
+  /** (i.e. title of the release) */
+  Title = 'title',
+  /** (i.e. year of the release) */
+  Year = 'year'
+}
+
 export type DiscogsArtistShort = {
   __typename?: 'DiscogsArtistShort';
   anv: Scalars['String'];
   artist: DiscogsArtist;
+  getReleases: DiscogsArtistReleases;
   id: Scalars['ID'];
   join: Scalars['String'];
   name: Scalars['String'];
@@ -51,6 +123,12 @@ export type DiscogsArtistShort = {
   role: Scalars['String'];
   thumbnail_url: Scalars['String'];
   tracks: Scalars['String'];
+};
+
+
+export type DiscogsArtistShortGetReleasesArgs = {
+  pagination?: InputMaybe<DiscogsPaginationParameters>;
+  sort?: InputMaybe<DiscogsArtistGetReleasesSort>;
 };
 
 export type DiscogsCommunity = {
@@ -165,6 +243,7 @@ export type DiscogsMasterVersion = {
   label: Scalars['String'];
   major_formats: Array<Scalars['String']>;
   rating: DiscogsReleaseRatingWrapper;
+  relation: Relation;
   release: DiscogsRelease;
   released: Scalars['String'];
   resource_url: Scalars['String'];
@@ -450,6 +529,7 @@ export type DiscogsSearchPaginationUrls = {
 export type DiscogsSearchResultArtist = {
   __typename?: 'DiscogsSearchResultArtist';
   cover_image: Scalars['String'];
+  getReleases: DiscogsArtistReleases;
   id: Scalars['ID'];
   relation: Relation;
   resource_url: Scalars['String'];
@@ -458,6 +538,12 @@ export type DiscogsSearchResultArtist = {
   type: Scalars['String'];
   uri: Scalars['String'];
   user_data: DiscogsMasterVersionStatsCommunity;
+};
+
+
+export type DiscogsSearchResultArtistGetReleasesArgs = {
+  pagination?: InputMaybe<DiscogsPaginationParameters>;
+  sort?: InputMaybe<DiscogsArtistGetReleasesSort>;
 };
 
 export type DiscogsSearchResultMaster = {
