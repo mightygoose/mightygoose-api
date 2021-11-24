@@ -1,6 +1,7 @@
 import { gql } from 'apollo-server';
 import {
-  SearchDiscogsRelease,
+  DiscogsArtistRelease,
+  DiscogsArtistMaster,
   DiscogsArtistReleases,
   DiscogsSearchResultArtistGetReleasesArgs,
   DiscogsArtist,
@@ -9,6 +10,8 @@ import {
   DiscogsArtistShort,
 } from '../types';
 
+import { Relation } from '../../base/types';
+import { createRelation, log } from '../../base';
 import { Context } from '../';
 
 export const typeDefs = gql`
@@ -26,6 +29,7 @@ export const typeDefs = gql`
     title: String!
     type: DiscogsArtistReleaseResultTypes!
     year: Int!
+    relation: Relation!
   }
 
   type DiscogsArtistRelease implements DiscogsArtistReleaseResult {
@@ -40,6 +44,7 @@ export const typeDefs = gql`
     title: String!
     type: DiscogsArtistReleaseResultTypes!
     year: Int!
+    relation: Relation!
   }
 
   type DiscogsArtistMaster implements DiscogsArtistReleaseResult {
@@ -52,6 +57,7 @@ export const typeDefs = gql`
     title: String!
     type: DiscogsArtistReleaseResultTypes!
     year: Int!
+    relation: Relation!
   }
 
   input DiscogsArtistGetReleasesSort {
@@ -126,6 +132,38 @@ export const resolvers = {
       { dataSources: { discogsApi } }: Context
     ): Promise<DiscogsArtistReleases> =>
       discogsApi.lookupArtistReleases(parseInt(id), { ...sort, ...pagination }),
+  },
+  DiscogsArtistRelease: {
+    relation: ({
+      year,
+      title: album,
+      artist,
+      type,
+    }: DiscogsArtistRelease): Relation =>
+      createRelation({
+        type,
+        artist,
+        artists: [artist],
+        album,
+        title: `${artist} - ${album}`,
+        year,
+      }),
+  },
+  DiscogsArtistMaster: {
+    relation: ({
+      year,
+      title: album,
+      artist,
+      type,
+    }: DiscogsArtistMaster): Relation =>
+      createRelation({
+        type,
+        artist,
+        artists: [artist],
+        album,
+        title: `${artist} - ${album}`,
+        year,
+      }),
   },
 };
 

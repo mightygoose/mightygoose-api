@@ -128,7 +128,6 @@ export const resolvers = {
     relation: ({ name: artist }: DiscogsArtist): Relation =>
       createRelation({
         type: 'artist',
-        title: artist,
         artist,
         artists: [artist],
       }),
@@ -150,7 +149,6 @@ export const resolvers = {
     relation: ({ name: artist }: DiscogsArtistShort): Relation =>
       createRelation({
         type: 'artist',
-        title: artist,
         artist,
         artists: [artist],
       }),
