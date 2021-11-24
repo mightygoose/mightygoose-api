@@ -6,6 +6,7 @@ import {
   DiscogsMaster,
   DiscogsRelease,
   SearchDiscogsMaster,
+  DiscogsArtistMaster,
   DiscogsLookupMasterArgs,
   DiscogsRelationMastersArgs,
 } from '../types';
@@ -76,6 +77,10 @@ export const typeDefs = gql`
   }
 
   extend type DiscogsRelease {
+    master: DiscogsMaster!
+  }
+
+  extend type DiscogsArtistMaster {
     master: DiscogsMaster!
   }
 
@@ -205,5 +210,12 @@ export const resolvers = {
       _params: unknown,
       { dataSources: { discogsApi } }: Context
     ): Promise<DiscogsMaster> => discogsApi.lookupMaster(master_id),
+  },
+  DiscogsArtistMaster: {
+    master: (
+      { id }: DiscogsArtistMaster,
+      _params: unknown,
+      { dataSources: { discogsApi } }: Context
+    ): Promise<DiscogsMaster> => discogsApi.lookupMaster(parseInt(id)),
   },
 };
