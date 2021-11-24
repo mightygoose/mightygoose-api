@@ -12,6 +12,8 @@ import {
   DiscogsMasterVersionReleaseArgs,
   DiscogsMasterReleaseArgs,
   DiscogsReleaseRatingWrapper,
+  DiscogsArtistRelease,
+  DiscogsArtistMaster,
 } from '../types';
 
 import { Relation } from '../../base/types';
@@ -157,6 +159,14 @@ export const typeDefs = gql`
   enum DiscogsMasterReleaseType {
     main
     most_recent
+  }
+
+  extend type DiscogsArtistRelease {
+    release(curr_abbr: DiscogsCurrencies): DiscogsRelease!
+  }
+
+  extend type DiscogsArtistMaster {
+    release(curr_abbr: DiscogsCurrencies): DiscogsRelease!
   }
 
   extend type DiscogsMaster {
@@ -313,6 +323,22 @@ export const resolvers = {
       { dataSources: { discogsApi } }: Context
     ): Promise<DiscogsReleaseRatingWrapper> =>
       discogsApi.lookupReleaseRating(parseInt(id)),
+  },
+  DiscogsArtistRelease: {
+    release: (
+      { id }: DiscogsArtistRelease,
+      { curr_abbr }: DiscogsMasterVersionReleaseArgs,
+      { dataSources: { discogsApi } }: Context
+    ): Promise<DiscogsRelease> =>
+      discogsApi.lookupRelease(parseInt(id), curr_abbr),
+  },
+  DiscogsArtistMaster: {
+    release: (
+      { main_release }: DiscogsArtistMaster,
+      { curr_abbr }: DiscogsMasterVersionReleaseArgs,
+      { dataSources: { discogsApi } }: Context
+    ): Promise<DiscogsRelease> =>
+      discogsApi.lookupRelease(main_release, curr_abbr),
   },
   DiscogsRelation: {
     releases: (

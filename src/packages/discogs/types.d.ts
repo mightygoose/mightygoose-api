@@ -48,12 +48,20 @@ export type DiscogsArtistMaster = DiscogsArtistReleaseResult & {
   artist: Scalars['String'];
   id: Scalars['ID'];
   main_release: Scalars['Int'];
+  master: DiscogsMaster;
+  relation: Relation;
+  release: DiscogsRelease;
   resource_url: Scalars['String'];
   role: Scalars['String'];
   thumb: Scalars['String'];
   title: Scalars['String'];
   type: DiscogsArtistReleaseResultTypes;
   year: Scalars['Int'];
+};
+
+
+export type DiscogsArtistMasterReleaseArgs = {
+  curr_abbr?: InputMaybe<DiscogsCurrencies>;
 };
 
 export type DiscogsArtistMembers = {
@@ -71,6 +79,8 @@ export type DiscogsArtistRelease = DiscogsArtistReleaseResult & {
   format: Scalars['String'];
   id: Scalars['ID'];
   label: Scalars['String'];
+  relation: Relation;
+  release: DiscogsRelease;
   resource_url: Scalars['String'];
   role: Scalars['String'];
   status: Scalars['String'];
@@ -80,9 +90,15 @@ export type DiscogsArtistRelease = DiscogsArtistReleaseResult & {
   year: Scalars['Int'];
 };
 
+
+export type DiscogsArtistReleaseReleaseArgs = {
+  curr_abbr?: InputMaybe<DiscogsCurrencies>;
+};
+
 export type DiscogsArtistReleaseResult = {
   artist: Scalars['String'];
   id: Scalars['ID'];
+  relation: Relation;
   resource_url: Scalars['String'];
   role: Scalars['String'];
   thumb: Scalars['String'];
