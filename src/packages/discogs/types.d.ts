@@ -207,14 +207,20 @@ export type DiscogsLabelGetReleasesSort = {
 export type DiscogsLabelReleaseResult = {
   __typename?: 'DiscogsLabelReleaseResult';
   artist: Scalars['String'];
+  catno: Scalars['String'];
+  format: Scalars['String'];
   id: Scalars['ID'];
-  relation: Relation;
+  release: DiscogsRelease;
   resource_url: Scalars['String'];
-  role: Scalars['String'];
+  status: Scalars['String'];
   thumb: Scalars['String'];
   title: Scalars['String'];
-  type: DiscogsArtistReleaseResultTypes;
   year: Scalars['Int'];
+};
+
+
+export type DiscogsLabelReleaseResultReleaseArgs = {
+  curr_abbr?: InputMaybe<DiscogsCurrencies>;
 };
 
 export type DiscogsLabelReleases = {
