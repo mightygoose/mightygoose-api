@@ -1,8 +1,10 @@
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -10,6 +12,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  _FieldSet: any;
   AvailableFilters: any;
 };
 
@@ -908,3 +911,781 @@ export type SearchDiscogsRelease = {
 export enum Services {
   Discogs = 'Discogs'
 }
+
+export type WithIndex<TObject> = TObject & Record<string, any>;
+export type ResolversObject<TObject> = WithIndex<TObject>;
+
+export type ResolverTypeWrapper<T> = Promise<T> | T;
+
+
+export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
+  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+};
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+
+export type ResolverFn<TResult, TParent, TContext, TArgs> = (
+  parent: TParent,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => Promise<TResult> | TResult;
+
+export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
+  parent: TParent,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
+
+export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
+  parent: TParent,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => TResult | Promise<TResult>;
+
+export interface SubscriptionSubscriberObject<TResult, TKey extends string, TParent, TContext, TArgs> {
+  subscribe: SubscriptionSubscribeFn<{ [key in TKey]: TResult }, TParent, TContext, TArgs>;
+  resolve?: SubscriptionResolveFn<TResult, { [key in TKey]: TResult }, TContext, TArgs>;
+}
+
+export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
+  subscribe: SubscriptionSubscribeFn<any, TParent, TContext, TArgs>;
+  resolve: SubscriptionResolveFn<TResult, any, TContext, TArgs>;
+}
+
+export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, TArgs> =
+  | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
+  | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
+
+export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TContext = {}, TArgs = {}> =
+  | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
+  | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
+
+export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
+  parent: TParent,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
+
+export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+
+export type NextResolverFn<T> = () => Promise<T>;
+
+export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs = {}> = (
+  next: NextResolverFn<TResult>,
+  parent: TParent,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => TResult | Promise<TResult>;
+
+/** Mapping between all available schema types and the resolvers types */
+export type ResolversTypes = ResolversObject<{
+  AvailableFilters: ResolverTypeWrapper<Scalars['AvailableFilters']>;
+  DiscogsArtist: ResolverTypeWrapper<DiscogsArtist>;
+  String: ResolverTypeWrapper<Scalars['String']>;
+  ID: ResolverTypeWrapper<Scalars['ID']>;
+  DiscogsArtistGetReleasesSort: DiscogsArtistGetReleasesSort;
+  DiscogsArtistMaster: ResolverTypeWrapper<DiscogsArtistMaster>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
+  DiscogsArtistMembers: ResolverTypeWrapper<DiscogsArtistMembers>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  DiscogsArtistRelease: ResolverTypeWrapper<DiscogsArtistRelease>;
+  DiscogsArtistReleaseResult: ResolversTypes['DiscogsArtistMaster'] | ResolversTypes['DiscogsArtistRelease'];
+  DiscogsArtistReleaseResultTypes: DiscogsArtistReleaseResultTypes;
+  DiscogsArtistReleases: ResolverTypeWrapper<DiscogsArtistReleases>;
+  DiscogsArtistRelesesSort: DiscogsArtistRelesesSort;
+  DiscogsArtistShort: ResolverTypeWrapper<DiscogsArtistShort>;
+  DiscogsCommunity: ResolverTypeWrapper<DiscogsCommunity>;
+  DiscogsCurrencies: DiscogsCurrencies;
+  DiscogsImageShort: ResolverTypeWrapper<DiscogsImageShort>;
+  DiscogsLabel: ResolverTypeWrapper<DiscogsLabel>;
+  DiscogsLabelGetReleasesSort: DiscogsLabelGetReleasesSort;
+  DiscogsLabelReleaseResult: ResolverTypeWrapper<DiscogsLabelReleaseResult>;
+  DiscogsLabelReleases: ResolverTypeWrapper<DiscogsLabelReleases>;
+  DiscogsLabelRelesesSort: DiscogsLabelRelesesSort;
+  DiscogsLookup: ResolverTypeWrapper<DiscogsLookup>;
+  DiscogsMaster: ResolverTypeWrapper<DiscogsMaster>;
+  Float: ResolverTypeWrapper<Scalars['Float']>;
+  DiscogsMasterReleaseType: DiscogsMasterReleaseType;
+  DiscogsMasterVersion: ResolverTypeWrapper<DiscogsMasterVersion>;
+  DiscogsMasterVersionStats: ResolverTypeWrapper<DiscogsMasterVersionStats>;
+  DiscogsMasterVersionStatsCommunity: ResolverTypeWrapper<DiscogsMasterVersionStatsCommunity>;
+  DiscogsMasterVersionsFilterFacets: ResolverTypeWrapper<DiscogsMasterVersionsFilterFacets>;
+  DiscogsMasterVersionsFilterInput: DiscogsMasterVersionsFilterInput;
+  DiscogsMasterVersionsFilterSort: DiscogsMasterVersionsFilterSort;
+  DiscogsMasterVersionsFilterSortOrder: DiscogsMasterVersionsFilterSortOrder;
+  DiscogsMasterVersionsFilters: ResolverTypeWrapper<DiscogsMasterVersionsFilters>;
+  DiscogsPaginationParameters: DiscogsPaginationParameters;
+  DiscogsRelation: ResolverTypeWrapper<DiscogsRelation>;
+  DiscogsRelease: ResolverTypeWrapper<DiscogsRelease>;
+  DiscogsReleaseCommunity: ResolverTypeWrapper<DiscogsReleaseCommunity>;
+  DiscogsReleaseCommunityRating: ResolverTypeWrapper<DiscogsReleaseCommunityRating>;
+  DiscogsReleaseCommunityUser: ResolverTypeWrapper<DiscogsReleaseCommunityUser>;
+  DiscogsReleaseFormat: ResolverTypeWrapper<DiscogsReleaseFormat>;
+  DiscogsReleaseIdentifier: ResolverTypeWrapper<DiscogsReleaseIdentifier>;
+  DiscogsReleaseLabel: ResolverTypeWrapper<DiscogsReleaseLabel>;
+  DiscogsReleaseRating: ResolverTypeWrapper<DiscogsReleaseRating>;
+  DiscogsReleaseRatingWrapper: ResolverTypeWrapper<DiscogsReleaseRatingWrapper>;
+  DiscogsSearch: ResolverTypeWrapper<DiscogsSearch>;
+  DiscogsSearchPagination: ResolverTypeWrapper<DiscogsSearchPagination>;
+  DiscogsSearchPaginationUrls: ResolverTypeWrapper<DiscogsSearchPaginationUrls>;
+  DiscogsSearchResultArtist: ResolverTypeWrapper<DiscogsSearchResultArtist>;
+  DiscogsSearchResultLabel: ResolverTypeWrapper<DiscogsSearchResultLabel>;
+  DiscogsSearchResultMaster: ResolverTypeWrapper<DiscogsSearchResultMaster>;
+  DiscogsSearchResultRelease: ResolverTypeWrapper<DiscogsSearchResultRelease>;
+  DiscogsSortOrder: DiscogsSortOrder;
+  DiscogsTrackShort: ResolverTypeWrapper<DiscogsTrackShort>;
+  DiscogsUserData: ResolverTypeWrapper<DiscogsUserData>;
+  DiscogsVersionsFilterFacetsValues: ResolverTypeWrapper<DiscogsVersionsFilterFacetsValues>;
+  DiscogsVideo: ResolverTypeWrapper<DiscogsVideo>;
+  GetDiscogsMasterVersions: ResolverTypeWrapper<GetDiscogsMasterVersions>;
+  Lookup: ResolverTypeWrapper<Lookup>;
+  Relation: ResolverTypeWrapper<Relation>;
+  Search: ResolverTypeWrapper<Search>;
+  SearchDiscogsArtist: ResolverTypeWrapper<SearchDiscogsArtist>;
+  SearchDiscogsFilter: SearchDiscogsFilter;
+  SearchDiscogsLabel: ResolverTypeWrapper<SearchDiscogsLabel>;
+  SearchDiscogsMaster: ResolverTypeWrapper<SearchDiscogsMaster>;
+  SearchDiscogsRelease: ResolverTypeWrapper<SearchDiscogsRelease>;
+  Services: Services;
+}>;
+
+/** Mapping between all available schema types and the resolvers parents */
+export type ResolversParentTypes = ResolversObject<{
+  AvailableFilters: Scalars['AvailableFilters'];
+  DiscogsArtist: DiscogsArtist;
+  String: Scalars['String'];
+  ID: Scalars['ID'];
+  DiscogsArtistGetReleasesSort: DiscogsArtistGetReleasesSort;
+  DiscogsArtistMaster: DiscogsArtistMaster;
+  Int: Scalars['Int'];
+  DiscogsArtistMembers: DiscogsArtistMembers;
+  Boolean: Scalars['Boolean'];
+  DiscogsArtistRelease: DiscogsArtistRelease;
+  DiscogsArtistReleaseResult: ResolversParentTypes['DiscogsArtistMaster'] | ResolversParentTypes['DiscogsArtistRelease'];
+  DiscogsArtistReleases: DiscogsArtistReleases;
+  DiscogsArtistShort: DiscogsArtistShort;
+  DiscogsCommunity: DiscogsCommunity;
+  DiscogsImageShort: DiscogsImageShort;
+  DiscogsLabel: DiscogsLabel;
+  DiscogsLabelGetReleasesSort: DiscogsLabelGetReleasesSort;
+  DiscogsLabelReleaseResult: DiscogsLabelReleaseResult;
+  DiscogsLabelReleases: DiscogsLabelReleases;
+  DiscogsLookup: DiscogsLookup;
+  DiscogsMaster: DiscogsMaster;
+  Float: Scalars['Float'];
+  DiscogsMasterVersion: DiscogsMasterVersion;
+  DiscogsMasterVersionStats: DiscogsMasterVersionStats;
+  DiscogsMasterVersionStatsCommunity: DiscogsMasterVersionStatsCommunity;
+  DiscogsMasterVersionsFilterFacets: DiscogsMasterVersionsFilterFacets;
+  DiscogsMasterVersionsFilterInput: DiscogsMasterVersionsFilterInput;
+  DiscogsMasterVersionsFilters: DiscogsMasterVersionsFilters;
+  DiscogsPaginationParameters: DiscogsPaginationParameters;
+  DiscogsRelation: DiscogsRelation;
+  DiscogsRelease: DiscogsRelease;
+  DiscogsReleaseCommunity: DiscogsReleaseCommunity;
+  DiscogsReleaseCommunityRating: DiscogsReleaseCommunityRating;
+  DiscogsReleaseCommunityUser: DiscogsReleaseCommunityUser;
+  DiscogsReleaseFormat: DiscogsReleaseFormat;
+  DiscogsReleaseIdentifier: DiscogsReleaseIdentifier;
+  DiscogsReleaseLabel: DiscogsReleaseLabel;
+  DiscogsReleaseRating: DiscogsReleaseRating;
+  DiscogsReleaseRatingWrapper: DiscogsReleaseRatingWrapper;
+  DiscogsSearch: DiscogsSearch;
+  DiscogsSearchPagination: DiscogsSearchPagination;
+  DiscogsSearchPaginationUrls: DiscogsSearchPaginationUrls;
+  DiscogsSearchResultArtist: DiscogsSearchResultArtist;
+  DiscogsSearchResultLabel: DiscogsSearchResultLabel;
+  DiscogsSearchResultMaster: DiscogsSearchResultMaster;
+  DiscogsSearchResultRelease: DiscogsSearchResultRelease;
+  DiscogsTrackShort: DiscogsTrackShort;
+  DiscogsUserData: DiscogsUserData;
+  DiscogsVersionsFilterFacetsValues: DiscogsVersionsFilterFacetsValues;
+  DiscogsVideo: DiscogsVideo;
+  GetDiscogsMasterVersions: GetDiscogsMasterVersions;
+  Lookup: Lookup;
+  Relation: Relation;
+  Search: Search;
+  SearchDiscogsArtist: SearchDiscogsArtist;
+  SearchDiscogsFilter: SearchDiscogsFilter;
+  SearchDiscogsLabel: SearchDiscogsLabel;
+  SearchDiscogsMaster: SearchDiscogsMaster;
+  SearchDiscogsRelease: SearchDiscogsRelease;
+}>;
+
+export interface AvailableFiltersScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['AvailableFilters'], any> {
+  name: 'AvailableFilters';
+}
+
+export type DiscogsArtistResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsArtist'] = ResolversParentTypes['DiscogsArtist']> = ResolversObject<{
+  data_quality?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  getReleases?: Resolver<ResolversTypes['DiscogsArtistReleases'], ParentType, ContextType, RequireFields<DiscogsArtistGetReleasesArgs, 'pagination'>>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  images?: Resolver<Array<ResolversTypes['DiscogsImageShort']>, ParentType, ContextType>;
+  members?: Resolver<Array<ResolversTypes['DiscogsArtistMembers']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  namevariations?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  profile?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  relation?: Resolver<ResolversTypes['Relation'], ParentType, ContextType>;
+  releases_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  resource_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  uri?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  urls?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsArtistMasterResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsArtistMaster'] = ResolversParentTypes['DiscogsArtistMaster']> = ResolversObject<{
+  artist?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  main_release?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  master?: Resolver<ResolversTypes['DiscogsMaster'], ParentType, ContextType>;
+  relation?: Resolver<ResolversTypes['Relation'], ParentType, ContextType>;
+  release?: Resolver<ResolversTypes['DiscogsRelease'], ParentType, ContextType, RequireFields<DiscogsArtistMasterReleaseArgs, never>>;
+  resource_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  role?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  thumb?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['DiscogsArtistReleaseResultTypes'], ParentType, ContextType>;
+  year?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsArtistMembersResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsArtistMembers'] = ResolversParentTypes['DiscogsArtistMembers']> = ResolversObject<{
+  active?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  resource_url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  thumbnail_url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsArtistReleaseResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsArtistRelease'] = ResolversParentTypes['DiscogsArtistRelease']> = ResolversObject<{
+  artist?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  format?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  label?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  relation?: Resolver<ResolversTypes['Relation'], ParentType, ContextType>;
+  release?: Resolver<ResolversTypes['DiscogsRelease'], ParentType, ContextType, RequireFields<DiscogsArtistReleaseReleaseArgs, never>>;
+  resource_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  role?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  thumb?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['DiscogsArtistReleaseResultTypes'], ParentType, ContextType>;
+  year?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsArtistReleaseResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsArtistReleaseResult'] = ResolversParentTypes['DiscogsArtistReleaseResult']> = ResolversObject<{
+  __resolveType: TypeResolveFn<'DiscogsArtistMaster' | 'DiscogsArtistRelease', ParentType, ContextType>;
+  artist?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  relation?: Resolver<ResolversTypes['Relation'], ParentType, ContextType>;
+  resource_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  role?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  thumb?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['DiscogsArtistReleaseResultTypes'], ParentType, ContextType>;
+  year?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+}>;
+
+export type DiscogsArtistReleasesResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsArtistReleases'] = ResolversParentTypes['DiscogsArtistReleases']> = ResolversObject<{
+  pagination?: Resolver<ResolversTypes['DiscogsSearchPagination'], ParentType, ContextType>;
+  releases?: Resolver<Array<ResolversTypes['DiscogsArtistReleaseResult']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsArtistShortResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsArtistShort'] = ResolversParentTypes['DiscogsArtistShort']> = ResolversObject<{
+  anv?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  artist?: Resolver<ResolversTypes['DiscogsArtist'], ParentType, ContextType>;
+  getReleases?: Resolver<ResolversTypes['DiscogsArtistReleases'], ParentType, ContextType, RequireFields<DiscogsArtistShortGetReleasesArgs, 'pagination'>>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  join?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  relation?: Resolver<ResolversTypes['Relation'], ParentType, ContextType>;
+  resource_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  role?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  thumbnail_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  tracks?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsCommunityResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsCommunity'] = ResolversParentTypes['DiscogsCommunity']> = ResolversObject<{
+  have?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  want?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsImageShortResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsImageShort'] = ResolversParentTypes['DiscogsImageShort']> = ResolversObject<{
+  height?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  resource_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  uri?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  uri150?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  width?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsLabelResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsLabel'] = ResolversParentTypes['DiscogsLabel']> = ResolversObject<{
+  contact_info?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  data_quality?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  getReleases?: Resolver<ResolversTypes['DiscogsLabelReleases'], ParentType, ContextType, RequireFields<DiscogsLabelGetReleasesArgs, 'pagination'>>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  images?: Resolver<Array<Maybe<ResolversTypes['DiscogsImageShort']>>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  profile?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  releases_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  resource_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  uri?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  urls?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsLabelReleaseResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsLabelReleaseResult'] = ResolversParentTypes['DiscogsLabelReleaseResult']> = ResolversObject<{
+  artist?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  catno?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  format?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  release?: Resolver<ResolversTypes['DiscogsRelease'], ParentType, ContextType, RequireFields<DiscogsLabelReleaseResultReleaseArgs, never>>;
+  resource_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  thumb?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  year?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsLabelReleasesResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsLabelReleases'] = ResolversParentTypes['DiscogsLabelReleases']> = ResolversObject<{
+  pagination?: Resolver<ResolversTypes['DiscogsSearchPagination'], ParentType, ContextType>;
+  releases?: Resolver<Array<ResolversTypes['DiscogsLabelReleaseResult']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsLookupResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsLookup'] = ResolversParentTypes['DiscogsLookup']> = ResolversObject<{
+  artist?: Resolver<Maybe<ResolversTypes['DiscogsArtist']>, ParentType, ContextType, RequireFields<DiscogsLookupArtistArgs, 'id'>>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  label?: Resolver<Maybe<ResolversTypes['DiscogsLabel']>, ParentType, ContextType, RequireFields<DiscogsLookupLabelArgs, 'id'>>;
+  master?: Resolver<Maybe<ResolversTypes['DiscogsMaster']>, ParentType, ContextType, RequireFields<DiscogsLookupMasterArgs, 'id'>>;
+  release?: Resolver<Maybe<ResolversTypes['DiscogsRelease']>, ParentType, ContextType, RequireFields<DiscogsLookupReleaseArgs, 'id'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsMasterResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsMaster'] = ResolversParentTypes['DiscogsMaster']> = ResolversObject<{
+  artists?: Resolver<Array<Maybe<ResolversTypes['DiscogsArtistShort']>>, ParentType, ContextType>;
+  data_quality?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  genres?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  getVersions?: Resolver<ResolversTypes['GetDiscogsMasterVersions'], ParentType, ContextType, RequireFields<DiscogsMasterGetVersionsArgs, never>>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  images?: Resolver<Array<Maybe<ResolversTypes['DiscogsImageShort']>>, ParentType, ContextType>;
+  lowest_price?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  main_release?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  main_release_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  most_recent_release?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  most_recent_release_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  notes?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  num_for_sale?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  relation?: Resolver<ResolversTypes['Relation'], ParentType, ContextType>;
+  release?: Resolver<ResolversTypes['DiscogsRelease'], ParentType, ContextType, RequireFields<DiscogsMasterReleaseArgs, 'type'>>;
+  resource_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  styles?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  tracklist?: Resolver<Array<Maybe<ResolversTypes['DiscogsTrackShort']>>, ParentType, ContextType>;
+  uri?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  versions_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  videos?: Resolver<Array<Maybe<ResolversTypes['DiscogsVideo']>>, ParentType, ContextType>;
+  year?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsMasterVersionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsMasterVersion'] = ResolversParentTypes['DiscogsMasterVersion']> = ResolversObject<{
+  catno?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  country?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  format?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  label?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  major_formats?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  rating?: Resolver<ResolversTypes['DiscogsReleaseRatingWrapper'], ParentType, ContextType>;
+  relation?: Resolver<ResolversTypes['Relation'], ParentType, ContextType>;
+  release?: Resolver<ResolversTypes['DiscogsRelease'], ParentType, ContextType, RequireFields<DiscogsMasterVersionReleaseArgs, never>>;
+  released?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  resource_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  stats?: Resolver<ResolversTypes['DiscogsMasterVersionStats'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  thumb?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsMasterVersionStatsResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsMasterVersionStats'] = ResolversParentTypes['DiscogsMasterVersionStats']> = ResolversObject<{
+  community?: Resolver<ResolversTypes['DiscogsMasterVersionStatsCommunity'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsMasterVersionStatsCommunityResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsMasterVersionStatsCommunity'] = ResolversParentTypes['DiscogsMasterVersionStatsCommunity']> = ResolversObject<{
+  in_collection?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  in_wantlist?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsMasterVersionsFilterFacetsResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsMasterVersionsFilterFacets'] = ResolversParentTypes['DiscogsMasterVersionsFilterFacets']> = ResolversObject<{
+  allows_multiple_values?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  values?: Resolver<Array<ResolversTypes['DiscogsVersionsFilterFacetsValues']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsMasterVersionsFiltersResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsMasterVersionsFilters'] = ResolversParentTypes['DiscogsMasterVersionsFilters']> = ResolversObject<{
+  available?: Resolver<ResolversTypes['AvailableFilters'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsRelationResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsRelation'] = ResolversParentTypes['DiscogsRelation']> = ResolversObject<{
+  artists?: Resolver<Maybe<ResolversTypes['SearchDiscogsArtist']>, ParentType, ContextType, RequireFields<DiscogsRelationArtistsArgs, 'pagination'>>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  masters?: Resolver<ResolversTypes['SearchDiscogsMaster'], ParentType, ContextType, RequireFields<DiscogsRelationMastersArgs, 'pagination'>>;
+  releases?: Resolver<ResolversTypes['SearchDiscogsRelease'], ParentType, ContextType, RequireFields<DiscogsRelationReleasesArgs, 'pagination'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsReleaseResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsRelease'] = ResolversParentTypes['DiscogsRelease']> = ResolversObject<{
+  artists?: Resolver<Array<Maybe<ResolversTypes['DiscogsArtistShort']>>, ParentType, ContextType>;
+  artists_sort?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  blocked_from_sale?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  community?: Resolver<ResolversTypes['DiscogsReleaseCommunity'], ParentType, ContextType>;
+  companies?: Resolver<Array<ResolversTypes['DiscogsReleaseLabel']>, ParentType, ContextType>;
+  country?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  data_quality?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  date_added?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  date_changed?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  estimated_weight?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  extraartists?: Resolver<Array<ResolversTypes['DiscogsArtistShort']>, ParentType, ContextType>;
+  format_quantity?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  formats?: Resolver<Maybe<Array<ResolversTypes['DiscogsReleaseFormat']>>, ParentType, ContextType>;
+  genres?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  identifiers?: Resolver<Array<ResolversTypes['DiscogsReleaseIdentifier']>, ParentType, ContextType>;
+  images?: Resolver<Array<Maybe<ResolversTypes['DiscogsImageShort']>>, ParentType, ContextType>;
+  labels?: Resolver<Array<ResolversTypes['DiscogsReleaseLabel']>, ParentType, ContextType>;
+  lowest_price?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  master?: Resolver<ResolversTypes['DiscogsMaster'], ParentType, ContextType>;
+  master_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  master_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  notes?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  num_for_sale?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  rating?: Resolver<ResolversTypes['DiscogsReleaseRatingWrapper'], ParentType, ContextType>;
+  relation?: Resolver<ResolversTypes['Relation'], ParentType, ContextType>;
+  released?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  released_formatted?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  resource_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  series?: Resolver<Array<ResolversTypes['DiscogsReleaseLabel']>, ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  styles?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  thumb?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  tracklist?: Resolver<Array<Maybe<ResolversTypes['DiscogsTrackShort']>>, ParentType, ContextType>;
+  uri?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  videos?: Resolver<Array<ResolversTypes['DiscogsVideo']>, ParentType, ContextType>;
+  year?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsReleaseCommunityResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsReleaseCommunity'] = ResolversParentTypes['DiscogsReleaseCommunity']> = ResolversObject<{
+  contributors?: Resolver<Array<ResolversTypes['DiscogsReleaseCommunityUser']>, ParentType, ContextType>;
+  data_quality?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  have?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  rating?: Resolver<ResolversTypes['DiscogsReleaseCommunityRating'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  submitter?: Resolver<ResolversTypes['DiscogsReleaseCommunityUser'], ParentType, ContextType>;
+  want?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsReleaseCommunityRatingResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsReleaseCommunityRating'] = ResolversParentTypes['DiscogsReleaseCommunityRating']> = ResolversObject<{
+  average?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsReleaseCommunityUserResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsReleaseCommunityUser'] = ResolversParentTypes['DiscogsReleaseCommunityUser']> = ResolversObject<{
+  average?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsReleaseFormatResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsReleaseFormat'] = ResolversParentTypes['DiscogsReleaseFormat']> = ResolversObject<{
+  descriptions?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  qty?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsReleaseIdentifierResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsReleaseIdentifier'] = ResolversParentTypes['DiscogsReleaseIdentifier']> = ResolversObject<{
+  average?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsReleaseLabelResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsReleaseLabel'] = ResolversParentTypes['DiscogsReleaseLabel']> = ResolversObject<{
+  catno?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  entity_type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  entity_type_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  resource_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  thumbnail_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsReleaseRatingResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsReleaseRating'] = ResolversParentTypes['DiscogsReleaseRating']> = ResolversObject<{
+  average?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsReleaseRatingWrapperResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsReleaseRatingWrapper'] = ResolversParentTypes['DiscogsReleaseRatingWrapper']> = ResolversObject<{
+  rating?: Resolver<ResolversTypes['DiscogsReleaseRating'], ParentType, ContextType>;
+  release_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsSearchResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsSearch'] = ResolversParentTypes['DiscogsSearch']> = ResolversObject<{
+  artists?: Resolver<ResolversTypes['SearchDiscogsArtist'], ParentType, ContextType, RequireFields<DiscogsSearchArtistsArgs, 'pagination'>>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  labels?: Resolver<ResolversTypes['SearchDiscogsLabel'], ParentType, ContextType, RequireFields<DiscogsSearchLabelsArgs, 'pagination'>>;
+  masters?: Resolver<ResolversTypes['SearchDiscogsMaster'], ParentType, ContextType, RequireFields<DiscogsSearchMastersArgs, 'pagination'>>;
+  releases?: Resolver<ResolversTypes['SearchDiscogsRelease'], ParentType, ContextType, RequireFields<DiscogsSearchReleasesArgs, 'pagination'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsSearchPaginationResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsSearchPagination'] = ResolversParentTypes['DiscogsSearchPagination']> = ResolversObject<{
+  items?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  page?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  pages?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  per_page?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  urls?: Resolver<ResolversTypes['DiscogsSearchPaginationUrls'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsSearchPaginationUrlsResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsSearchPaginationUrls'] = ResolversParentTypes['DiscogsSearchPaginationUrls']> = ResolversObject<{
+  first?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  last?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  next?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  prev?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsSearchResultArtistResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsSearchResultArtist'] = ResolversParentTypes['DiscogsSearchResultArtist']> = ResolversObject<{
+  cover_image?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  getReleases?: Resolver<ResolversTypes['DiscogsArtistReleases'], ParentType, ContextType, RequireFields<DiscogsSearchResultArtistGetReleasesArgs, 'pagination'>>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  relation?: Resolver<ResolversTypes['Relation'], ParentType, ContextType>;
+  resource_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  thumb?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  uri?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  user_data?: Resolver<ResolversTypes['DiscogsMasterVersionStatsCommunity'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsSearchResultLabelResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsSearchResultLabel'] = ResolversParentTypes['DiscogsSearchResultLabel']> = ResolversObject<{
+  cover_image?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  getReleases?: Resolver<ResolversTypes['DiscogsLabelReleases'], ParentType, ContextType, RequireFields<DiscogsSearchResultLabelGetReleasesArgs, 'pagination'>>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  master_id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  master_url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  resource_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  thumb?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  uri?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  user_data?: Resolver<ResolversTypes['DiscogsUserData'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsSearchResultMasterResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsSearchResultMaster'] = ResolversParentTypes['DiscogsSearchResultMaster']> = ResolversObject<{
+  barcode?: Resolver<Array<Maybe<ResolversTypes['String']>>, ParentType, ContextType>;
+  catno?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  community?: Resolver<ResolversTypes['DiscogsCommunity'], ParentType, ContextType>;
+  country?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  cover_image?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  format?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  genre?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  getVersions?: Resolver<ResolversTypes['GetDiscogsMasterVersions'], ParentType, ContextType, RequireFields<DiscogsSearchResultMasterGetVersionsArgs, never>>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  label?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  master?: Resolver<ResolversTypes['DiscogsMaster'], ParentType, ContextType>;
+  master_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  master_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  relation?: Resolver<ResolversTypes['Relation'], ParentType, ContextType>;
+  resource_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  style?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  thumb?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  uri?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  year?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsSearchResultReleaseResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsSearchResultRelease'] = ResolversParentTypes['DiscogsSearchResultRelease']> = ResolversObject<{
+  barcode?: Resolver<Array<Maybe<ResolversTypes['String']>>, ParentType, ContextType>;
+  catno?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  community?: Resolver<ResolversTypes['DiscogsCommunity'], ParentType, ContextType>;
+  country?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  cover_image?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  format?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  format_quantity?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  formats?: Resolver<Maybe<Array<ResolversTypes['DiscogsReleaseFormat']>>, ParentType, ContextType>;
+  genre?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  label?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  master?: Resolver<ResolversTypes['DiscogsMaster'], ParentType, ContextType>;
+  master_id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  master_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  rating?: Resolver<ResolversTypes['DiscogsReleaseRatingWrapper'], ParentType, ContextType>;
+  relation?: Resolver<ResolversTypes['Relation'], ParentType, ContextType>;
+  release?: Resolver<ResolversTypes['DiscogsRelease'], ParentType, ContextType, RequireFields<DiscogsSearchResultReleaseReleaseArgs, never>>;
+  resource_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  style?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  thumb?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  uri?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  year?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsTrackShortResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsTrackShort'] = ResolversParentTypes['DiscogsTrackShort']> = ResolversObject<{
+  duration?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  position?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type_?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsUserDataResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsUserData'] = ResolversParentTypes['DiscogsUserData']> = ResolversObject<{
+  in_collection?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  in_wantlist?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsVersionsFilterFacetsValuesResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsVersionsFilterFacetsValues'] = ResolversParentTypes['DiscogsVersionsFilterFacetsValues']> = ResolversObject<{
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DiscogsVideoResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsVideo'] = ResolversParentTypes['DiscogsVideo']> = ResolversObject<{
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  duration?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  embed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  uri?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type GetDiscogsMasterVersionsResolvers<ContextType = any, ParentType extends ResolversParentTypes['GetDiscogsMasterVersions'] = ResolversParentTypes['GetDiscogsMasterVersions']> = ResolversObject<{
+  filter_facets?: Resolver<Array<Maybe<ResolversTypes['DiscogsMasterVersionsFilterFacets']>>, ParentType, ContextType>;
+  filters?: Resolver<ResolversTypes['DiscogsMasterVersionsFilters'], ParentType, ContextType>;
+  pagination?: Resolver<ResolversTypes['DiscogsSearchPagination'], ParentType, ContextType>;
+  versions?: Resolver<Array<Maybe<ResolversTypes['DiscogsMasterVersion']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type LookupResolvers<ContextType = any, ParentType extends ResolversParentTypes['Lookup'] = ResolversParentTypes['Lookup']> = ResolversObject<{
+  discogs?: Resolver<ResolversTypes['DiscogsLookup'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type RelationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Relation'] = ResolversParentTypes['Relation']> = ResolversObject<{
+  discogs?: Resolver<ResolversTypes['DiscogsRelation'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type SearchResolvers<ContextType = any, ParentType extends ResolversParentTypes['Search'] = ResolversParentTypes['Search']> = ResolversObject<{
+  discogs?: Resolver<ResolversTypes['DiscogsSearch'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type SearchDiscogsArtistResolvers<ContextType = any, ParentType extends ResolversParentTypes['SearchDiscogsArtist'] = ResolversParentTypes['SearchDiscogsArtist']> = ResolversObject<{
+  pagination?: Resolver<ResolversTypes['DiscogsSearchPagination'], ParentType, ContextType>;
+  results?: Resolver<Array<ResolversTypes['DiscogsSearchResultArtist']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type SearchDiscogsLabelResolvers<ContextType = any, ParentType extends ResolversParentTypes['SearchDiscogsLabel'] = ResolversParentTypes['SearchDiscogsLabel']> = ResolversObject<{
+  pagination?: Resolver<ResolversTypes['DiscogsSearchPagination'], ParentType, ContextType>;
+  results?: Resolver<Array<ResolversTypes['DiscogsSearchResultLabel']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type SearchDiscogsMasterResolvers<ContextType = any, ParentType extends ResolversParentTypes['SearchDiscogsMaster'] = ResolversParentTypes['SearchDiscogsMaster']> = ResolversObject<{
+  pagination?: Resolver<ResolversTypes['DiscogsSearchPagination'], ParentType, ContextType>;
+  results?: Resolver<Array<ResolversTypes['DiscogsSearchResultMaster']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type SearchDiscogsReleaseResolvers<ContextType = any, ParentType extends ResolversParentTypes['SearchDiscogsRelease'] = ResolversParentTypes['SearchDiscogsRelease']> = ResolversObject<{
+  pagination?: Resolver<ResolversTypes['DiscogsSearchPagination'], ParentType, ContextType>;
+  results?: Resolver<Array<ResolversTypes['DiscogsSearchResultRelease']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type Resolvers<ContextType = any> = ResolversObject<{
+  AvailableFilters?: GraphQLScalarType;
+  DiscogsArtist?: DiscogsArtistResolvers<ContextType>;
+  DiscogsArtistMaster?: DiscogsArtistMasterResolvers<ContextType>;
+  DiscogsArtistMembers?: DiscogsArtistMembersResolvers<ContextType>;
+  DiscogsArtistRelease?: DiscogsArtistReleaseResolvers<ContextType>;
+  DiscogsArtistReleaseResult?: DiscogsArtistReleaseResultResolvers<ContextType>;
+  DiscogsArtistReleases?: DiscogsArtistReleasesResolvers<ContextType>;
+  DiscogsArtistShort?: DiscogsArtistShortResolvers<ContextType>;
+  DiscogsCommunity?: DiscogsCommunityResolvers<ContextType>;
+  DiscogsImageShort?: DiscogsImageShortResolvers<ContextType>;
+  DiscogsLabel?: DiscogsLabelResolvers<ContextType>;
+  DiscogsLabelReleaseResult?: DiscogsLabelReleaseResultResolvers<ContextType>;
+  DiscogsLabelReleases?: DiscogsLabelReleasesResolvers<ContextType>;
+  DiscogsLookup?: DiscogsLookupResolvers<ContextType>;
+  DiscogsMaster?: DiscogsMasterResolvers<ContextType>;
+  DiscogsMasterVersion?: DiscogsMasterVersionResolvers<ContextType>;
+  DiscogsMasterVersionStats?: DiscogsMasterVersionStatsResolvers<ContextType>;
+  DiscogsMasterVersionStatsCommunity?: DiscogsMasterVersionStatsCommunityResolvers<ContextType>;
+  DiscogsMasterVersionsFilterFacets?: DiscogsMasterVersionsFilterFacetsResolvers<ContextType>;
+  DiscogsMasterVersionsFilters?: DiscogsMasterVersionsFiltersResolvers<ContextType>;
+  DiscogsRelation?: DiscogsRelationResolvers<ContextType>;
+  DiscogsRelease?: DiscogsReleaseResolvers<ContextType>;
+  DiscogsReleaseCommunity?: DiscogsReleaseCommunityResolvers<ContextType>;
+  DiscogsReleaseCommunityRating?: DiscogsReleaseCommunityRatingResolvers<ContextType>;
+  DiscogsReleaseCommunityUser?: DiscogsReleaseCommunityUserResolvers<ContextType>;
+  DiscogsReleaseFormat?: DiscogsReleaseFormatResolvers<ContextType>;
+  DiscogsReleaseIdentifier?: DiscogsReleaseIdentifierResolvers<ContextType>;
+  DiscogsReleaseLabel?: DiscogsReleaseLabelResolvers<ContextType>;
+  DiscogsReleaseRating?: DiscogsReleaseRatingResolvers<ContextType>;
+  DiscogsReleaseRatingWrapper?: DiscogsReleaseRatingWrapperResolvers<ContextType>;
+  DiscogsSearch?: DiscogsSearchResolvers<ContextType>;
+  DiscogsSearchPagination?: DiscogsSearchPaginationResolvers<ContextType>;
+  DiscogsSearchPaginationUrls?: DiscogsSearchPaginationUrlsResolvers<ContextType>;
+  DiscogsSearchResultArtist?: DiscogsSearchResultArtistResolvers<ContextType>;
+  DiscogsSearchResultLabel?: DiscogsSearchResultLabelResolvers<ContextType>;
+  DiscogsSearchResultMaster?: DiscogsSearchResultMasterResolvers<ContextType>;
+  DiscogsSearchResultRelease?: DiscogsSearchResultReleaseResolvers<ContextType>;
+  DiscogsTrackShort?: DiscogsTrackShortResolvers<ContextType>;
+  DiscogsUserData?: DiscogsUserDataResolvers<ContextType>;
+  DiscogsVersionsFilterFacetsValues?: DiscogsVersionsFilterFacetsValuesResolvers<ContextType>;
+  DiscogsVideo?: DiscogsVideoResolvers<ContextType>;
+  GetDiscogsMasterVersions?: GetDiscogsMasterVersionsResolvers<ContextType>;
+  Lookup?: LookupResolvers<ContextType>;
+  Relation?: RelationResolvers<ContextType>;
+  Search?: SearchResolvers<ContextType>;
+  SearchDiscogsArtist?: SearchDiscogsArtistResolvers<ContextType>;
+  SearchDiscogsLabel?: SearchDiscogsLabelResolvers<ContextType>;
+  SearchDiscogsMaster?: SearchDiscogsMasterResolvers<ContextType>;
+  SearchDiscogsRelease?: SearchDiscogsReleaseResolvers<ContextType>;
+}>;
+

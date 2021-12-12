@@ -7,6 +7,7 @@ import {
   DiscogsLabelReleaseResult,
   DiscogsRelease,
   DiscogsLabelReleaseResultReleaseArgs,
+  Resolvers,
 } from '../types';
 
 import { Context } from '../';
@@ -64,7 +65,7 @@ export const typeDefs = gql`
   }
 `;
 
-export const resolvers = {
+export const resolvers: Resolvers<Context> = {
   DiscogsLabel: {
     getReleases: (
       { id }: DiscogsLabel,
