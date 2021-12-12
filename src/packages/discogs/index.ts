@@ -19,6 +19,8 @@ import {
   resolvers as artistResolvers,
 } from './modules/artist';
 
+import labelSchema from './modules/label';
+
 import artistReleasesSchema from './modules/artistReleases';
 
 export const typeDefs = gql`
@@ -234,6 +236,11 @@ export const typeDefs = gql`
     have: Int!
   }
 
+  type DiscogsUserData {
+    in_wantlist: Boolean!
+    in_collection: Boolean!
+  }
+
   type DiscogsSearch {
     id: ID!
   }
@@ -285,4 +292,5 @@ export default [
   { typeDefs: masterVersionTypeDefs, resolvers: masterVersionResolvers },
   { typeDefs: artistTypeDefs, resolvers: artistResolvers },
   artistReleasesSchema,
+  labelSchema,
 ];

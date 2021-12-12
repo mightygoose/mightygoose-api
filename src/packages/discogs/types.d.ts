@@ -178,17 +178,38 @@ export type DiscogsImageShort = {
   width: Scalars['Int'];
 };
 
+export type DiscogsLabel = {
+  __typename?: 'DiscogsLabel';
+  contact_info: Scalars['String'];
+  data_quality: Scalars['String'];
+  id: Scalars['ID'];
+  images: Array<Maybe<DiscogsImageShort>>;
+  name: Scalars['String'];
+  profile: Scalars['String'];
+  releases_url: Scalars['String'];
+  resource_url: Scalars['String'];
+  uri: Scalars['String'];
+  urls: Array<Scalars['String']>;
+};
+
 export type DiscogsLookup = {
   __typename?: 'DiscogsLookup';
   /** Get an artist */
   artist?: Maybe<DiscogsArtist>;
   id: Scalars['ID'];
+  /** Get a label */
+  label?: Maybe<DiscogsLabel>;
   master?: Maybe<DiscogsMaster>;
   release?: Maybe<DiscogsRelease>;
 };
 
 
 export type DiscogsLookupArtistArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type DiscogsLookupLabelArgs = {
   id: Scalars['Int'];
 };
 
@@ -500,12 +521,20 @@ export type DiscogsSearch = {
   __typename?: 'DiscogsSearch';
   artists: SearchDiscogsArtist;
   id: Scalars['ID'];
+  labels: SearchDiscogsLabel;
   masters: SearchDiscogsMaster;
   releases: SearchDiscogsRelease;
 };
 
 
 export type DiscogsSearchArtistsArgs = {
+  filter?: InputMaybe<SearchDiscogsFilter>;
+  pagination?: InputMaybe<DiscogsPaginationParameters>;
+  search?: InputMaybe<Scalars['String']>;
+};
+
+
+export type DiscogsSearchLabelsArgs = {
   filter?: InputMaybe<SearchDiscogsFilter>;
   pagination?: InputMaybe<DiscogsPaginationParameters>;
   search?: InputMaybe<Scalars['String']>;
@@ -560,6 +589,20 @@ export type DiscogsSearchResultArtist = {
 export type DiscogsSearchResultArtistGetReleasesArgs = {
   pagination?: InputMaybe<DiscogsPaginationParameters>;
   sort?: InputMaybe<DiscogsArtistGetReleasesSort>;
+};
+
+export type DiscogsSearchResultLabel = {
+  __typename?: 'DiscogsSearchResultLabel';
+  cover_image: Scalars['String'];
+  id: Scalars['ID'];
+  master_id?: Maybe<Scalars['Int']>;
+  master_url?: Maybe<Scalars['String']>;
+  resource_url: Scalars['String'];
+  thumb: Scalars['String'];
+  title: Scalars['String'];
+  type: Scalars['String'];
+  uri: Scalars['String'];
+  user_data: DiscogsUserData;
 };
 
 export type DiscogsSearchResultMaster = {
@@ -632,6 +675,12 @@ export type DiscogsTrackShort = {
   position: Scalars['String'];
   title: Scalars['String'];
   type_: Scalars['String'];
+};
+
+export type DiscogsUserData = {
+  __typename?: 'DiscogsUserData';
+  in_collection: Scalars['Boolean'];
+  in_wantlist: Scalars['Boolean'];
 };
 
 export type DiscogsVersionsFilterFacetsValues = {
@@ -779,6 +828,12 @@ export type SearchDiscogsFilter = {
    * Example: 1991
    */
   year?: InputMaybe<Scalars['Int']>;
+};
+
+export type SearchDiscogsLabel = {
+  __typename?: 'SearchDiscogsLabel';
+  pagination: DiscogsSearchPagination;
+  results: Array<DiscogsSearchResultLabel>;
 };
 
 export type SearchDiscogsMaster = {
