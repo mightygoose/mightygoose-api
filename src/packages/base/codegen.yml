@@ -6,4 +6,8 @@ generates:
     plugins:
       - typescript
       - typescript-operations
+      - typescript-resolvers
+    config:
+      federation: true
+      useIndexSignature: true
 

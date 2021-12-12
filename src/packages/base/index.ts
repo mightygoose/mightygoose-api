@@ -1,5 +1,5 @@
 import { gql } from 'apollo-server';
-import { Relation, RelationData } from './types';
+import { Relation, RelationData, Resolvers } from './types';
 
 export const typeDefs = gql`
   enum Services {
@@ -54,16 +54,14 @@ export const createRelation = (data: RelationData): Relation => ({
   _relationData: data,
 });
 
-export const resolvers = {
+export const resolvers: Resolvers = {
   Query: {
-    search: () => ({}),
-    lookup: () => ({}),
-  },
-  Search: {
-    id: () => +new Date(),
-  },
-  Lookup: {
-    id: () => +new Date(),
+    search: () => ({
+      id: (+new Date()).toString(),
+    }),
+    lookup: () => ({
+      id: (+new Date()).toString(),
+    }),
   },
 };
 
