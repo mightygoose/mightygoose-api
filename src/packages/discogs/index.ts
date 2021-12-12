@@ -20,12 +20,18 @@ import {
 } from './modules/artist';
 
 import labelSchema from './modules/label';
+import labelReleasesSchema from './modules/labelReleases';
 
 import artistReleasesSchema from './modules/artistReleases';
 
 export const typeDefs = gql`
   extend enum Services {
     Discogs
+  }
+
+  enum DiscogsSortOrder {
+    asc
+    desc
   }
 
   enum DiscogsCurrencies {
@@ -293,4 +299,5 @@ export default [
   { typeDefs: artistTypeDefs, resolvers: artistResolvers },
   artistReleasesSchema,
   labelSchema,
+  labelReleasesSchema,
 ];

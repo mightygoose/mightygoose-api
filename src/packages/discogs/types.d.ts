@@ -182,6 +182,7 @@ export type DiscogsLabel = {
   __typename?: 'DiscogsLabel';
   contact_info: Scalars['String'];
   data_quality: Scalars['String'];
+  getReleases: DiscogsLabelReleases;
   id: Scalars['ID'];
   images: Array<Maybe<DiscogsImageShort>>;
   name: Scalars['String'];
@@ -191,6 +192,44 @@ export type DiscogsLabel = {
   uri: Scalars['String'];
   urls: Array<Scalars['String']>;
 };
+
+
+export type DiscogsLabelGetReleasesArgs = {
+  pagination?: InputMaybe<DiscogsPaginationParameters>;
+  sort?: InputMaybe<DiscogsLabelGetReleasesSort>;
+};
+
+export type DiscogsLabelGetReleasesSort = {
+  sort?: InputMaybe<DiscogsLabelRelesesSort>;
+  sort_order?: InputMaybe<DiscogsSortOrder>;
+};
+
+export type DiscogsLabelReleaseResult = {
+  __typename?: 'DiscogsLabelReleaseResult';
+  artist: Scalars['String'];
+  id: Scalars['ID'];
+  relation: Relation;
+  resource_url: Scalars['String'];
+  role: Scalars['String'];
+  thumb: Scalars['String'];
+  title: Scalars['String'];
+  type: DiscogsArtistReleaseResultTypes;
+  year: Scalars['Int'];
+};
+
+export type DiscogsLabelReleases = {
+  __typename?: 'DiscogsLabelReleases';
+  pagination: DiscogsSearchPagination;
+  releases: Array<DiscogsLabelReleaseResult>;
+};
+
+export enum DiscogsLabelRelesesSort {
+  Format = 'format',
+  /** (i.e. title of the release) */
+  Title = 'title',
+  /** (i.e. year of the release) */
+  Year = 'year'
+}
 
 export type DiscogsLookup = {
   __typename?: 'DiscogsLookup';
@@ -594,6 +633,7 @@ export type DiscogsSearchResultArtistGetReleasesArgs = {
 export type DiscogsSearchResultLabel = {
   __typename?: 'DiscogsSearchResultLabel';
   cover_image: Scalars['String'];
+  getReleases: DiscogsLabelReleases;
   id: Scalars['ID'];
   master_id?: Maybe<Scalars['Int']>;
   master_url?: Maybe<Scalars['String']>;
@@ -603,6 +643,12 @@ export type DiscogsSearchResultLabel = {
   type: Scalars['String'];
   uri: Scalars['String'];
   user_data: DiscogsUserData;
+};
+
+
+export type DiscogsSearchResultLabelGetReleasesArgs = {
+  pagination?: InputMaybe<DiscogsPaginationParameters>;
+  sort?: InputMaybe<DiscogsLabelGetReleasesSort>;
 };
 
 export type DiscogsSearchResultMaster = {
@@ -668,6 +714,11 @@ export type DiscogsSearchResultRelease = {
 export type DiscogsSearchResultReleaseReleaseArgs = {
   curr_abbr?: InputMaybe<DiscogsCurrencies>;
 };
+
+export enum DiscogsSortOrder {
+  Asc = 'asc',
+  Desc = 'desc'
+}
 
 export type DiscogsTrackShort = {
   __typename?: 'DiscogsTrackShort';
