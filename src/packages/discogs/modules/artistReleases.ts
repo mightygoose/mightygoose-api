@@ -1,16 +1,6 @@
 import { gql } from 'apollo-server';
-import {
-  DiscogsArtistRelease,
-  DiscogsArtistMaster,
-  DiscogsArtistReleases,
-  DiscogsSearchResultArtistGetReleasesArgs,
-  DiscogsArtist,
-  DiscogsSearchResultArtist,
-  DiscogsArtistReleaseResult,
-  DiscogsArtistShort,
-} from '../types';
+import { Resolvers } from '../types';
 
-import { Relation } from '../../base/types';
 import { createRelation, log } from '../../base';
 import { Context } from '../';
 
@@ -92,14 +82,11 @@ export const typeDefs = gql`
   }
 `;
 
-export const resolvers = {
+export const resolvers: Resolvers<Context> = {
   DiscogsArtistReleaseResult: {
     __resolveType: ({
       type,
-    }: DiscogsArtistReleaseResult):
-      | 'DiscogsArtistMaster'
-      | 'DiscogsArtistRelease'
-      | null => {
+    }): 'DiscogsArtistMaster' | 'DiscogsArtistRelease' | null => {
       if (type === 'master') {
         return 'DiscogsArtistMaster';
       }
@@ -111,35 +98,30 @@ export const resolvers = {
   },
   DiscogsArtist: {
     getReleases: (
-      { id }: DiscogsArtist,
-      { pagination, sort }: DiscogsSearchResultArtistGetReleasesArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsArtistReleases> =>
+      { id },
+      { pagination, sort },
+      { dataSources: { discogsApi } }
+    ) =>
       discogsApi.lookupArtistReleases(parseInt(id), { ...sort, ...pagination }),
   },
   DiscogsSearchResultArtist: {
     getReleases: (
-      { id }: DiscogsSearchResultArtist,
-      { pagination, sort }: DiscogsSearchResultArtistGetReleasesArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsArtistReleases> =>
+      { id },
+      { pagination, sort },
+      { dataSources: { discogsApi } }
+    ) =>
       discogsApi.lookupArtistReleases(parseInt(id), { ...sort, ...pagination }),
   },
   DiscogsArtistShort: {
     getReleases: (
-      { id }: DiscogsArtistShort,
-      { pagination, sort }: DiscogsSearchResultArtistGetReleasesArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsArtistReleases> =>
+      { id },
+      { pagination, sort },
+      { dataSources: { discogsApi } }
+    ) =>
       discogsApi.lookupArtistReleases(parseInt(id), { ...sort, ...pagination }),
   },
   DiscogsArtistRelease: {
-    relation: ({
-      year,
-      title: album,
-      artist,
-      type,
-    }: DiscogsArtistRelease): Relation =>
+    relation: ({ year, title: album, artist, type }) =>
       createRelation({
         type,
         artist,
@@ -150,12 +132,7 @@ export const resolvers = {
       }),
   },
   DiscogsArtistMaster: {
-    relation: ({
-      year,
-      title: album,
-      artist,
-      type,
-    }: DiscogsArtistMaster): Relation =>
+    relation: ({ year, title: album, artist, type }) =>
       createRelation({
         type,
         artist,

@@ -770,16 +770,37 @@ export type GetDiscogsMasterVersions = {
 export type Lookup = {
   __typename?: 'Lookup';
   discogs: DiscogsLookup;
+  id: Scalars['ID'];
+};
+
+export type Query = {
+  __typename?: 'Query';
+  lookup: Lookup;
+  search: Search;
 };
 
 export type Relation = {
   __typename?: 'Relation';
-  discogs: DiscogsRelation;
+  _relationData: RelationData;
+  discogs?: Maybe<DiscogsRelation>;
+};
+
+export type RelationData = {
+  __typename?: 'RelationData';
+  album?: Maybe<Scalars['String']>;
+  artist?: Maybe<Scalars['String']>;
+  artists?: Maybe<Array<Scalars['String']>>;
+  country?: Maybe<Scalars['String']>;
+  genre?: Maybe<Array<Scalars['String']>>;
+  title?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  year?: Maybe<Scalars['Int']>;
 };
 
 export type Search = {
   __typename?: 'Search';
   discogs: DiscogsSearch;
+  id: Scalars['ID'];
 };
 
 export type SearchDiscogsArtist = {
@@ -909,6 +930,7 @@ export type SearchDiscogsRelease = {
 };
 
 export enum Services {
+  Base = 'BASE',
   Discogs = 'Discogs'
 }
 
@@ -1042,7 +1064,9 @@ export type ResolversTypes = ResolversObject<{
   DiscogsVideo: ResolverTypeWrapper<DiscogsVideo>;
   GetDiscogsMasterVersions: ResolverTypeWrapper<GetDiscogsMasterVersions>;
   Lookup: ResolverTypeWrapper<Lookup>;
+  Query: ResolverTypeWrapper<{}>;
   Relation: ResolverTypeWrapper<Relation>;
+  RelationData: ResolverTypeWrapper<RelationData>;
   Search: ResolverTypeWrapper<Search>;
   SearchDiscogsArtist: ResolverTypeWrapper<SearchDiscogsArtist>;
   SearchDiscogsFilter: SearchDiscogsFilter;
@@ -1106,7 +1130,9 @@ export type ResolversParentTypes = ResolversObject<{
   DiscogsVideo: DiscogsVideo;
   GetDiscogsMasterVersions: GetDiscogsMasterVersions;
   Lookup: Lookup;
+  Query: {};
   Relation: Relation;
+  RelationData: RelationData;
   Search: Search;
   SearchDiscogsArtist: SearchDiscogsArtist;
   SearchDiscogsFilter: SearchDiscogsFilter;
@@ -1600,16 +1626,36 @@ export type GetDiscogsMasterVersionsResolvers<ContextType = any, ParentType exte
 
 export type LookupResolvers<ContextType = any, ParentType extends ResolversParentTypes['Lookup'] = ResolversParentTypes['Lookup']> = ResolversObject<{
   discogs?: Resolver<ResolversTypes['DiscogsLookup'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  lookup?: Resolver<ResolversTypes['Lookup'], ParentType, ContextType>;
+  search?: Resolver<ResolversTypes['Search'], ParentType, ContextType>;
+}>;
+
 export type RelationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Relation'] = ResolversParentTypes['Relation']> = ResolversObject<{
-  discogs?: Resolver<ResolversTypes['DiscogsRelation'], ParentType, ContextType>;
+  _relationData?: Resolver<ResolversTypes['RelationData'], ParentType, ContextType>;
+  discogs?: Resolver<Maybe<ResolversTypes['DiscogsRelation']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type RelationDataResolvers<ContextType = any, ParentType extends ResolversParentTypes['RelationData'] = ResolversParentTypes['RelationData']> = ResolversObject<{
+  album?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  artist?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  artists?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
+  country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  genre?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
+  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  year?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type SearchResolvers<ContextType = any, ParentType extends ResolversParentTypes['Search'] = ResolversParentTypes['Search']> = ResolversObject<{
   discogs?: Resolver<ResolversTypes['DiscogsSearch'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -1681,7 +1727,9 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   DiscogsVideo?: DiscogsVideoResolvers<ContextType>;
   GetDiscogsMasterVersions?: GetDiscogsMasterVersionsResolvers<ContextType>;
   Lookup?: LookupResolvers<ContextType>;
+  Query?: QueryResolvers<ContextType>;
   Relation?: RelationResolvers<ContextType>;
+  RelationData?: RelationDataResolvers<ContextType>;
   Search?: SearchResolvers<ContextType>;
   SearchDiscogsArtist?: SearchDiscogsArtistResolvers<ContextType>;
   SearchDiscogsLabel?: SearchDiscogsLabelResolvers<ContextType>;

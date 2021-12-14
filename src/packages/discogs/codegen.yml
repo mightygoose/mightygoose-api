@@ -1,6 +1,7 @@
 schema:
   - './**/*.ts':
       assumeValid: true
+  - '../base/index.ts'
 generates:
   ./types.d.ts:
     plugins:

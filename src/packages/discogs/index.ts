@@ -219,7 +219,7 @@ export const typeDefs = gql`
   }
 
   extend type Relation {
-    discogs: DiscogsRelation!
+    discogs: DiscogsRelation
   }
 
   type DiscogsSearchPaginationUrls {
