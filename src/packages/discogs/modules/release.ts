@@ -14,12 +14,12 @@ import {
   DiscogsReleaseRatingWrapper,
   DiscogsArtistRelease,
   DiscogsArtistMaster,
+  Resolvers,
 } from '../types';
 
-import { Relation } from '../../base/types';
 import { createRelation, log } from '../../base';
 
-import { Context, dataSources } from '../';
+import { Context } from '../';
 
 export const typeDefs = gql`
   type DiscogsReleaseCommunityRating {
@@ -223,13 +223,13 @@ export const typeDefs = gql`
   }
 `;
 
-export const resolvers = {
+export const resolvers: Resolvers<Context> = {
   DiscogsSearch: {
     releases: (
-      _parent: unknown,
-      { search, filter, pagination }: DiscogsSearchReleasesArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<SearchDiscogsRelease> =>
+      _parent,
+      { search, filter, pagination },
+      { dataSources: { discogsApi } }
+    ) =>
       discogsApi.searchReleases({
         query: search,
         ...filter,
@@ -237,26 +237,13 @@ export const resolvers = {
       }),
   },
   DiscogsLookup: {
-    release: (
-      _parent: unknown,
-      { id, curr_abbr }: DiscogsLookupReleaseArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsRelease> => discogsApi.lookupRelease(id, curr_abbr),
+    release: (_parent, { id, curr_abbr }, { dataSources: { discogsApi } }) =>
+      discogsApi.lookupRelease(id, curr_abbr),
   },
   DiscogsSearchResultRelease: {
-    release: (
-      { id }: DiscogsSearchResultRelease,
-      { curr_abbr }: DiscogsSearchResultReleaseReleaseArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsRelease> =>
+    release: ({ id }, { curr_abbr }, { dataSources: { discogsApi } }) =>
       discogsApi.lookupRelease(parseInt(id), curr_abbr),
-    relation: ({
-      type,
-      year,
-      title,
-      country,
-      genre,
-    }: DiscogsSearchResultRelease): Relation =>
+    relation: ({ type, year, title, country, genre }) =>
       createRelation({
         type,
         title,
@@ -267,43 +254,28 @@ export const resolvers = {
         country,
         genre,
       }),
-    rating: (
-      { id }: DiscogsSearchResultRelease,
-      _params: unknown,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsReleaseRatingWrapper> =>
+    rating: ({ id }, _params, { dataSources: { discogsApi } }) =>
       discogsApi.lookupReleaseRating(parseInt(id)),
   },
   DiscogsMaster: {
     release: (
-      { main_release, most_recent_release }: DiscogsMaster,
-      { type }: DiscogsMasterReleaseArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsRelease> => {
+      { main_release, most_recent_release },
+      { type },
+      { dataSources: { discogsApi } }
+    ) => {
       return discogsApi.lookupRelease(
         type === 'main' ? main_release : most_recent_release
       );
     },
   },
   DiscogsMasterVersion: {
-    release: (
-      { id }: DiscogsMasterVersion,
-      { curr_abbr }: DiscogsMasterVersionReleaseArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsRelease> => discogsApi.lookupRelease(id, curr_abbr),
-    rating: (
-      { id }: DiscogsMasterVersion,
-      _params: unknown,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsReleaseRatingWrapper> =>
+    release: ({ id }, { curr_abbr }, { dataSources: { discogsApi } }) =>
+      discogsApi.lookupRelease(id, curr_abbr),
+    rating: ({ id }, _params, { dataSources: { discogsApi } }) =>
       discogsApi.lookupReleaseRating(id),
   },
   DiscogsRelease: {
-    relation: ({
-      year,
-      title,
-      artists: artistsList,
-    }: DiscogsRelease): Relation => {
+    relation: ({ year, title, artists: artistsList }) => {
       const artists = artistsList?.map((artist) => (artist ? artist.name : ''));
       const artist = artists.join(' & ');
       const album = title;
@@ -317,37 +289,26 @@ export const resolvers = {
         year,
       });
     },
-    rating: (
-      { id }: DiscogsRelease,
-      _params: unknown,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsReleaseRatingWrapper> =>
+    rating: ({ id }, _params, { dataSources: { discogsApi } }) =>
       discogsApi.lookupReleaseRating(parseInt(id)),
   },
   DiscogsArtistRelease: {
-    release: (
-      { id }: DiscogsArtistRelease,
-      { curr_abbr }: DiscogsMasterVersionReleaseArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsRelease> =>
+    release: ({ id }, { curr_abbr }, { dataSources: { discogsApi } }) =>
       discogsApi.lookupRelease(parseInt(id), curr_abbr),
   },
   DiscogsArtistMaster: {
     release: (
-      { main_release }: DiscogsArtistMaster,
-      { curr_abbr }: DiscogsMasterVersionReleaseArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsRelease> =>
-      discogsApi.lookupRelease(main_release, curr_abbr),
+      { main_release },
+      { curr_abbr },
+      { dataSources: { discogsApi } }
+    ) => discogsApi.lookupRelease(main_release, curr_abbr),
   },
   DiscogsRelation: {
     releases: (
-      {
-        _relationData: { title, year, artist, album, country, ...rest },
-      }: Relation,
-      { pagination }: DiscogsRelationReleasesArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<SearchDiscogsRelease> => {
+      { _relationData: { title, year, artist, album, country, ...rest } },
+      { pagination },
+      { dataSources: { discogsApi } }
+    ) => {
       console.log(
         '[make search Releases]',
         title,

@@ -1,13 +1,5 @@
 import { gql } from 'apollo-server';
-import {
-  SearchDiscogsLabel,
-  DiscogsSearchLabelsArgs,
-  DiscogsLookupLabelArgs,
-  DiscogsLabel,
-} from '../types';
-
-import { Relation } from '../../base/types';
-import { createRelation, log } from '../../base';
+import { Resolvers } from '../types';
 
 import { Context } from '../';
 
@@ -66,13 +58,13 @@ export const typeDefs = gql`
   }
 `;
 
-export const resolvers = {
+export const resolvers: Resolvers<Context> = {
   DiscogsSearch: {
     labels: (
-      _parent: unknown,
-      { search, filter, pagination }: DiscogsSearchLabelsArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<SearchDiscogsLabel> =>
+      _parent,
+      { search, filter, pagination },
+      { dataSources: { discogsApi } }
+    ) =>
       discogsApi.searchLabels({
         query: search,
         ...filter,
@@ -81,11 +73,8 @@ export const resolvers = {
   },
 
   DiscogsLookup: {
-    label: (
-      _parent: unknown,
-      { id }: DiscogsLookupLabelArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsLabel> => discogsApi.lookupLabel(id),
+    label: (_parent, { id }, { dataSources: { discogsApi } }) =>
+      discogsApi.lookupLabel(id),
   },
 };
 

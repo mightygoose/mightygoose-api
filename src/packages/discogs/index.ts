@@ -216,6 +216,7 @@ export const typeDefs = gql`
 
   type DiscogsRelation {
     id: ID!
+    _relationData: RelationData!
   }
 
   extend type Relation {

@@ -1,16 +1,7 @@
 import { gql } from 'apollo-server';
 
-import {
-  DiscogsRelationArtistsArgs,
-  DiscogsLookupArtistArgs,
-  DiscogsArtist,
-  SearchDiscogsArtist,
-  DiscogsSearchArtistsArgs,
-  DiscogsSearchResultArtist,
-  DiscogsArtistShort,
-} from '../types';
+import { Resolvers } from '../types';
 
-import { Relation } from '../../base/types';
 import { createRelation, log } from '../../base';
 
 import { Context } from '../';
@@ -101,22 +92,18 @@ export const typeDefs = gql`
   }
 `;
 
-export const resolvers = {
+export const resolvers: Resolvers<Context> = {
   DiscogsLookup: {
-    artist: (
-      _parent: unknown,
-      { id }: DiscogsLookupArtistArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsArtist> => {
+    artist: (_parent, { id }, { dataSources: { discogsApi } }) => {
       return discogsApi.lookupArtist(id);
     },
   },
   DiscogsSearch: {
     artists: (
-      _parent: unknown,
-      { search, filter, pagination }: DiscogsSearchArtistsArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<SearchDiscogsArtist> => {
+      _parent,
+      { search, filter, pagination },
+      { dataSources: { discogsApi } }
+    ) => {
       return discogsApi.searchArtists({
         query: search,
         ...filter,
@@ -125,7 +112,7 @@ export const resolvers = {
     },
   },
   DiscogsArtist: {
-    relation: ({ name: artist }: DiscogsArtist): Relation =>
+    relation: ({ name: artist }) =>
       createRelation({
         type: 'artist',
         artist,
@@ -133,7 +120,7 @@ export const resolvers = {
       }),
   },
   DiscogsSearchResultArtist: {
-    relation: ({ type, title: artist }: DiscogsSearchResultArtist): Relation =>
+    relation: ({ type, title: artist }) =>
       createRelation({
         type,
         artist,
@@ -141,12 +128,9 @@ export const resolvers = {
       }),
   },
   DiscogsArtistShort: {
-    artist: (
-      { id }: DiscogsArtistShort,
-      _params: unknown,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsArtist> => discogsApi.lookupArtist(parseInt(id)),
-    relation: ({ name: artist }: DiscogsArtistShort): Relation =>
+    artist: ({ id }, _params, { dataSources: { discogsApi } }) =>
+      discogsApi.lookupArtist(parseInt(id)),
+    relation: ({ name: artist }) =>
       createRelation({
         type: 'artist',
         artist,
@@ -155,10 +139,10 @@ export const resolvers = {
   },
   DiscogsRelation: {
     artists: (
-      { _relationData: { artist, artists, ...rest } }: Relation,
-      { pagination }: DiscogsRelationArtistsArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<SearchDiscogsArtist> | null =>
+      { _relationData: { artist, artists, ...rest } },
+      { pagination },
+      { dataSources: { discogsApi } }
+    ) =>
       artist
         ? discogsApi.searchArtists({
             title: artists?.join(' / '),

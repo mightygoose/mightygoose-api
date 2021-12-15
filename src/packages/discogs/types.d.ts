@@ -439,6 +439,7 @@ export type DiscogsPaginationParameters = {
 
 export type DiscogsRelation = {
   __typename?: 'DiscogsRelation';
+  _relationData: RelationData;
   artists?: Maybe<SearchDiscogsArtist>;
   id: Scalars['ID'];
   masters: SearchDiscogsMaster;
@@ -1369,6 +1370,7 @@ export type DiscogsMasterVersionsFiltersResolvers<ContextType = any, ParentType 
 }>;
 
 export type DiscogsRelationResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsRelation'] = ResolversParentTypes['DiscogsRelation']> = ResolversObject<{
+  _relationData?: Resolver<ResolversTypes['RelationData'], ParentType, ContextType>;
   artists?: Resolver<Maybe<ResolversTypes['SearchDiscogsArtist']>, ParentType, ContextType, RequireFields<DiscogsRelationArtistsArgs, 'pagination'>>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   masters?: Resolver<ResolversTypes['SearchDiscogsMaster'], ParentType, ContextType, RequireFields<DiscogsRelationMastersArgs, 'pagination'>>;

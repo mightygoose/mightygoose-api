@@ -1,13 +1,5 @@
 import { gql } from 'apollo-server';
-import {
-  DiscogsSearchResultMaster,
-  DiscogsMaster,
-  GetDiscogsMasterVersions,
-  DiscogsSearchResultMasterGetVersionsArgs,
-} from '../types';
-
-import { Relation } from '../../base/types';
-import { createRelation, log } from '../../base';
+import { Resolvers } from '../types';
 
 import { Context } from '../';
 
@@ -139,13 +131,13 @@ export const typeDefs = gql`
   }
 `;
 
-export const resolvers = {
+export const resolvers: Resolvers<Context> = {
   DiscogsMaster: {
     getVersions: (
-      { id }: DiscogsMaster,
-      { filter, pagination }: DiscogsSearchResultMasterGetVersionsArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<GetDiscogsMasterVersions> =>
+      { id },
+      { filter, pagination },
+      { dataSources: { discogsApi } }
+    ) =>
       discogsApi.lookupMasterVersions(parseInt(id), {
         ...filter,
         ...pagination,
@@ -153,10 +145,10 @@ export const resolvers = {
   },
   DiscogsSearchResultMaster: {
     getVersions: (
-      { master_id }: DiscogsSearchResultMaster,
-      { filter, pagination }: DiscogsSearchResultMasterGetVersionsArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<GetDiscogsMasterVersions> =>
+      { master_id },
+      { filter, pagination },
+      { dataSources: { discogsApi } }
+    ) =>
       discogsApi.lookupMasterVersions(master_id, { ...filter, ...pagination }),
   },
 };

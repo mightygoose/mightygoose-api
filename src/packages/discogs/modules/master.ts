@@ -1,17 +1,6 @@
 import { gql } from 'apollo-server';
-import {
-  DiscogsSearchMastersArgs,
-  DiscogsSearchResultMaster,
-  DiscogsSearchResultRelease,
-  DiscogsMaster,
-  DiscogsRelease,
-  SearchDiscogsMaster,
-  DiscogsArtistMaster,
-  DiscogsLookupMasterArgs,
-  DiscogsRelationMastersArgs,
-} from '../types';
+import { Resolvers } from '../types';
 
-import { Relation } from '../../base/types';
 import { createRelation, log } from '../../base';
 
 import { Context } from '../';
@@ -103,13 +92,13 @@ export const typeDefs = gql`
   }
 `;
 
-export const resolvers = {
+export const resolvers: Resolvers<Context> = {
   DiscogsSearch: {
     masters: (
-      _parent: unknown,
-      { search, filter, pagination }: DiscogsSearchMastersArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<SearchDiscogsMaster> =>
+      _parent,
+      { search, filter, pagination },
+      { dataSources: { discogsApi } }
+    ) =>
       discogsApi.searchMasters({
         query: search,
         ...filter,
@@ -117,25 +106,13 @@ export const resolvers = {
       }),
   },
   DiscogsLookup: {
-    master: (
-      _parent: unknown,
-      { id }: DiscogsLookupMasterArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsMaster> => discogsApi.lookupMaster(id),
+    master: (_parent, { id }, { dataSources: { discogsApi } }) =>
+      discogsApi.lookupMaster(id),
   },
   DiscogsSearchResultMaster: {
-    master: (
-      { master_id }: DiscogsSearchResultMaster,
-      _params: unknown,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsMaster> => discogsApi.lookupMaster(master_id),
-    relation: ({
-      type,
-      year,
-      title,
-      country,
-      genre,
-    }: DiscogsSearchResultMaster): Relation => {
+    master: ({ master_id }, _params, { dataSources: { discogsApi } }) =>
+      discogsApi.lookupMaster(master_id),
+    relation: ({ type, year, title, country, genre }) => {
       const [artist, album] = title.split(' - ');
       return createRelation({
         type,
@@ -150,7 +127,7 @@ export const resolvers = {
     },
   },
   DiscogsMaster: {
-    relation: ({ year, title, artists }: DiscogsMaster): Relation => {
+    relation: ({ year, title, artists }) => {
       const artistsFlatened =
         artists?.reduce<Array<string>>((acc, artist) => {
           if (typeof artist?.name !== 'undefined') {
@@ -173,12 +150,10 @@ export const resolvers = {
   },
   DiscogsRelation: {
     masters: (
-      {
-        _relationData: { title, year, artist, album, country, ...rest },
-      }: Relation,
-      { pagination }: DiscogsRelationMastersArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<SearchDiscogsMaster> => {
+      { _relationData: { title, year, artist, album, country, ...rest } },
+      { pagination },
+      { dataSources: { discogsApi } }
+    ) => {
       console.log(
         '[make search masters]',
         title,
@@ -198,24 +173,15 @@ export const resolvers = {
     },
   },
   DiscogsSearchResultRelease: {
-    master: (
-      { master_id }: DiscogsSearchResultRelease,
-      _params: unknown,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsMaster> => discogsApi.lookupMaster(master_id),
+    master: ({ master_id }, _params, { dataSources: { discogsApi } }) =>
+      discogsApi.lookupMaster(master_id),
   },
   DiscogsRelease: {
-    master: (
-      { master_id }: DiscogsRelease,
-      _params: unknown,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsMaster> => discogsApi.lookupMaster(master_id),
+    master: ({ master_id }, _params, { dataSources: { discogsApi } }) =>
+      discogsApi.lookupMaster(master_id),
   },
   DiscogsArtistMaster: {
-    master: (
-      { id }: DiscogsArtistMaster,
-      _params: unknown,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsMaster> => discogsApi.lookupMaster(parseInt(id)),
+    master: ({ id }, _params, { dataSources: { discogsApi } }) =>
+      discogsApi.lookupMaster(parseInt(id)),
   },
 };
