@@ -23,11 +23,12 @@ import labelSchema from './modules/label';
 import labelReleasesSchema from './modules/labelReleases';
 
 import artistReleasesSchema from './modules/artistReleases';
+import { Resolvers } from './types';
 
 export const typeDefs = gql`
-  extend enum Services {
-    Discogs
-  }
+  #extend enum Services {
+  #  Discogs
+  #}
 
   enum DiscogsSortOrder {
     asc
@@ -214,13 +215,25 @@ export const typeDefs = gql`
     embed: Boolean!
   }
 
-  type DiscogsRelation {
-    id: ID!
-    _relationData: RelationData!
+  extend type RelationData {
+    type: String @external
+    title: String @external
+    album: String @external
+    artist: String @external
+    artists: [String!] @external
+    year: Int @external
+    country: String @external
+    genre: [String!] @external
   }
 
-  extend type Relation {
-    discogs: DiscogsRelation
+  type DiscogsRelation {
+    _relationData: RelationData!
+      @provides(fields: "type title album year artist artists country genre")
+  }
+
+  extend type Relation @key(fields: "_relationData") {
+    _relationData: RelationData! @external
+    discogs: DiscogsRelation @requires(fields: "_relationData")
   }
 
   type DiscogsSearchPaginationUrls {
@@ -252,7 +265,8 @@ export const typeDefs = gql`
     id: ID!
   }
 
-  extend type Search {
+  extend type Search @key(fields: "id") {
+    id: ID! @external
     discogs: DiscogsSearch!
   }
 
@@ -260,7 +274,8 @@ export const typeDefs = gql`
     id: ID!
   }
 
-  extend type Lookup {
+  extend type Lookup @key(fields: "id") {
+    id: ID! @external
     discogs: DiscogsLookup!
   }
 `;
@@ -269,24 +284,23 @@ export interface Context extends BaseContext {
   dataSources: typeof dataSources;
 }
 
-export const resolvers = {
+export const resolvers: Resolvers<Context> = {
   Search: {
-    discogs: <T>(parent: T): T => parent,
+    discogs: (): any => ({}),
   },
   Lookup: {
-    discogs: <T>(parent: T): T => parent,
-  },
-  DiscogsSearch: {
-    id: () => +new Date(),
-  },
-  DiscogsLookup: {
-    id: () => +new Date(),
+    discogs: (): any => ({}),
   },
   Relation: {
-    discogs: <T>(parent: T): T => parent,
+    discogs: (parent): any => {
+      return parent;
+    },
   },
-  DiscogsRelation: {
-    id: () => +new Date(),
+  DiscogsSearch: {
+    id: () => `${+new Date()}`,
+  },
+  DiscogsLookup: {
+    id: () => `${+new Date()}`,
   },
 };
 

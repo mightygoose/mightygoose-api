@@ -441,7 +441,6 @@ export type DiscogsRelation = {
   __typename?: 'DiscogsRelation';
   _relationData: RelationData;
   artists?: Maybe<SearchDiscogsArtist>;
-  id: Scalars['ID'];
   masters: SearchDiscogsMaster;
   releases: SearchDiscogsRelease;
 };
@@ -774,12 +773,6 @@ export type Lookup = {
   id: Scalars['ID'];
 };
 
-export type Query = {
-  __typename?: 'Query';
-  lookup: Lookup;
-  search: Search;
-};
-
 export type Relation = {
   __typename?: 'Relation';
   _relationData: RelationData;
@@ -930,16 +923,22 @@ export type SearchDiscogsRelease = {
   results: Array<DiscogsSearchResultRelease>;
 };
 
-export enum Services {
-  Base = 'BASE',
-  Discogs = 'Discogs'
-}
-
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
+export type ReferenceResolver<TResult, TReference, TContext> = (
+      reference: TReference,
+      context: TContext,
+      info: GraphQLResolveInfo
+    ) => Promise<TResult> | TResult;
+
+      type ScalarCheck<T, S> = S extends true ? T : NullableCheck<T, S>;
+      type NullableCheck<T, S> = Maybe<T> extends T ? Maybe<ListCheck<NonNullable<T>, S>> : ListCheck<T, S>;
+      type ListCheck<T, S> = T extends (infer U)[] ? NullableCheck<U, S>[] : GraphQLRecursivePick<T, S>;
+      export type GraphQLRecursivePick<T, S> = { [K in keyof T & keyof S]: ScalarCheck<T[K], S[K]> };
+    
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
@@ -1065,7 +1064,6 @@ export type ResolversTypes = ResolversObject<{
   DiscogsVideo: ResolverTypeWrapper<DiscogsVideo>;
   GetDiscogsMasterVersions: ResolverTypeWrapper<GetDiscogsMasterVersions>;
   Lookup: ResolverTypeWrapper<Lookup>;
-  Query: ResolverTypeWrapper<{}>;
   Relation: ResolverTypeWrapper<Relation>;
   RelationData: ResolverTypeWrapper<RelationData>;
   Search: ResolverTypeWrapper<Search>;
@@ -1074,7 +1072,6 @@ export type ResolversTypes = ResolversObject<{
   SearchDiscogsLabel: ResolverTypeWrapper<SearchDiscogsLabel>;
   SearchDiscogsMaster: ResolverTypeWrapper<SearchDiscogsMaster>;
   SearchDiscogsRelease: ResolverTypeWrapper<SearchDiscogsRelease>;
-  Services: Services;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -1131,7 +1128,6 @@ export type ResolversParentTypes = ResolversObject<{
   DiscogsVideo: DiscogsVideo;
   GetDiscogsMasterVersions: GetDiscogsMasterVersions;
   Lookup: Lookup;
-  Query: {};
   Relation: Relation;
   RelationData: RelationData;
   Search: Search;
@@ -1372,7 +1368,6 @@ export type DiscogsMasterVersionsFiltersResolvers<ContextType = any, ParentType 
 export type DiscogsRelationResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscogsRelation'] = ResolversParentTypes['DiscogsRelation']> = ResolversObject<{
   _relationData?: Resolver<ResolversTypes['RelationData'], ParentType, ContextType>;
   artists?: Resolver<Maybe<ResolversTypes['SearchDiscogsArtist']>, ParentType, ContextType, RequireFields<DiscogsRelationArtistsArgs, 'pagination'>>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   masters?: Resolver<ResolversTypes['SearchDiscogsMaster'], ParentType, ContextType, RequireFields<DiscogsRelationMastersArgs, 'pagination'>>;
   releases?: Resolver<ResolversTypes['SearchDiscogsRelease'], ParentType, ContextType, RequireFields<DiscogsRelationReleasesArgs, 'pagination'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -1627,19 +1622,16 @@ export type GetDiscogsMasterVersionsResolvers<ContextType = any, ParentType exte
 }>;
 
 export type LookupResolvers<ContextType = any, ParentType extends ResolversParentTypes['Lookup'] = ResolversParentTypes['Lookup']> = ResolversObject<{
-  discogs?: Resolver<ResolversTypes['DiscogsLookup'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Lookup']>, { __typename: 'Lookup' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+  discogs?: Resolver<ResolversTypes['DiscogsLookup'], { __typename: 'Lookup' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  lookup?: Resolver<ResolversTypes['Lookup'], ParentType, ContextType>;
-  search?: Resolver<ResolversTypes['Search'], ParentType, ContextType>;
-}>;
-
 export type RelationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Relation'] = ResolversParentTypes['Relation']> = ResolversObject<{
-  _relationData?: Resolver<ResolversTypes['RelationData'], ParentType, ContextType>;
-  discogs?: Resolver<Maybe<ResolversTypes['DiscogsRelation']>, ParentType, ContextType>;
+  __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Relation']>, { __typename: 'Relation' } & GraphQLRecursivePick<ParentType, {"_relationData":true}>, ContextType>;
+
+  discogs?: Resolver<Maybe<ResolversTypes['DiscogsRelation']>, { __typename: 'Relation' } & GraphQLRecursivePick<ParentType, {"_relationData":true}> & GraphQLRecursivePick<ParentType, {"_relationData":true}>, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -1656,8 +1648,9 @@ export type RelationDataResolvers<ContextType = any, ParentType extends Resolver
 }>;
 
 export type SearchResolvers<ContextType = any, ParentType extends ResolversParentTypes['Search'] = ResolversParentTypes['Search']> = ResolversObject<{
-  discogs?: Resolver<ResolversTypes['DiscogsSearch'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Search']>, { __typename: 'Search' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+  discogs?: Resolver<ResolversTypes['DiscogsSearch'], { __typename: 'Search' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -1729,7 +1722,6 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   DiscogsVideo?: DiscogsVideoResolvers<ContextType>;
   GetDiscogsMasterVersions?: GetDiscogsMasterVersionsResolvers<ContextType>;
   Lookup?: LookupResolvers<ContextType>;
-  Query?: QueryResolvers<ContextType>;
   Relation?: RelationResolvers<ContextType>;
   RelationData?: RelationDataResolvers<ContextType>;
   Search?: SearchResolvers<ContextType>;

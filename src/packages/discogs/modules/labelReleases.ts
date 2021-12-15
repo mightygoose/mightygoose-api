@@ -1,14 +1,5 @@
 import { gql } from 'apollo-server';
-import {
-  DiscogsLabel,
-  DiscogsSearchResultLabelGetReleasesArgs,
-  DiscogsLabelReleases,
-  DiscogsSearchResultLabel,
-  DiscogsLabelReleaseResult,
-  DiscogsRelease,
-  DiscogsLabelReleaseResultReleaseArgs,
-  Resolvers,
-} from '../types';
+import { Resolvers } from '../types';
 
 import { Context } from '../';
 
@@ -68,26 +59,22 @@ export const typeDefs = gql`
 export const resolvers: Resolvers<Context> = {
   DiscogsLabel: {
     getReleases: (
-      { id }: DiscogsLabel,
-      { pagination, sort }: DiscogsSearchResultLabelGetReleasesArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsLabelReleases> =>
+      { id },
+      { pagination, sort },
+      { dataSources: { discogsApi } }
+    ) =>
       discogsApi.lookupLabelReleases(parseInt(id), { ...sort, ...pagination }),
   },
   DiscogsSearchResultLabel: {
     getReleases: (
-      { id }: DiscogsSearchResultLabel,
-      { pagination, sort }: DiscogsSearchResultLabelGetReleasesArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsLabelReleases> =>
+      { id },
+      { pagination, sort },
+      { dataSources: { discogsApi } }
+    ) =>
       discogsApi.lookupLabelReleases(parseInt(id), { ...sort, ...pagination }),
   },
   DiscogsLabelReleaseResult: {
-    release: (
-      { id }: DiscogsLabelReleaseResult,
-      { curr_abbr }: DiscogsLabelReleaseResultReleaseArgs,
-      { dataSources: { discogsApi } }: Context
-    ): Promise<DiscogsRelease> =>
+    release: ({ id }, { curr_abbr }, { dataSources: { discogsApi } }) =>
       discogsApi.lookupRelease(parseInt(id), curr_abbr),
   },
 };

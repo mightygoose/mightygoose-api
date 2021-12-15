@@ -47,15 +47,22 @@ export type Search = {
   id: Scalars['ID'];
 };
 
-export enum Services {
-  Base = 'BASE'
-}
-
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
+export type ReferenceResolver<TResult, TReference, TContext> = (
+      reference: TReference,
+      context: TContext,
+      info: GraphQLResolveInfo
+    ) => Promise<TResult> | TResult;
+
+      type ScalarCheck<T, S> = S extends true ? T : NullableCheck<T, S>;
+      type NullableCheck<T, S> = Maybe<T> extends T ? Maybe<ListCheck<NonNullable<T>, S>> : ListCheck<T, S>;
+      type ListCheck<T, S> = T extends (infer U)[] ? NullableCheck<U, S>[] : GraphQLRecursivePick<T, S>;
+      export type GraphQLRecursivePick<T, S> = { [K in keyof T & keyof S]: ScalarCheck<T[K], S[K]> };
+    
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
@@ -129,7 +136,6 @@ export type ResolversTypes = ResolversObject<{
   String: ResolverTypeWrapper<Scalars['String']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Search: ResolverTypeWrapper<Search>;
-  Services: Services;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 }>;
 
@@ -147,6 +153,7 @@ export type ResolversParentTypes = ResolversObject<{
 }>;
 
 export type LookupResolvers<ContextType = any, ParentType extends ResolversParentTypes['Lookup'] = ResolversParentTypes['Lookup']> = ResolversObject<{
+  __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Lookup']>, { __typename: 'Lookup' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -157,11 +164,13 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 }>;
 
 export type RelationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Relation'] = ResolversParentTypes['Relation']> = ResolversObject<{
+  __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Relation']>, { __typename: 'Relation' } & GraphQLRecursivePick<ParentType, {"_relationData":true}>, ContextType>;
   _relationData?: Resolver<ResolversTypes['RelationData'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type RelationDataResolvers<ContextType = any, ParentType extends ResolversParentTypes['RelationData'] = ResolversParentTypes['RelationData']> = ResolversObject<{
+  __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['RelationData']>, { __typename: 'RelationData' } & (GraphQLRecursivePick<ParentType, {"title":true}> | GraphQLRecursivePick<ParentType, {"type":true}> | GraphQLRecursivePick<ParentType, {"album":true}> | GraphQLRecursivePick<ParentType, {"artist":true}> | GraphQLRecursivePick<ParentType, {"artists":true}> | GraphQLRecursivePick<ParentType, {"country":true}> | GraphQLRecursivePick<ParentType, {"genre":true}> | GraphQLRecursivePick<ParentType, {"year":true}>), ContextType>;
   album?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   artist?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   artists?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
@@ -174,6 +183,7 @@ export type RelationDataResolvers<ContextType = any, ParentType extends Resolver
 }>;
 
 export type SearchResolvers<ContextType = any, ParentType extends ResolversParentTypes['Search'] = ResolversParentTypes['Search']> = ResolversObject<{
+  __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Search']>, { __typename: 'Search' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;

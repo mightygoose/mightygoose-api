@@ -2,12 +2,19 @@ import { gql } from 'apollo-server';
 import { Relation, RelationData, Resolvers } from './types';
 
 export const typeDefs = gql`
-  enum Services {
-    BASE
-  }
+  #enum Services {
+  #  BASE
+  #}
 
-  type RelationData {
-    #service: Services!
+  type RelationData
+    @key(fields: "title")
+    @key(fields: "type")
+    @key(fields: "album")
+    @key(fields: "artist")
+    @key(fields: "artists")
+    @key(fields: "country")
+    @key(fields: "genre")
+    @key(fields: "year") {
     type: String
     title: String
     album: String
@@ -18,15 +25,15 @@ export const typeDefs = gql`
     genre: [String!]
   }
 
-  type Relation {
+  type Relation @key(fields: "_relationData") {
     _relationData: RelationData!
   }
 
-  type Search {
+  type Search @key(fields: "id") {
     id: ID!
   }
 
-  type Lookup {
+  type Lookup @key(fields: "id") {
     id: ID!
   }
 
