@@ -1,5 +1,6 @@
 import { gql } from 'apollo-server';
 import { BaseContext } from 'apollo-server-types';
+import { buildSubgraphSchema } from '@apollo/subgraph';
 
 import masterSchema from './modules/master';
 import releaseSchema from './modules/release';
@@ -289,7 +290,7 @@ export const resolvers: Resolvers<Context> = {
 
 export const dataSources = { discogsApi: new DiscogsAPI() };
 
-export default [
+const schemaDefinition = [
   { typeDefs, resolvers },
   masterSchema,
   releaseSchema,
@@ -299,3 +300,7 @@ export default [
   labelSchema,
   labelReleasesSchema,
 ];
+
+export const schema = buildSubgraphSchema(schemaDefinition);
+
+export default schemaDefinition;

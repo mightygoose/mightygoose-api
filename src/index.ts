@@ -10,8 +10,9 @@ import { buildSubgraphSchema } from '@apollo/subgraph';
 import rootSchema from './schema';
 import baseSchema from './packages/base';
 // import spotifySchema from './packages/spotify';
-import discogsSchema, {
+import {
   dataSources as discogsDataSources,
+  schema as discogsSchema,
 } from './packages/discogs';
 
 const gateway = new ApolloGateway({
@@ -28,7 +29,7 @@ const gateway = new ApolloGateway({
       return new LocalGraphQLDataSource(buildSubgraphSchema(baseSchema));
     }
     if (name === 'discogs') {
-      return new LocalGraphQLDataSource(buildSubgraphSchema(discogsSchema));
+      return new LocalGraphQLDataSource(discogsSchema);
     }
     return new RemoteGraphQLDataSource({ url });
   },
