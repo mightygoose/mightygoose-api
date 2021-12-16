@@ -152,3 +152,5 @@ export const resolvers: Resolvers<Context> = {
       discogsApi.lookupMasterVersions(master_id, { ...filter, ...pagination }),
   },
 };
+
+export default { typeDefs, resolvers };

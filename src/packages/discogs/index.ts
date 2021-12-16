@@ -1,35 +1,18 @@
 import { gql } from 'apollo-server';
 import { BaseContext } from 'apollo-server-types';
-import { DiscogsAPI } from './dataSource';
-import {
-  typeDefs as masterTypeDefs,
-  resolvers as masterResolvers,
-} from './modules/master';
-import {
-  typeDefs as releaseTypeDefs,
-  resolvers as releaseResolvers,
-} from './modules/release';
-import {
-  typeDefs as masterVersionTypeDefs,
-  resolvers as masterVersionResolvers,
-} from './modules/masterVersion';
 
-import {
-  typeDefs as artistTypeDefs,
-  resolvers as artistResolvers,
-} from './modules/artist';
-
+import masterSchema from './modules/master';
+import releaseSchema from './modules/release';
+import masterVersionSchema from './modules/masterVersion';
+import artistSchema from './modules/artist';
 import labelSchema from './modules/label';
 import labelReleasesSchema from './modules/labelReleases';
-
 import artistReleasesSchema from './modules/artistReleases';
+
+import { DiscogsAPI } from './dataSource';
 import { Resolvers } from './types';
 
 export const typeDefs = gql`
-  #extend enum Services {
-  #  Discogs
-  #}
-
   enum DiscogsSortOrder {
     asc
     desc
@@ -308,10 +291,10 @@ export const dataSources = { discogsApi: new DiscogsAPI() };
 
 export default [
   { typeDefs, resolvers },
-  { typeDefs: masterTypeDefs, resolvers: masterResolvers },
-  { typeDefs: releaseTypeDefs, resolvers: releaseResolvers },
-  { typeDefs: masterVersionTypeDefs, resolvers: masterVersionResolvers },
-  { typeDefs: artistTypeDefs, resolvers: artistResolvers },
+  masterSchema,
+  releaseSchema,
+  masterVersionSchema,
+  artistSchema,
   artistReleasesSchema,
   labelSchema,
   labelReleasesSchema,

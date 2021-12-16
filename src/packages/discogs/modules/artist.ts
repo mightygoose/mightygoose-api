@@ -151,3 +151,5 @@ export const resolvers: Resolvers<Context> = {
         : null,
   },
 };
+
+export default { typeDefs, resolvers };

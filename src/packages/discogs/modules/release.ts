@@ -1,21 +1,5 @@
 import { gql } from 'apollo-server';
-import {
-  DiscogsSearchReleasesArgs,
-  DiscogsSearchResultRelease,
-  DiscogsRelease,
-  SearchDiscogsRelease,
-  DiscogsLookupReleaseArgs,
-  DiscogsRelationReleasesArgs,
-  DiscogsMaster,
-  DiscogsMasterVersion,
-  DiscogsSearchResultReleaseReleaseArgs,
-  DiscogsMasterVersionReleaseArgs,
-  DiscogsMasterReleaseArgs,
-  DiscogsReleaseRatingWrapper,
-  DiscogsArtistRelease,
-  DiscogsArtistMaster,
-  Resolvers,
-} from '../types';
+import { Resolvers } from '../types';
 
 import { createRelation, log } from '../../base';
 
@@ -328,3 +312,5 @@ export const resolvers: Resolvers<Context> = {
     },
   },
 };
+
+export default { typeDefs, resolvers };

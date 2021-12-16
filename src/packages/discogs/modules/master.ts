@@ -185,3 +185,5 @@ export const resolvers: Resolvers<Context> = {
       discogsApi.lookupMaster(parseInt(id)),
   },
 };
+
+export default { typeDefs, resolvers };
