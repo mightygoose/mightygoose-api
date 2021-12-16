@@ -264,10 +264,6 @@ export const typeDefs = gql`
   }
 `;
 
-export interface Context extends BaseContext {
-  dataSources: typeof dataSources;
-}
-
 export const resolvers: Resolvers<Context> = {
   Search: {
     discogs: (): any => ({}),
@@ -288,7 +284,14 @@ export const resolvers: Resolvers<Context> = {
   },
 };
 
-export const dataSources = { discogsApi: new DiscogsAPI() };
+export const dataSources = { discogsApi: () => new DiscogsAPI() };
+type DataSources = {
+  [T in keyof typeof dataSources]: ReturnType<typeof dataSources[T]>;
+};
+
+export interface Context extends BaseContext {
+  dataSources: DataSources;
+}
 
 const schemaDefinition = [
   { typeDefs, resolvers },
