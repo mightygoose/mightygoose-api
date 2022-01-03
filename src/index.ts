@@ -5,7 +5,7 @@ import {
   RemoteGraphQLDataSource,
 } from '@apollo/gateway';
 
-import { buildSubgraphSchema } from '@apollo/subgraph';
+import { GraphQLSchema } from 'graphql';
 
 import rootSchema from './schema';
 import baseSchema from './packages/base';
@@ -15,7 +15,16 @@ import {
   schema as discogsSchema,
 } from './packages/discogs';
 
-const packages = <const>{
+type Packages = Record<
+  string,
+  {
+    url: string;
+    schema?: GraphQLSchema;
+    dataSources?: () => Record<string, unknown>;
+  }
+>;
+
+const packages: Packages = <const>{
   root: {
     url: 'local://root',
     schema: rootSchema,
@@ -36,15 +45,11 @@ const gateway = new ApolloGateway({
     name,
     url,
   })),
-  buildService: ({ name, url }) => {
-    if (name === 'root') {
-      return new LocalGraphQLDataSource(packages[name].schema);
-    }
-    if (name === 'base') {
-      return new LocalGraphQLDataSource(packages[name].schema);
-    }
-    if (name === 'discogs') {
-      return new LocalGraphQLDataSource(packages[name].schema);
+  buildService: ({ name }) => {
+    const { schema, url } = packages[name];
+    const isLocal = /^local:\/\//.test(url);
+    if (isLocal && schema) {
+      return new LocalGraphQLDataSource(schema);
     }
     return new RemoteGraphQLDataSource({ url });
   },
