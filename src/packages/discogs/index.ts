@@ -284,13 +284,10 @@ export const resolvers: Resolvers<Context> = {
   },
 };
 
-export const dataSources = { discogsApi: () => new DiscogsAPI() };
-type DataSources = {
-  [T in keyof typeof dataSources]: ReturnType<typeof dataSources[T]>;
-};
+export const dataSources = () => ({ discogsApi: new DiscogsAPI() });
 
 export interface Context extends BaseContext {
-  dataSources: DataSources;
+  dataSources: ReturnType<typeof dataSources>;
 }
 
 const schemaDefinition = [
