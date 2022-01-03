@@ -1,11 +1,11 @@
+import type { DataSource } from 'apollo-datasource';
+import type { GraphQLSchema } from 'graphql';
 import { ApolloServer } from 'apollo-server';
 import {
   ApolloGateway,
   LocalGraphQLDataSource,
   RemoteGraphQLDataSource,
 } from '@apollo/gateway';
-
-import { GraphQLSchema } from 'graphql';
 
 import rootSchema from './schema';
 import baseSchema from './packages/base';
@@ -15,12 +15,14 @@ import {
   schema as discogsSchema,
 } from './packages/discogs';
 
+type DataSources = () => Record<string, DataSource>;
+
 type Packages = Record<
   string,
   {
     url: string;
     schema?: GraphQLSchema;
-    dataSources?: () => Record<string, unknown>;
+    dataSources?: DataSources;
   }
 >;
 
@@ -55,11 +57,22 @@ const gateway = new ApolloGateway({
   },
 });
 
+const dataSources = Object.values(packages).reduce<Array<DataSources>>(
+  (acc, { dataSources }) => {
+    if (dataSources) {
+      return [...acc, dataSources];
+    }
+    return acc;
+  },
+  []
+);
+
 const server = new ApolloServer({
   gateway,
-  dataSources: () => ({
-    ...discogsDataSources(),
-  }),
+  dataSources: () =>
+    dataSources.reduce<ReturnType<DataSources>>((acc, dataSources) => {
+      return { ...acc, ...dataSources() };
+    }, {}),
 });
 
 server.listen().then(({ url }) => {
