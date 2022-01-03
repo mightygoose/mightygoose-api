@@ -1,4 +1,5 @@
 import { gql } from 'apollo-server';
+import { buildSubgraphSchema } from '@apollo/subgraph';
 import { Relation, RelationData, Resolvers } from './types';
 
 export const typeDefs = gql`
@@ -72,4 +73,4 @@ export const resolvers: Resolvers = {
   },
 };
 
-export default { typeDefs, resolvers };
+export default buildSubgraphSchema({ typeDefs, resolvers });

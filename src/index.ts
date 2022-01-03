@@ -15,21 +15,36 @@ import {
   schema as discogsSchema,
 } from './packages/discogs';
 
+const packages = <const>{
+  root: {
+    url: 'local://root',
+    schema: rootSchema,
+  },
+  base: {
+    url: 'local://base',
+    schema: baseSchema,
+  },
+  discogs: {
+    url: 'local://discogs',
+    schema: discogsSchema,
+    dataSources: discogsDataSources,
+  },
+};
+
 const gateway = new ApolloGateway({
-  serviceList: [
-    { name: 'root', url: 'local://root' },
-    { name: 'base', url: 'local://base' },
-    { name: 'discogs', url: 'local://discogs' },
-  ],
+  serviceList: Object.entries(packages).map(([name, { url }]) => ({
+    name,
+    url,
+  })),
   buildService: ({ name, url }) => {
     if (name === 'root') {
-      return new LocalGraphQLDataSource(buildSubgraphSchema(rootSchema));
+      return new LocalGraphQLDataSource(packages[name].schema);
     }
     if (name === 'base') {
-      return new LocalGraphQLDataSource(buildSubgraphSchema(baseSchema));
+      return new LocalGraphQLDataSource(packages[name].schema);
     }
     if (name === 'discogs') {
-      return new LocalGraphQLDataSource(discogsSchema);
+      return new LocalGraphQLDataSource(packages[name].schema);
     }
     return new RemoteGraphQLDataSource({ url });
   },
