@@ -4,7 +4,7 @@ import { dataSources, schema } from '.';
 
 const server = new ApolloServer({
   schema,
-  dataSources: () => dataSources,
+  dataSources,
 });
 
 server.listen(4001).then(({ url }) => {

@@ -5,10 +5,14 @@
   "license": "MIT",
   "scripts": {
     "generate:types": "graphql-codegen",
-    "generate:types:watch": "yarn generate:types --watch './**/*.ts'"
+    "generate:types:watch": "yarn generate:types --watch './**/*.ts'",
+    "start:dev": "env $(cat .env| xargs) ts-node-dev server.ts"
   },
   "dependencies": {
     "@graphql-codegen/cli": "^2.3.0",
     "@graphql-codegen/typescript-operations": "^2.2.0"
+  },
+  "devDependencies": {
+    "ts-node-dev": "^1.1.8"
   }
 }
