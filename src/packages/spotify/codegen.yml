@@ -1,0 +1,14 @@
+schema:
+  - './**/*.ts':
+      assumeValid: true
+generates:
+  ./types.d.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-resolvers
+    config:
+      federation: true
+      useIndexSignature: true
+
+

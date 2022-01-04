@@ -9,7 +9,10 @@ import {
 
 import rootSchema from './schema';
 import baseSchema from './packages/base';
-// import spotifySchema from './packages/spotify';
+import {
+  dataSources as spotifyDataSources,
+  schema as spotifySchema,
+} from './packages/spotify';
 import {
   dataSources as discogsDataSources,
   schema as discogsSchema,
@@ -39,6 +42,11 @@ const packages: Packages = <const>{
     url: 'local://discogs',
     schema: discogsSchema,
     dataSources: discogsDataSources,
+  },
+  spotify: {
+    url: 'local://spotify',
+    schema: spotifySchema,
+    dataSources: spotifyDataSources,
   },
 };
 
