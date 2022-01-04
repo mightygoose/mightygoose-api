@@ -176,11 +176,11 @@ export const typeDefs = gql`
 `;
 
 export const resolvers: Resolvers<Context> = {
-  // SpotifyLookup: {
-  // artist: (_parent, { id }, { dataSources: { SpotifyApi } }) => {
-  // return discogsApi.lookupArtist(id);
-  // },
-  // },
+  SpotifyLookup: {
+    album: (_parent, { id, market }, { dataSources: { spotifyApi } }) => {
+      return spotifyApi.lookupAlbum(id, market);
+    },
+  },
   // SpotifySearch: {
   // artists: (
   // _parent,

@@ -32,8 +32,7 @@ export const typeDefs = gql`
     If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter.
     Note: If neither market or user country are provided, the content is considered unavailable for the client.
     Users can view the country that is associated with their account in the account settings.
-    Example value:
-    "ES"
+    Example value: "ES"
     """
     market: String
   }

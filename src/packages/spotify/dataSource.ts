@@ -1,26 +1,6 @@
 import { RESTDataSource } from 'apollo-datasource-rest';
-// import { DISCOGS_TOKEN } from './config';
-// import {
-// InputMaybe,
-// DiscogsMaster,
-// DiscogsRelease,
-// SearchDiscogsMaster,
-// SearchDiscogsRelease,
-// SearchDiscogsArtist,
-// SearchDiscogsFilter,
-// DiscogsPaginationParameters,
-// GetDiscogsMasterVersions,
-// DiscogsMasterVersionsFilterInput,
-// DiscogsCurrencies,
-// DiscogsReleaseRatingWrapper,
-// DiscogsArtist,
-// DiscogsArtistGetReleasesSort,
-// DiscogsArtistReleases,
-// SearchDiscogsLabel,
-// DiscogsLabel,
-// DiscogsLabelGetReleasesSort,
-// DiscogsLabelReleases,
-// } from './types';
+import { SPOTIFY_ID, SPOTIFY_SECRET } from './config';
+import { InputMaybe, SpotifyAlbum, SpotifyLookupAlbumArgs } from './types';
 
 // const omitInvalidParams = <T extends Record<string, any>>(params: T) => {
 // const acc: Record<string, string | number> = {};
@@ -72,6 +52,15 @@ export class SpotifyAPI extends RESTDataSource {
     // request.path
     // }?${request.params.toString()}`
     // );
+  }
+
+  async lookupAlbum(
+    id: SpotifyLookupAlbumArgs['id'],
+    market?: SpotifyLookupAlbumArgs['market']
+  ): Promise<SpotifyAlbum> {
+    return this.get<SpotifyAlbum>(`/albums/${id}`, {
+      market: market || undefined,
+    });
   }
 
   // async search<T>(params: SearchRequestParams) {
