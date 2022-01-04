@@ -7,53 +7,37 @@ import { createRelation, log } from '../../base';
 import { Context } from '../';
 
 export const typeDefs = gql`
-  """
-  type SpotifyArtistMembers {
-    id: Int
-    name: String
-    resource_url: String
-    active: Boolean
-    thumbnail_url: String
-  }
-
-  type SpotifySearchResultArtist {
-    id: ID!
-    type: String!
-    uri: String!
-    title: String!
-    thumb: String!
-    cover_image: String!
-    resource_url: String!
-    user_data: SpotifyMasterVersionStatsCommunity!
-    relation: Relation!
-  }
-
-  type SpotifyArtistShort {
-    id: ID!
-    name: String!
-    anv: String!
-    join: String!
-    role: String!
-    tracks: String!
-    resource_url: String!
-    thumbnail_url: String!
-    relation: Relation!
-    artist: SpotifyArtist!
-  }
-
-  type SearchSpotifyArtist {
-    pagination: SpotifySearchPagination!
-    results: [SpotifySearchResultArtist!]!
+  type SearchSpotifyAlbum {
+    #pagination: SpotifySearchPagination!
+    #results: [SpotifySearchResultArtist!]!
+    foo: String
   }
 
   extend type SpotifySearch {
-    artists(
-      search: String
+    albums(
+      """
+      Your search query.
+
+      You can narrow down your search using field filters. The available filters are album, artist, track, year, upc, tag:hipster, tag:new, isrc, and genre. Each field filter only applies to certain result types.
+
+      The artist filter can be used while searching albums, artists or tracks.
+      The album and year filters can be used while searching albums or tracks. You can filter on a single year or a range (e.g. 1955-1960).
+      The genre filter can be use while searching tracks and artists.
+      The isrc and track filters can be used while searching tracks.
+      The upc, tag:new and tag:hipster filters can only be used while searching albums. The tag:new filter will return albums released in the past two weeks and tag:hipster can be used to return only albums with the lowest 10% popularity.
+
+
+      You can also use the NOT operator to exclude keywords from your search.
+      Example value:
+      "remaster%20track:Doxy+artist:Miles%20Davis"
+      """
+      q: String!
+
       filter: SearchSpotifyFilter
-      pagination: SpotifyPaginationParameters = { page: 1, per_page: 1 }
-    ): SearchSpotifyArtist!
+      pagination: SpotifyPaginationParameters = { limit: 1, offset: 0 }
+    ): SearchSpotifyAlbum!
   }
-  """
+
   enum AlbumTypes {
     album
     single
@@ -83,32 +67,6 @@ export const typeDefs = gql`
     Additional reasons may be added in the future.
     """
     reason: SpotifyRestrictionReason!
-  }
-
-  #TODO: move to index
-  type SpotifyImage {
-    """
-    The source URL of the image
-    """
-    url: String!
-
-    """
-    The image height in pixels.
-    """
-    height: Int!
-
-    """
-    The image width in pixels.
-    """
-    width: Int!
-  }
-
-  #TODO: move to index
-  type SpotifyExternalUrls {
-    """
-    The Spotify URL for the object.
-    """
-    spotify: String!
   }
 
   type SpotifyAlbum {
@@ -213,7 +171,7 @@ export const typeDefs = gql`
   #extend type SpotifyRelation {
   #  albums(
   #    pagination: SpotifyPaginationParameters = { page: 1, per_page: 1 }
-  #  ): SearchSpotifyArtist
+  #  ): SearchSpotifyAlbum
   #}
 `;
 

@@ -14,24 +14,8 @@ import { SpotifyAPI } from './dataSource';
 import { Resolvers } from './types';
 
 export const typeDefs = gql`
-  enum SpotifySortOrder {
-    asc
-    desc
-  }
-
-  enum SpotifyCurrencies {
-    USD
-    GBP
-    EUR
-    CAD
-    AUD
-    JPY
-    CHF
-    MXN
-    BRL
-    NZD
-    SEK
-    ZAR
+  enum IncludeExternal {
+    audio
   }
 
   """
@@ -39,121 +23,19 @@ export const typeDefs = gql`
   """
   input SearchSpotifyFilter {
     """
-    Your search query
-
-    Example: nirvana
+    If include_external=audio is specified then the response will include any relevant audio content that is hosted externally. By default external content is filtered out from responses.
     """
-    query: String
+    include_external: IncludeExternal
 
     """
-    Example: nirvana - nevermind
+    An ISO 3166-1 alpha-2 country code. If a country code is specified, only episodes that are available in that market will be returned.
+    If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter.
+    Note: If neither market or user country are provided, the content is considered unavailable for the client.
+    Users can view the country that is associated with their account in the account settings.
+    Example value:
+    "ES"
     """
-    title: String
-
-    """
-    Search release titles
-
-    Example: nevermind
-    """
-    release_title: String
-
-    """
-    Search release credits
-
-    Example: kurt
-    """
-    credit: String
-
-    """
-    Search artist names
-
-    Example: nirvana
-    """
-    artist: String
-
-    """
-    Search artist ANV (Artist Name Variation)
-
-    Example: nirvana
-    """
-    anv: String
-
-    """
-    Search label names
-
-    Example: dgc
-    """
-    label: String
-
-    """
-    Search genres
-
-    Example: rock
-    """
-    genre: String
-
-    """
-    Search styles
-
-    Example: grunge
-    """
-    style: String
-
-    """
-    Search release country
-
-    Example: canada
-    """
-    country: String
-
-    """
-    Search release year
-
-    Example: 1991
-    """
-    year: Int
-
-    """
-    Search formats
-
-    Example: album
-    """
-    format: String
-
-    """
-    Search catalog number
-
-    Example: DGCD-24425
-    """
-    catno: String
-
-    """
-    Search barcodes
-
-    Example: 7 2064-24425-2 4
-    """
-    barcode: String
-
-    """
-    Search track titles
-
-    Example: smells like teen spirit
-    """
-    track: String
-
-    """
-    Search submitter username
-
-    Example: milKt
-    """
-    submitter: String
-
-    """
-    Search contributor usernames
-
-    Example: jerome99
-    """
-    contributor: String
+    market: String
   }
 
   """
@@ -161,42 +43,14 @@ export const typeDefs = gql`
   """
   input SpotifyPaginationParameters {
     """
-    The page you want to request
-
-    Example: 3
+    The maximum number of results to return in each item type.
     """
-    page: Int! = 1
+    limit: Int
 
     """
-    The number of items per page
-
-    Example: 5
+    The index of the first result to return. Use with limit to get the next page of search results.
     """
-    per_page: Int! = 5
-  }
-
-  type SpotifyImageShort {
-    type: String!
-    uri: String!
-    resource_url: String!
-    uri150: String!
-    width: Int!
-    height: Int!
-  }
-
-  type SpotifyTrackShort {
-    position: String!
-    type_: String!
-    title: String!
-    duration: String!
-  }
-
-  type SpotifyVideo {
-    uri: String!
-    title: String!
-    description: String!
-    duration: Int!
-    embed: Boolean!
+    offset: Int
   }
 
   extend type RelationData {
@@ -220,29 +74,28 @@ export const typeDefs = gql`
     spotify: SpotifyRelation @requires(fields: "_relationData")
   }
 
-  type SpotifySearchPaginationUrls {
-    first: String
-    last: String
-    prev: String
-    next: String
+  type SpotifyImage {
+    """
+    The source URL of the image
+    """
+    url: String!
+
+    """
+    The image height in pixels.
+    """
+    height: Int!
+
+    """
+    The image width in pixels.
+    """
+    width: Int!
   }
 
-  type SpotifySearchPagination {
-    page: Int!
-    pages: Int!
-    per_page: Int!
-    items: Int!
-    urls: SpotifySearchPaginationUrls!
-  }
-
-  type SpotifyCommunity {
-    want: Int!
-    have: Int!
-  }
-
-  type SpotifyUserData {
-    in_wantlist: Boolean!
-    in_collection: Boolean!
+  type SpotifyExternalUrls {
+    """
+    The Spotify URL for the object.
+    """
+    spotify: String!
   }
 
   type SpotifySearch {

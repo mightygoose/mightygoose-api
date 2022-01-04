@@ -19,57 +19,14 @@ export enum AlbumType {
   Album = 'album'
 }
 
-/**
- * type SpotifyArtistMembers {
- *   id: Int
- *   name: String
- *   resource_url: String
- *   active: Boolean
- *   thumbnail_url: String
- * }
- *
- * type SpotifySearchResultArtist {
- *   id: ID!
- *   type: String!
- *   uri: String!
- *   title: String!
- *   thumb: String!
- *   cover_image: String!
- *   resource_url: String!
- *   user_data: SpotifyMasterVersionStatsCommunity!
- *   relation: Relation!
- * }
- *
- * type SpotifyArtistShort {
- *   id: ID!
- *   name: String!
- *   anv: String!
- *   join: String!
- *   role: String!
- *   tracks: String!
- *   resource_url: String!
- *   thumbnail_url: String!
- *   relation: Relation!
- *   artist: SpotifyArtist!
- * }
- *
- * type SearchSpotifyArtist {
- *   pagination: SpotifySearchPagination!
- *   results: [SpotifySearchResultArtist!]!
- * }
- *
- * extend type SpotifySearch {
- *   artists(
- *     search: String
- *     filter: SearchSpotifyFilter
- *     pagination: SpotifyPaginationParameters = { page: 1, per_page: 1 }
- *   ): SearchSpotifyArtist!
- * }
- */
 export enum AlbumTypes {
   Album = 'album',
   Compilation = 'compilation',
   Single = 'single'
+}
+
+export enum IncludeExternal {
+  Audio = 'audio'
 }
 
 export type Lookup = {
@@ -108,106 +65,24 @@ export type Search = {
   spotify: SpotifySearch;
 };
 
+export type SearchSpotifyAlbum = {
+  __typename?: 'SearchSpotifyAlbum';
+  foo?: Maybe<Scalars['String']>;
+};
+
 /** spotify general search parameters */
 export type SearchSpotifyFilter = {
+  /** If include_external=audio is specified then the response will include any relevant audio content that is hosted externally. By default external content is filtered out from responses. */
+  include_external?: InputMaybe<IncludeExternal>;
   /**
-   * Search artist ANV (Artist Name Variation)
-   *
-   * Example: nirvana
+   * An ISO 3166-1 alpha-2 country code. If a country code is specified, only episodes that are available in that market will be returned.
+   * If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter.
+   * Note: If neither market or user country are provided, the content is considered unavailable for the client.
+   * Users can view the country that is associated with their account in the account settings.
+   * Example value:
+   * "ES"
    */
-  anv?: InputMaybe<Scalars['String']>;
-  /**
-   * Search artist names
-   *
-   * Example: nirvana
-   */
-  artist?: InputMaybe<Scalars['String']>;
-  /**
-   * Search barcodes
-   *
-   * Example: 7 2064-24425-2 4
-   */
-  barcode?: InputMaybe<Scalars['String']>;
-  /**
-   * Search catalog number
-   *
-   * Example: DGCD-24425
-   */
-  catno?: InputMaybe<Scalars['String']>;
-  /**
-   * Search contributor usernames
-   *
-   * Example: jerome99
-   */
-  contributor?: InputMaybe<Scalars['String']>;
-  /**
-   * Search release country
-   *
-   * Example: canada
-   */
-  country?: InputMaybe<Scalars['String']>;
-  /**
-   * Search release credits
-   *
-   * Example: kurt
-   */
-  credit?: InputMaybe<Scalars['String']>;
-  /**
-   * Search formats
-   *
-   * Example: album
-   */
-  format?: InputMaybe<Scalars['String']>;
-  /**
-   * Search genres
-   *
-   * Example: rock
-   */
-  genre?: InputMaybe<Scalars['String']>;
-  /**
-   * Search label names
-   *
-   * Example: dgc
-   */
-  label?: InputMaybe<Scalars['String']>;
-  /**
-   * Your search query
-   *
-   * Example: nirvana
-   */
-  query?: InputMaybe<Scalars['String']>;
-  /**
-   * Search release titles
-   *
-   * Example: nevermind
-   */
-  release_title?: InputMaybe<Scalars['String']>;
-  /**
-   * Search styles
-   *
-   * Example: grunge
-   */
-  style?: InputMaybe<Scalars['String']>;
-  /**
-   * Search submitter username
-   *
-   * Example: milKt
-   */
-  submitter?: InputMaybe<Scalars['String']>;
-  /** Example: nirvana - nevermind */
-  title?: InputMaybe<Scalars['String']>;
-  /**
-   * Search track titles
-   *
-   * Example: smells like teen spirit
-   */
-  track?: InputMaybe<Scalars['String']>;
-  /**
-   * Search release year
-   *
-   * Example: 1991
-   */
-  year?: InputMaybe<Scalars['Int']>;
+  market?: InputMaybe<Scalars['String']>;
 };
 
 export type SpotifyAlbum = {
@@ -244,27 +119,6 @@ export type SpotifyAlbum = {
   uri: Scalars['String'];
 };
 
-export type SpotifyCommunity = {
-  __typename?: 'SpotifyCommunity';
-  have: Scalars['Int'];
-  want: Scalars['Int'];
-};
-
-export enum SpotifyCurrencies {
-  Aud = 'AUD',
-  Brl = 'BRL',
-  Cad = 'CAD',
-  Chf = 'CHF',
-  Eur = 'EUR',
-  Gbp = 'GBP',
-  Jpy = 'JPY',
-  Mxn = 'MXN',
-  Nzd = 'NZD',
-  Sek = 'SEK',
-  Usd = 'USD',
-  Zar = 'ZAR'
-}
-
 export type SpotifyExternalUrls = {
   __typename?: 'SpotifyExternalUrls';
   /** The Spotify URL for the object. */
@@ -278,16 +132,6 @@ export type SpotifyImage = {
   /** The source URL of the image */
   url: Scalars['String'];
   /** The image width in pixels. */
-  width: Scalars['Int'];
-};
-
-export type SpotifyImageShort = {
-  __typename?: 'SpotifyImageShort';
-  height: Scalars['Int'];
-  resource_url: Scalars['String'];
-  type: Scalars['String'];
-  uri: Scalars['String'];
-  uri150: Scalars['String'];
   width: Scalars['Int'];
 };
 
@@ -309,18 +153,10 @@ export type SpotifyLookupAlbumArgs = {
 
 /** spotify pagination parameters */
 export type SpotifyPaginationParameters = {
-  /**
-   * The page you want to request
-   *
-   * Example: 3
-   */
-  page?: Scalars['Int'];
-  /**
-   * The number of items per page
-   *
-   * Example: 5
-   */
-  per_page?: Scalars['Int'];
+  /** The maximum number of results to return in each item type. */
+  limit?: InputMaybe<Scalars['Int']>;
+  /** The index of the first result to return. Use with limit to get the next page of search results. */
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 export type SpotifyRelation = {
@@ -346,52 +182,15 @@ export type SpotifyRestrictions = {
 
 export type SpotifySearch = {
   __typename?: 'SpotifySearch';
+  albums: SearchSpotifyAlbum;
   id: Scalars['ID'];
 };
 
-export type SpotifySearchPagination = {
-  __typename?: 'SpotifySearchPagination';
-  items: Scalars['Int'];
-  page: Scalars['Int'];
-  pages: Scalars['Int'];
-  per_page: Scalars['Int'];
-  urls: SpotifySearchPaginationUrls;
-};
 
-export type SpotifySearchPaginationUrls = {
-  __typename?: 'SpotifySearchPaginationUrls';
-  first?: Maybe<Scalars['String']>;
-  last?: Maybe<Scalars['String']>;
-  next?: Maybe<Scalars['String']>;
-  prev?: Maybe<Scalars['String']>;
-};
-
-export enum SpotifySortOrder {
-  Asc = 'asc',
-  Desc = 'desc'
-}
-
-export type SpotifyTrackShort = {
-  __typename?: 'SpotifyTrackShort';
-  duration: Scalars['String'];
-  position: Scalars['String'];
-  title: Scalars['String'];
-  type_: Scalars['String'];
-};
-
-export type SpotifyUserData = {
-  __typename?: 'SpotifyUserData';
-  in_collection: Scalars['Boolean'];
-  in_wantlist: Scalars['Boolean'];
-};
-
-export type SpotifyVideo = {
-  __typename?: 'SpotifyVideo';
-  description: Scalars['String'];
-  duration: Scalars['Int'];
-  embed: Scalars['Boolean'];
-  title: Scalars['String'];
-  uri: Scalars['String'];
+export type SpotifySearchAlbumsArgs = {
+  filter?: InputMaybe<SearchSpotifyFilter>;
+  pagination?: InputMaybe<SpotifyPaginationParameters>;
+  q: Scalars['String'];
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -477,6 +276,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = ResolversObject<{
   AlbumType: AlbumType;
   AlbumTypes: AlbumTypes;
+  IncludeExternal: IncludeExternal;
   Lookup: ResolverTypeWrapper<Lookup>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Relation: ResolverTypeWrapper<Relation>;
@@ -485,26 +285,18 @@ export type ResolversTypes = ResolversObject<{
   Int: ResolverTypeWrapper<Scalars['Int']>;
   ReleaseDatePrecision: ReleaseDatePrecision;
   Search: ResolverTypeWrapper<Search>;
+  SearchSpotifyAlbum: ResolverTypeWrapper<SearchSpotifyAlbum>;
   SearchSpotifyFilter: SearchSpotifyFilter;
   SpotifyAlbum: ResolverTypeWrapper<SpotifyAlbum>;
-  SpotifyCommunity: ResolverTypeWrapper<SpotifyCommunity>;
-  SpotifyCurrencies: SpotifyCurrencies;
   SpotifyExternalUrls: ResolverTypeWrapper<SpotifyExternalUrls>;
   SpotifyImage: ResolverTypeWrapper<SpotifyImage>;
-  SpotifyImageShort: ResolverTypeWrapper<SpotifyImageShort>;
   SpotifyLookup: ResolverTypeWrapper<SpotifyLookup>;
   SpotifyPaginationParameters: SpotifyPaginationParameters;
   SpotifyRelation: ResolverTypeWrapper<SpotifyRelation>;
   SpotifyRestrictionReason: SpotifyRestrictionReason;
   SpotifyRestrictions: ResolverTypeWrapper<SpotifyRestrictions>;
   SpotifySearch: ResolverTypeWrapper<SpotifySearch>;
-  SpotifySearchPagination: ResolverTypeWrapper<SpotifySearchPagination>;
-  SpotifySearchPaginationUrls: ResolverTypeWrapper<SpotifySearchPaginationUrls>;
-  SpotifySortOrder: SpotifySortOrder;
-  SpotifyTrackShort: ResolverTypeWrapper<SpotifyTrackShort>;
-  SpotifyUserData: ResolverTypeWrapper<SpotifyUserData>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
-  SpotifyVideo: ResolverTypeWrapper<SpotifyVideo>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -516,23 +308,17 @@ export type ResolversParentTypes = ResolversObject<{
   String: Scalars['String'];
   Int: Scalars['Int'];
   Search: Search;
+  SearchSpotifyAlbum: SearchSpotifyAlbum;
   SearchSpotifyFilter: SearchSpotifyFilter;
   SpotifyAlbum: SpotifyAlbum;
-  SpotifyCommunity: SpotifyCommunity;
   SpotifyExternalUrls: SpotifyExternalUrls;
   SpotifyImage: SpotifyImage;
-  SpotifyImageShort: SpotifyImageShort;
   SpotifyLookup: SpotifyLookup;
   SpotifyPaginationParameters: SpotifyPaginationParameters;
   SpotifyRelation: SpotifyRelation;
   SpotifyRestrictions: SpotifyRestrictions;
   SpotifySearch: SpotifySearch;
-  SpotifySearchPagination: SpotifySearchPagination;
-  SpotifySearchPaginationUrls: SpotifySearchPaginationUrls;
-  SpotifyTrackShort: SpotifyTrackShort;
-  SpotifyUserData: SpotifyUserData;
   Boolean: Scalars['Boolean'];
-  SpotifyVideo: SpotifyVideo;
 }>;
 
 export type LookupResolvers<ContextType = any, ParentType extends ResolversParentTypes['Lookup'] = ResolversParentTypes['Lookup']> = ResolversObject<{
@@ -568,6 +354,11 @@ export type SearchResolvers<ContextType = any, ParentType extends ResolversParen
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type SearchSpotifyAlbumResolvers<ContextType = any, ParentType extends ResolversParentTypes['SearchSpotifyAlbum'] = ResolversParentTypes['SearchSpotifyAlbum']> = ResolversObject<{
+  foo?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type SpotifyAlbumResolvers<ContextType = any, ParentType extends ResolversParentTypes['SpotifyAlbum'] = ResolversParentTypes['SpotifyAlbum']> = ResolversObject<{
   album_type?: Resolver<ResolversTypes['AlbumTypes'], ParentType, ContextType>;
   available_markets?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
@@ -586,12 +377,6 @@ export type SpotifyAlbumResolvers<ContextType = any, ParentType extends Resolver
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type SpotifyCommunityResolvers<ContextType = any, ParentType extends ResolversParentTypes['SpotifyCommunity'] = ResolversParentTypes['SpotifyCommunity']> = ResolversObject<{
-  have?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  want?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
 export type SpotifyExternalUrlsResolvers<ContextType = any, ParentType extends ResolversParentTypes['SpotifyExternalUrls'] = ResolversParentTypes['SpotifyExternalUrls']> = ResolversObject<{
   spotify?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -600,16 +385,6 @@ export type SpotifyExternalUrlsResolvers<ContextType = any, ParentType extends R
 export type SpotifyImageResolvers<ContextType = any, ParentType extends ResolversParentTypes['SpotifyImage'] = ResolversParentTypes['SpotifyImage']> = ResolversObject<{
   height?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  width?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type SpotifyImageShortResolvers<ContextType = any, ParentType extends ResolversParentTypes['SpotifyImageShort'] = ResolversParentTypes['SpotifyImageShort']> = ResolversObject<{
-  height?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  resource_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  uri?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  uri150?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   width?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -631,47 +406,8 @@ export type SpotifyRestrictionsResolvers<ContextType = any, ParentType extends R
 }>;
 
 export type SpotifySearchResolvers<ContextType = any, ParentType extends ResolversParentTypes['SpotifySearch'] = ResolversParentTypes['SpotifySearch']> = ResolversObject<{
+  albums?: Resolver<ResolversTypes['SearchSpotifyAlbum'], ParentType, ContextType, RequireFields<SpotifySearchAlbumsArgs, 'pagination' | 'q'>>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type SpotifySearchPaginationResolvers<ContextType = any, ParentType extends ResolversParentTypes['SpotifySearchPagination'] = ResolversParentTypes['SpotifySearchPagination']> = ResolversObject<{
-  items?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  page?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  pages?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  per_page?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  urls?: Resolver<ResolversTypes['SpotifySearchPaginationUrls'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type SpotifySearchPaginationUrlsResolvers<ContextType = any, ParentType extends ResolversParentTypes['SpotifySearchPaginationUrls'] = ResolversParentTypes['SpotifySearchPaginationUrls']> = ResolversObject<{
-  first?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  last?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  next?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  prev?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type SpotifyTrackShortResolvers<ContextType = any, ParentType extends ResolversParentTypes['SpotifyTrackShort'] = ResolversParentTypes['SpotifyTrackShort']> = ResolversObject<{
-  duration?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  position?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  type_?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type SpotifyUserDataResolvers<ContextType = any, ParentType extends ResolversParentTypes['SpotifyUserData'] = ResolversParentTypes['SpotifyUserData']> = ResolversObject<{
-  in_collection?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  in_wantlist?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type SpotifyVideoResolvers<ContextType = any, ParentType extends ResolversParentTypes['SpotifyVideo'] = ResolversParentTypes['SpotifyVideo']> = ResolversObject<{
-  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  duration?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  embed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  uri?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -680,19 +416,13 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Relation?: RelationResolvers<ContextType>;
   RelationData?: RelationDataResolvers<ContextType>;
   Search?: SearchResolvers<ContextType>;
+  SearchSpotifyAlbum?: SearchSpotifyAlbumResolvers<ContextType>;
   SpotifyAlbum?: SpotifyAlbumResolvers<ContextType>;
-  SpotifyCommunity?: SpotifyCommunityResolvers<ContextType>;
   SpotifyExternalUrls?: SpotifyExternalUrlsResolvers<ContextType>;
   SpotifyImage?: SpotifyImageResolvers<ContextType>;
-  SpotifyImageShort?: SpotifyImageShortResolvers<ContextType>;
   SpotifyLookup?: SpotifyLookupResolvers<ContextType>;
   SpotifyRelation?: SpotifyRelationResolvers<ContextType>;
   SpotifyRestrictions?: SpotifyRestrictionsResolvers<ContextType>;
   SpotifySearch?: SpotifySearchResolvers<ContextType>;
-  SpotifySearchPagination?: SpotifySearchPaginationResolvers<ContextType>;
-  SpotifySearchPaginationUrls?: SpotifySearchPaginationUrlsResolvers<ContextType>;
-  SpotifyTrackShort?: SpotifyTrackShortResolvers<ContextType>;
-  SpotifyUserData?: SpotifyUserDataResolvers<ContextType>;
-  SpotifyVideo?: SpotifyVideoResolvers<ContextType>;
 }>;
 
