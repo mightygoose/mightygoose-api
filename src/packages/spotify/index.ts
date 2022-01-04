@@ -2,7 +2,7 @@ import { gql } from 'apollo-server';
 import { BaseContext } from 'apollo-server-types';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 
-// import masterSchema from './modules/master';
+import albumSchema from './modules/album';
 // import releaseSchema from './modules/release';
 // import masterVersionSchema from './modules/masterVersion';
 // import artistSchema from './modules/artist';
@@ -292,7 +292,7 @@ export interface Context extends BaseContext {
 
 const schemaDefinition = [
   { typeDefs, resolvers },
-  // masterSchema,
+  albumSchema,
   // releaseSchema,
   // masterVersionSchema,
   // artistSchema,
