@@ -117,26 +117,28 @@ export const typeDefs = gql`
 `;
 
 export const resolvers: Resolvers<Context> = {
-  // Search: {
-  // spotify: (): any => ({}),
-  // },
-  // Lookup: {
-  // spotify: (): any => ({}),
-  // },
-  // Relation: {
-  // spotify: (parent): any => {
-  // return parent;
-  // },
-  // },
-  // SpotifySearch: {
-  // id: () => `${+new Date()}`,
-  // },
-  // SpotifyLookup: {
-  // id: () => `${+new Date()}`,
-  // },
+  Search: {
+    spotify: (): any => ({}),
+  },
+  Lookup: {
+    spotify: (): any => ({}),
+  },
+  Relation: {
+    spotify: (parent): any => {
+      return parent;
+    },
+  },
+  SpotifySearch: {
+    id: () => `${+new Date()}`,
+  },
+  SpotifyLookup: {
+    id: () => `${+new Date()}`,
+  },
 };
 
-export const dataSources = () => ({ spotifyApi: new SpotifyAPI() });
+export const dataSources = () => ({
+  spotifyApi: new SpotifyAPI(),
+});
 
 export interface Context extends BaseContext {
   dataSources: ReturnType<typeof dataSources>;
