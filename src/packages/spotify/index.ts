@@ -10,7 +10,7 @@ import albumSchema from './modules/album';
 // import labelReleasesSchema from './modules/labelReleases';
 // import artistReleasesSchema from './modules/artistReleases';
 
-import { SpotifyAPI } from './dataSource';
+import { SpotifyAPI, SpotifyAPIAuthorizer } from './dataSource';
 import { Resolvers } from './types';
 
 export const typeDefs = gql`
@@ -138,6 +138,7 @@ export const resolvers: Resolvers<Context> = {
 
 export const dataSources = () => ({
   spotifyApi: new SpotifyAPI(),
+  spotifyApiAuthorizer: new SpotifyAPIAuthorizer(),
 });
 
 export interface Context extends BaseContext {

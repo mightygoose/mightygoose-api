@@ -1,7 +1,8 @@
 import { RESTDataSource } from 'apollo-datasource-rest';
+import { InMemoryLRUCache } from 'apollo-server-caching';
 import { SPOTIFY_ID, SPOTIFY_SECRET } from './config';
 import { InputMaybe, SpotifyAlbum, SpotifyLookupAlbumArgs } from './types';
-import https from 'https';
+import { Context } from '.';
 
 // const omitInvalidParams = <T extends Record<string, any>>(params: T) => {
 // const acc: Record<string, string | number> = {};
@@ -43,60 +44,50 @@ import https from 'https';
 // type: SEARCH_TYPES;
 // }
 
-const getToken = async () => {
-  const requestBody = `${encodeURI('grant_type')}=${encodeURI(
-    'client_credentials'
-  )}`;
+const cache = new InMemoryLRUCache();
 
-  const options: https.RequestOptions = {
-    hostname: 'accounts.spotify.com',
-    port: 443,
-    path: '/api/token',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization':
-        'Basic ' +
-        Buffer.from(SPOTIFY_ID + ':' + SPOTIFY_SECRET).toString('base64'),
-    },
-  };
+export class SpotifyAPIAuthorizer extends RESTDataSource<Context> {
+  baseURL = 'https://accounts.spotify.com/api';
 
-  const req = new Promise((resolve, reject) => {
-    const req = https.request(options, function (res) {
+  keyValueCache = cache;
 
-      let responseBody = '';
+  async willSendRequest(request: any) {
+    console.log(
+      `${request.method} ${this.baseURL}${
+        request.path
+      }?${request.params.toString()}`
+    );
+  }
 
-      // Build JSON string from response chunks.
-      res.on('data', (chunk) => (responseBody = responseBody + chunk));
-      res.on('end', function () {
-        const parsedBody = JSON.parse(responseBody + '');
+  async getToken() {
+    const cachedAccessToken = await this.keyValueCache.get('access_token');
+    if (cachedAccessToken) {
+      return cachedAccessToken;
+    }
+    const { access_token, expires_in } = await this.post(
+      '/token',
+      `${encodeURI('grant_type')}=${encodeURI('client_credentials')}`,
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization':
+            'Basic ' +
+            Buffer.from(SPOTIFY_ID + ':' + SPOTIFY_SECRET).toString('base64'),
+        },
+      }
+    );
+    this.keyValueCache.set('access_token', access_token, { ttl: expires_in });
+    return access_token;
+  }
+}
 
-        // Resolve or reject based on status code.
-        res.statusCode !== 200 ? reject(parsedBody) : resolve(parsedBody);
-      });
-    });
-
-    // Make sure to write the request body.
-    req.write(requestBody);
-    req.end();
-    req.on('error', function (e) {
-      reject(e);
-    });
-  });
-
-  console.log(555);
-  const foo = await req;
-  console.log(777, foo);
-
-  //@ts-expect-error foobar
-  return foo.access_token;
-};
-
-export class SpotifyAPI extends RESTDataSource {
+export class SpotifyAPI extends RESTDataSource<Context> {
   baseURL = 'https://api.spotify.com/v1';
 
   async willSendRequest(request: any) {
-    request.headers.set('Authorization', `Bearer ${await getToken()}`);
+    const token =
+      await this.context.dataSources.spotifyApiAuthorizer.getToken();
+    request.headers.set('Authorization', `Bearer ${token}`);
     console.log(
       `${request.method} ${this.baseURL}${
         request.path
