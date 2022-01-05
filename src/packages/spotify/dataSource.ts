@@ -46,7 +46,7 @@ import { Context } from '.';
 
 const cache = new InMemoryLRUCache();
 
-export class SpotifyAPIAuthorizer extends RESTDataSource<Context> {
+export class SpotifyAccountsAPI extends RESTDataSource<Context> {
   baseURL = 'https://accounts.spotify.com/api';
 
   keyValueCache = cache;
@@ -85,8 +85,7 @@ export class SpotifyAPI extends RESTDataSource<Context> {
   baseURL = 'https://api.spotify.com/v1';
 
   async willSendRequest(request: any) {
-    const token =
-      await this.context.dataSources.spotifyApiAuthorizer.getToken();
+    const token = await this.context.dataSources.spotifyAccountsApi.getToken();
     request.headers.set('Authorization', `Bearer ${token}`);
     console.log(
       `${request.method} ${this.baseURL}${
