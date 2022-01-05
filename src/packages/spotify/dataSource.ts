@@ -1,4 +1,5 @@
 import { RESTDataSource } from 'apollo-datasource-rest';
+import { URLSearchParamsInit } from 'apollo-server-env';
 import { InMemoryLRUCache } from 'apollo-server-caching';
 import { SPOTIFY_ID, SPOTIFY_SECRET } from './config';
 import { InputMaybe, SpotifyAlbum, SpotifyLookupAlbumArgs } from './types';
@@ -43,6 +44,17 @@ import { Context } from '.';
 // interface SearchRequestParams extends SearchParams {
 // type: SEARCH_TYPES;
 // }
+
+const omitInvalidParams = <T extends Record<string, any>>(
+  params: T
+): URLSearchParamsInit => {
+  return Object.entries(params).reduce((acc, [key, value]) => {
+    if (value === null || typeof value === 'undefined') {
+      return acc;
+    }
+    return { ...acc, [key]: value };
+  }, {});
+};
 
 const cache = new InMemoryLRUCache();
 
@@ -107,11 +119,9 @@ export class SpotifyAPI extends RESTDataSource<Context> {
 
   async lookupAlbum({
     id,
-    market,
+    ...params
   }: SpotifyLookupAlbumArgs): Promise<SpotifyAlbum> {
-    return this.get<SpotifyAlbum>(`/albums/${id}`, {
-      // market: market || undefined,
-    });
+    return this.get<SpotifyAlbum>(`/albums/${id}`, omitInvalidParams(params));
   }
 
   // async search<T>(params: SearchRequestParams) {
