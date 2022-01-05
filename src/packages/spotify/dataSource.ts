@@ -5,19 +5,6 @@ import { SPOTIFY_ID, SPOTIFY_SECRET } from './config';
 import { InputMaybe, SpotifyAlbum, SpotifyLookupAlbumArgs } from './types';
 import { Context } from '.';
 
-// const omitInvalidParams = <T extends Record<string, any>>(params: T) => {
-// const acc: Record<string, string | number> = {};
-
-// for (let key in params) {
-// const value = params[key];
-
-// if (typeof value === 'string' || typeof value === 'number') {
-// acc[key] = value;
-// }
-// }
-// return acc;
-// };
-
 // interface SearchParams
 // extends SearchDiscogsFilter,
 // DiscogsPaginationParameters {}
