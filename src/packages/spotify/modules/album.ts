@@ -177,9 +177,8 @@ export const typeDefs = gql`
 
 export const resolvers: Resolvers<Context> = {
   SpotifyLookup: {
-    album: (_parent, { id, market }, { dataSources: { spotifyApi } }) => {
-      return spotifyApi.lookupAlbum(id, market);
-    },
+    album: (_parent, params, { dataSources: { spotifyApi } }) =>
+      spotifyApi.lookupAlbum(params),
   },
   // SpotifySearch: {
   // artists: (

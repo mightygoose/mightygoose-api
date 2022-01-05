@@ -94,10 +94,21 @@ export class SpotifyAPI extends RESTDataSource<Context> {
     );
   }
 
-  async lookupAlbum(
-    id: SpotifyLookupAlbumArgs['id'],
-    market?: SpotifyLookupAlbumArgs['market']
-  ): Promise<SpotifyAlbum> {
+  async resolveURL(request: any) {
+    const url = await super.resolveURL(request);
+    url.searchParams.append = () => {};
+    const params = [];
+    for (const [name, value] of request.params) {
+      params.push([name, value].join('='));
+    }
+    url.search = `?${params.join('&')}`;
+    return url;
+  }
+
+  async lookupAlbum({
+    id,
+    market,
+  }: SpotifyLookupAlbumArgs): Promise<SpotifyAlbum> {
     return this.get<SpotifyAlbum>(`/albums/${id}`, {
       // market: market || undefined,
     });
