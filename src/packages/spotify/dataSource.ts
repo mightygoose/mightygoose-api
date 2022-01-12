@@ -1,8 +1,16 @@
-import { RESTDataSource } from 'apollo-datasource-rest';
-import { URLSearchParamsInit } from 'apollo-server-env';
+import { RESTDataSource, RequestOptions } from 'apollo-datasource-rest';
+import { URLSearchParamsInit, URL } from 'apollo-server-env';
 import { InMemoryLRUCache } from 'apollo-server-caching';
 import { SPOTIFY_ID, SPOTIFY_SECRET } from './config';
-import { InputMaybe, SpotifyAlbum, SpotifyLookupAlbumArgs } from './types';
+import {
+  InputMaybe,
+  SearchSpotifyFilter,
+  SpotifyPaginationParameters,
+  SpotifyAlbum,
+  SpotifyLookupAlbumArgs,
+  SpotifySearchAlbumsArgs,
+  SearchSpotifyAlbum,
+} from './types';
 import { Context } from '.';
 
 // interface SearchParams
@@ -21,16 +29,21 @@ import { Context } from '.';
 // extends DiscogsLabelGetReleasesSort,
 // DiscogsPaginationParameters {}
 
-// enum SEARCH_TYPES {
-// release = 'release',
-// master = 'master',
-// artist = 'artist',
-// label = 'label',
-// }
+enum SEARCH_TYPES {
+  album = 'album',
+  artist = 'artist',
+  playlist = 'playlist',
+  track = 'track',
+  show = 'show',
+  episode = 'episode',
+}
 
-// interface SearchRequestParams extends SearchParams {
-// type: SEARCH_TYPES;
-// }
+interface SearchRequestParams
+  extends SearchSpotifyFilter,
+    SpotifyPaginationParameters {
+  q: string;
+  type: SEARCH_TYPES;
+}
 
 const omitInvalidParams = <T extends Record<string, any>>(
   params: T
@@ -50,7 +63,7 @@ export class SpotifyAccountsAPI extends RESTDataSource<Context> {
 
   keyValueCache = cache;
 
-  async willSendRequest(request: any) {
+  async willSendRequest(request: RequestOptions): Promise<void> {
     console.log(
       `${request.method} ${this.baseURL}${
         request.path
@@ -80,10 +93,26 @@ export class SpotifyAccountsAPI extends RESTDataSource<Context> {
   }
 }
 
+/*
+ * Spotify doesn't work properly with default URLSearchParams.toString()
+ * example:
+ *   query: "artist:Miles Davis+album:Kind Of Blue"
+ *   becomes: "artist%3AMiles+Davis%2Balbum%3AKind+Of+Blue"
+ * that's why we need a custom URL class with overridden .toString()
+ * */
+class SpotifyApiURL extends URL {
+  toString() {
+    const params = [...this.searchParams.entries()]
+      .map((item) => item.join('='))
+      .join('&');
+    return `${this.origin}${this.pathname}?${params}`;
+  }
+}
+
 export class SpotifyAPI extends RESTDataSource<Context> {
   baseURL = 'https://api.spotify.com/v1';
 
-  async willSendRequest(request: any) {
+  async willSendRequest(request: RequestOptions): Promise<void> {
     const token = await this.context.dataSources.spotifyAccountsApi.getToken();
     request.headers.set('Authorization', `Bearer ${token}`);
     console.log(
@@ -93,15 +122,13 @@ export class SpotifyAPI extends RESTDataSource<Context> {
     );
   }
 
-  async resolveURL(request: any) {
+  async resolveURL(request: RequestOptions): Promise<URL> {
     const url = await super.resolveURL(request);
-    url.searchParams.append = () => {};
-    const params = [];
-    for (const [name, value] of request.params) {
-      params.push([name, value].join('='));
-    }
-    url.search = `?${params.join('&')}`;
-    return url;
+    return new SpotifyApiURL(url.toString());
+  }
+
+  async search<T>(params: SearchRequestParams) {
+    return this.get<T>('/search', omitInvalidParams(params));
   }
 
   async lookupAlbum({
@@ -111,16 +138,19 @@ export class SpotifyAPI extends RESTDataSource<Context> {
     return this.get<SpotifyAlbum>(`/albums/${id}`, omitInvalidParams(params));
   }
 
-  // async search<T>(params: SearchRequestParams) {
-  // return this.get<T>('/database/search', omitInvalidParams(params));
-  // }
-
-  // async searchReleases(params: SearchParams): Promise<SearchDiscogsRelease> {
-  // return this.search<SearchDiscogsRelease>({
-  // type: SEARCH_TYPES.release,
-  // ...params,
-  // });
-  // }
+  async searchAlbums({
+    q,
+    filter,
+    pagination,
+  }: SpotifySearchAlbumsArgs): Promise<SearchSpotifyAlbum> {
+    const { albums } = await this.search<{ albums: SearchSpotifyAlbum }>({
+      type: SEARCH_TYPES.album,
+      q,
+      ...filter,
+      ...pagination,
+    });
+    return albums;
+  }
 
   // async lookupRelease(
   // id: number,

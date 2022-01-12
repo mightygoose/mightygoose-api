@@ -7,10 +7,57 @@ import { createRelation, log } from '../../base';
 import { Context } from '../';
 
 export const typeDefs = gql`
+  type SpotifySearchResultAlbum {
+    album_type: String!
+    href: String!
+    id: String!
+    name: String!
+    release_date: String!
+    release_date_precision: String!
+    total_tracks: Int!
+    type: String!
+    uri: String!
+    images: [SpotifyImage!]!
+    external_urls: SpotifyExternalUrls!
+    available_markets: [String!]!
+    #artists: [SpotifyArtist]
+  }
+
   type SearchSpotifyAlbum {
-    #pagination: SpotifySearchPagination!
-    #results: [SpotifySearchResultArtist!]!
-    foo: String
+    """
+    A link to the Web API endpoint returning the full result of the request
+    """
+    href: String!
+
+    """
+    The requested content
+    """
+    items: [SpotifySearchResultAlbum]!
+
+    """
+    The maximum number of items in the response (as set in the query or by default).
+    """
+    limit: Int!
+
+    """
+    URL to the next page of items. ( null if none)
+    """
+    next: String
+
+    """
+    The offset of the items returned (as set in the query or by default)
+    """
+    offset: Int!
+
+    """
+    URL to the previous page of items. ( null if none)
+    """
+    previous: String
+
+    """
+    The total number of items available to return.
+    """
+    total: Int!
   }
 
   extend type SpotifySearch {
@@ -119,7 +166,7 @@ export const typeDefs = gql`
     #The object type.
     #"""
     #tracks: [SpotifyTrack]
-    #artists: [Artists]
+    #artists: [SpotifyArtist]
 
     """
     Included in the response when a content restriction is applied.
@@ -180,19 +227,10 @@ export const resolvers: Resolvers<Context> = {
     album: (_parent, params, { dataSources: { spotifyApi } }) =>
       spotifyApi.lookupAlbum(params),
   },
-  // SpotifySearch: {
-  // artists: (
-  // _parent,
-  // { search, filter, pagination },
-  // { dataSources: { discogsApi } }
-  // ) => {
-  // return discogsApi.searchArtists({
-  // query: search,
-  // ...filter,
-  // ...pagination,
-  // });
-  // },
-  // },
+  SpotifySearch: {
+    albums: async (_parent, params, { dataSources: { spotifyApi } }) =>
+      spotifyApi.searchAlbums(params),
+  },
   // SpotifyArtist: {
   // relation: ({ name: artist }) =>
   // createRelation({
