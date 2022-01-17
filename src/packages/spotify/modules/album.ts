@@ -7,6 +7,56 @@ import { createRelation, log } from '../../base';
 import { Context } from '../';
 
 export const typeDefs = gql`
+  type SpotifyArtistShort {
+    id: ID!
+    href: String!
+    name: String!
+    type: String!
+    uri: String!
+    external_urls: SpotifyExternalUrls!
+    relation: Relation!
+  }
+
+  enum SpotifyTrackType {
+    track
+  }
+
+  type SpotifyTrackShort {
+    id: ID!
+    disc_number: Int!
+    duration_ms: Int!
+    explicit: Boolean!
+    href: String!
+    is_local: Boolean!
+    name: String!
+    preview_url: String!
+    track_number: Int!
+    type: SpotifyTrackType!
+    uri: String!
+    external_urls: SpotifyExternalUrls!
+    available_markets: [String!]!
+    artists: [SpotifyArtistShort!]!
+  }
+
+  type SpotifyTracks {
+    href: String!
+    limit: Int!
+    next: String
+    offset: Int!
+    previous: String
+    total: Int!
+    items: [SpotifyTrackShort!]!
+  }
+
+  type SpotifyExternalIds {
+    upc: String!
+  }
+
+  type SpotifyCopyrights {
+    text: String!
+    type: String!
+  }
+
   type SpotifySearchResultAlbum {
     album_type: String!
     href: String!
@@ -20,7 +70,8 @@ export const typeDefs = gql`
     images: [SpotifyImage!]!
     external_urls: SpotifyExternalUrls!
     available_markets: [String!]!
-    #artists: [SpotifyArtist]
+    artists: [SpotifyArtistShort!]!
+    relation: Relation!
   }
 
   type SearchSpotifyAlbum {
@@ -97,7 +148,7 @@ export const typeDefs = gql`
     day
   }
 
-  enum AlbumType {
+  enum SpotifyAlbumType {
     album
   }
 
@@ -155,23 +206,27 @@ export const typeDefs = gql`
     """
     The object type.
     """
-    type: AlbumType!
+    type: SpotifyAlbumType!
 
     """
     The Spotify URI for the album.
     """
     uri: String!
 
-    #"""
-    #The object type.
-    #"""
-    #tracks: [SpotifyTrack]
-    #artists: [SpotifyArtist]
+    """
+    The tracks of the album.
+    """
+    tracks: [SpotifyTracks!]!
+
+    """
+    The artists of the album. Each artist object includes a link in href to more detailed information about the artist.
+    """
+    artists: [SpotifyArtistShort!]!
 
     """
     Included in the response when a content restriction is applied.
     """
-    restrictions: SpotifyRestrictions!
+    restrictions: SpotifyRestrictions
 
     """
     The cover art for the album in various sizes, widest first.
@@ -188,6 +243,12 @@ export const typeDefs = gql`
     NOTE: an album is considered available in a market when at least 1 of its tracks is available in that market.
     """
     available_markets: [String!]!
+
+    label: String!
+    popularity: Int!
+    genres: [String!]!
+    external_ids: SpotifyExternalIds!
+    copyrights: [SpotifyCopyrights!]!
 
     relation: Relation!
   }
